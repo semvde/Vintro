@@ -5,13 +5,12 @@ import {MdOutlineMail} from "react-icons/md";
 import {FaLock} from "react-icons/fa6";
 import ButtonPrimary from "../components/ButtonPrimary.jsx";
 
-export default function Register() {
+export default function Login() {
     const navigate = useNavigate();
 
     const [form, setForm] = useState({
         email: "",
-        password: "",
-        password_confirm: ""
+        password: ""
     });
 
     const handleInputChange = (e) => {
@@ -26,14 +25,14 @@ export default function Register() {
     function handleSubmit(e) {
         e.preventDefault();
 
-        navigate('/login');
+        alert('actually do something');
     }
 
     return (
         <>
             <section>
-                <h1>Welkom!</h1>
-                <span>Maak hier jouw account aan en begin direct met oefenen!</span>
+                <h1>Welkom <span className={"text-primary"}>terug!</span></h1>
+                <span>Log in om (verder) te oefenen met het solliciteerproces!</span>
             </section>
             <section className={"py-10"}>
                 <form onSubmit={handleSubmit} className={"flex flex-col gap-5"}>
@@ -47,15 +46,10 @@ export default function Register() {
                                value={form.password}
                                required
                                onChange={handleInputChange}/>
-                    <FormField id={"password_confirm"} label={<h2>Wachtwoord herhalen</h2>} type={"password"}
-                               placeholder={"*********"}
-                               icon={<FaLock/>}
-                               value={form.password_confirm}
-                               required
-                               onChange={handleInputChange}/>
-                    <ButtonPrimary>Registreren</ButtonPrimary>
-                    <p className={"text-center"}>Al een account? <Link to={"/login"}
-                                                                       className={"text-primary cursor-pointer hover:text-primary-hover"}>Login</Link>
+                    <ButtonPrimary>Inloggen</ButtonPrimary>
+                    <p className={"text-center"}>Nog geen account? <Link to={"/register"}
+                                                                         className={"text-primary cursor-pointer hover:text-primary-hover"}>Maak
+                        er eentje!</Link>
                     </p>
                 </form>
             </section>
