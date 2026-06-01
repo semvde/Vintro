@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+class UserProfile extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'image',
+        'skills',
+        'work_experience',
+        'education_level',
+        'preferred_language',
+    ];
+
+    protected $casts = [
+        'skills' => 'array',
+        'work_experience' => 'array',
+        'education_level' => 'array',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
