@@ -96,3 +96,7 @@ main {
     margin: 60px auto;
     padding: 0 12px;
 }
+
+.textbubble {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 15% 85%, 0% 100%, 0% 0%)
+}
