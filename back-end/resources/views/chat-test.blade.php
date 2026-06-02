@@ -22,7 +22,7 @@
 
     <script>
         let step = 0;
-        const maxSteps = 6;
+        const maxSteps = 13;
         let history = [];
 
         window.onload = async () => {
