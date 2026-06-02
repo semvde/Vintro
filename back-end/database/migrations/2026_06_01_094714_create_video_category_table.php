@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('video_id')->constrained('videos')->cascadeOnDelete();
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
+            $table->timestamps();
         });
     }
 

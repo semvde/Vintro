@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('interview_id')->constrained('interviews')->cascadeOnDelete();
             $table->longText('ai_feedback');
             $table->boolean('accepted')->default(false);
+            $table->timestamps();
         });
     }
 

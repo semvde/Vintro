@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->longText('ai_feedback');
             $table->longText('motivation_letter');
             $table->boolean('accepted')->default(false);
+            $table->timestamps();
         });
     }
 

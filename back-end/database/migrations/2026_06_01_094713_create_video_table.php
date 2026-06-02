@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('video_url');
             $table->integer('duration_seconds');
             $table->foreignId('category_id')->constrained('categories');
+            $table->timestamps();
         });
     }
 
