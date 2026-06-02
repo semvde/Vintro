@@ -5,6 +5,7 @@ import UserLayout from "../layouts/UserLayout.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
+import Onboarding from "../pages/Onboarding.jsx";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: "/app/",
                 element: <Dashboard/>,
+            },
+            {
+                path: "/app/onboarding",
+                element: <Onboarding />,
             },
         ]
     }
