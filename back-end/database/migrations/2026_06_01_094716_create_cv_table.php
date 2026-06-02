@@ -12,8 +12,9 @@ return new class extends Migration {
     {
         Schema::create('cvs', function (Blueprint $table) {
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->string('email');
+            $table->timestamps();
         });
     }
 
