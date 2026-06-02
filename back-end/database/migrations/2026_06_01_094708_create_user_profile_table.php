@@ -18,7 +18,8 @@ return new class extends Migration {
             $table->json('skills')->nullable();
             $table->json('work_experience')->nullable();
             $table->json('education_level')->nullable();
-            $table->string('preferred_language');
+            $table->string('preferred_language')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('location');
             $table->string('employment_type');
             $table->foreignId('user_id')->constrained('users');
+            $table->timestamps();
         });
     }
 
