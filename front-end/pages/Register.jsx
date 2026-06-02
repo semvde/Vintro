@@ -49,7 +49,7 @@ export default function Register() {
             password: form.password
         });
 
-        if (!response.ok) {
+        if (response.errors) {
             setErrorMessage(response.errors);
             return;
         }

@@ -5,6 +5,9 @@ import UserLayout from "../layouts/UserLayout.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Login from "../pages/Login.jsx";
 import Register from "../pages/Register.jsx";
+import ProtectedRoute from "../components/ProtectedRoute.jsx";
+import {AppContext} from "./Contexts.jsx";
+import {useState} from "react";
 
 const router = createBrowserRouter([
     {
@@ -25,7 +28,11 @@ const router = createBrowserRouter([
         ]
     },
     {
-        element: <UserLayout/>,
+        element: (
+            <ProtectedRoute>
+                <UserLayout/>
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "/app/",
@@ -36,7 +43,11 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
+    const [user, setUser] = useState(null);
+
     return (
-        <RouterProvider router={router}/>
+        <AppContext value={{user, setUser}}>
+            <RouterProvider router={router}/>
+        </AppContext>
     )
 }
