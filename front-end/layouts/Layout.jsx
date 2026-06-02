@@ -1,14 +1,14 @@
 import {Outlet} from "react-router";
-import Topnavigation from "../components/topnavigation.jsx";
+import TopNavigation from "../components/TopNavigation.jsx";
 
 export default function Layout() {
-    return(
+    return (
         <>
             <nav>
-                <Topnavigation/>
+                <TopNavigation/>
             </nav>
             <main>
-                <Outlet />
+                <Outlet/>
             </main>
             <footer>
 
