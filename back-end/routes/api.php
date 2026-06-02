@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AIController;
+use App\Http\Controllers\OnboardingController;
 
-Route::post('/ai/chat', [AIController::class, 'chat']);
+Route::prefix('onboarding')->group(function () {
+    Route::get('/start', [OnboardingController::class, 'start']);
+    Route::post('/chat', [OnboardingController::class, 'chat']);
+});

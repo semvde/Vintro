@@ -5,14 +5,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class AIController extends Controller
+class OnboardingController extends Controller
 {
+    public function start()
+    {
+        return response()->json([
+            'reply' => 'Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?',
+            'type' => 'onboarding_start',
+        ]);
+    }
+
     public function chat(Request $request)
     {
         $validated = $request->validate([
             'message' => 'required|string|max:5000',
-            'context' => 'nullable|string|max:10000',
+            'step' => 'required|integer',
+            'max_steps' => 'required|integer',
+            'history' => 'nullable|array',
         ]);
+
+        $isLastStep = $validated['step'] >= $validated['max_steps'];
 
         $systemPrompt = <<<'PROMPT'
 /no_think
@@ -22,8 +34,16 @@ Je bent VINTRO, een rustige, betrouwbare en praktische AI-coach voor NEET-jonger
 Doelgroep:
 Jongeren die geen opleiding volgen, geen werk hebben en onzeker kunnen zijn over hun toekomst.
 
+Jouw doel:
+Je helpt de gebruiker stap voor stap richting werk, opleiding of persoonlijke ontwikkeling.
+
+Tijdens de onboarding verzamel je informatie om:
+- een persoonlijk profiel op te bouwen
+- een eerste CV te genereren
+- passende vacatures te vinden
+- toekomstige sollicitatieoefeningen te personaliseren
+
 Jouw rol:
-- Help de gebruiker richting werk, opleiding of training.
 - Help met motivatie, structuur, sollicitaties, CV's en zelfvertrouwen.
 - Antwoord altijd in het Nederlands.
 - Houd antwoorden kort: maximaal 4 zinnen.
@@ -45,7 +65,25 @@ Voorbeeld:
 Onboarding-stijl:
 - Begeleid de gebruiker stap voor stap.
 - Vraag steeds maar één ding tegelijk.
-- Verzamel informatie over interesses, opleiding, werkervaring, sterke punten, uitdagingen en doelen.
+- Verzamel informatie over:
+  - interesses
+  - opleiding
+  - werkervaring
+  - sterke punten
+  - uitdagingen
+  - doelen
+  - voorkeuren voor werk
+
+- Herhaal geen vragen die al beantwoord zijn.
+- Bouw logisch verder op eerdere antwoorden.
+- Houd het gesprek natuurlijk en menselijk.
+
+Wanneer je voldoende informatie hebt:
+- Bedank de gebruiker.
+- Geef aan dat er genoeg informatie is verzameld.
+- Zeg dat er nu een profiel opgebouwd kan worden.
+- Zeg dat daarna een eerste CV gegenereerd kan worden.
+- Stel geen nieuwe vraag meer.
 
 Antwoordstijl:
 Rustig, vriendelijk, duidelijk en praktisch.
@@ -57,13 +95,26 @@ PROMPT;
                 'role' => 'system',
                 'content' => $systemPrompt,
             ],
+            [
+                'role' => 'system',
+                'content' => $isLastStep
+                    ? 'Dit is de laatste onboarding-stap. Rond het gesprek natuurlijk en vriendelijk af.'
+                    : 'Dit is onboarding stap ' . $validated['step'] . ' van ' . $validated['max_steps'] . '. Stel één korte vervolgvraag om profielinformatie te verzamelen.',
+            ],
         ];
 
-        if (!empty($validated['context'])) {
-            $messages[] = [
-                'role' => 'system',
-                'content' => 'Extra context over de gebruiker of sessie: ' . $validated['context'],
-            ];
+        if (!empty($validated['history'])) {
+            foreach ($validated['history'] as $item) {
+                if (
+                    isset($item['role'], $item['content']) &&
+                    in_array($item['role'], ['user', 'assistant'], true)
+                ) {
+                    $messages[] = [
+                        'role' => $item['role'],
+                        'content' => $item['content'],
+                    ];
+                }
+            }
         }
 
         $messages[] = [
@@ -98,6 +149,7 @@ PROMPT;
 
         return response()->json([
             'reply' => trim($reply),
+            'finished' => $isLastStep,
         ]);
     }
 }

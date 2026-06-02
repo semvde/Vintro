@@ -21,6 +21,23 @@
     <button onclick="sendMessage()">Verstuur</button>
 
     <script>
+        let step = 0;
+        const maxSteps = 6;
+        let history = [];
+
+        window.onload = async () => {
+            const response = await fetch('/api/onboarding/start');
+            const data = await response.json();
+
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div class="bot">VINTRO: ${data.reply}</div>`;
+
+            history.push({
+                role: 'assistant',
+                content: data.reply
+            });
+        };
+
         async function sendMessage() {
             const input = document.getElementById('message');
             const chat = document.getElementById('chat');
@@ -31,7 +48,14 @@
             chat.innerHTML += `<div class="user">Jij: ${message}</div>`;
             input.value = '';
 
-            const response = await fetch('/api/ai/chat', {
+            history.push({
+                role: 'user',
+                content: message
+            });
+
+            step++;
+
+            const response = await fetch('/api/onboarding/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -39,13 +63,24 @@
                 },
                 body: JSON.stringify({
                     message: message,
-                    context: 'Gebruiker test de VINTRO coach in de browser.'
+                    step: step,
+                    max_steps: maxSteps,
+                    history: history
                 })
             });
 
             const data = await response.json();
 
             chat.innerHTML += `<div class="bot">VINTRO: ${data.reply ?? 'Geen antwoord ontvangen.'}</div>`;
+
+            history.push({
+                role: 'assistant',
+                content: data.reply
+            });
+
+            if (data.finished) {
+                input.disabled = true;
+            }
         }
     </script>
 </body>
