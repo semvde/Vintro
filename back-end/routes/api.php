@@ -6,6 +6,7 @@ use App\Http\Controllers\TTSController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VacancyController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -22,6 +23,8 @@ Route::middleware('user')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/vacancies', [VacancyController::class, 'index']);
+    Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
 });
 
 Route::middleware('auth:api')->group(function () {
