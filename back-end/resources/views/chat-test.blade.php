@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>VINTRO Chat Test</title>
+    <button onclick="logout()">Logout</button>
     <style>
         body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; }
         #chat { border: 1px solid #ddd; padding: 20px; min-height: 300px; margin-bottom: 15px; }
@@ -21,16 +22,50 @@
     <button onclick="sendMessage()">Verstuur</button>
 
     <script>
+
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = '/login-test';
+        }
+
+        async function logout() {
+            const token = localStorage.getItem('token');
+
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+            }
+
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            window.location.href = '/login-test';
+        }
         let step = 0;
-        const maxSteps = 6;
+        const maxSteps = 13;
         let history = [];
 
         window.onload = async () => {
-            const response = await fetch('/api/onboarding/start');
+            const response = await fetch('/api/onboarding/start', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
             const data = await response.json();
 
             const chat = document.getElementById('chat');
-            chat.innerHTML += `<div class="bot">VINTRO: ${data.reply}</div>`;
+            chat.innerHTML += `<div class="bot">Victoria: ${data.reply}</div>`;
 
             history.push({
                 role: 'assistant',
@@ -60,6 +95,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     message: message,

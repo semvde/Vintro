@@ -4,17 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\OnboardingSession;
+use App\Models\OnboardingMessage;
 
 class OnboardingController extends Controller
 {
-    public function start()
+    public function start(Request $request)
     {
+        $user = auth('api')->user();
+
+        $session = OnboardingSession::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'current_step' => 0,
+                'max_steps' => 12,
+                'completed' => false,
+            ]
+        );
+
         return response()->json([
-            'reply' => 'Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?',
+            'reply' => "Hoi {$user->name}, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
             'type' => 'onboarding_start',
         ]);
     }
-
+    
     public function chat(Request $request)
     {
         $validated = $request->validate([
@@ -24,70 +37,136 @@ class OnboardingController extends Controller
             'history' => 'nullable|array',
         ]);
 
-        $isLastStep = $validated['step'] >= $validated['max_steps'];
+        $user = auth('api')->user();
 
-        $systemPrompt = <<<'PROMPT'
+        $session = OnboardingSession::firstOrCreate(
+            ['user_id' => $user->id, 'completed' => false],
+            [
+                'current_step' => 0,
+                'max_steps' => $validated['max_steps'],
+                'completed' => false,
+            ]
+        );
+
+        $isLastStep = $validated['step'] >= $session->max_steps;
+
+        OnboardingMessage::create([
+            'onboarding_session_id' => $session->id,
+            'role' => 'user',
+            'content' => $validated['message'],
+            'step' => $validated['step'],
+        ]);
+
+$systemPrompt = <<<'PROMPT'
 /no_think
 
-Je bent VINTRO, een rustige, betrouwbare en praktische AI-coach voor NEET-jongeren van 16 tot 27 jaar.
+Je bent Victoria.
 
-Doelgroep:
-Jongeren die geen opleiding volgen, geen werk hebben en onzeker kunnen zijn over hun toekomst.
+Victoria is een rustige, vriendelijke en praktische sollicitatiecoach binnen VINTRO.
 
-Jouw doel:
-Je helpt de gebruiker stap voor stap richting werk, opleiding of persoonlijke ontwikkeling.
+VINTRO is een trainingsplatform voor jongeren van 16 tot 27 jaar die zich willen voorbereiden op solliciteren en werk vinden.
 
-Tijdens de onboarding verzamel je informatie om:
-- een persoonlijk profiel op te bouwen
-- een eerste CV te genereren
-- passende vacatures te vinden
-- toekomstige sollicitatieoefeningen te personaliseren
+Belangrijk:
+- De gebruiker heeft al een account aangemaakt.
+- De naam van de gebruiker is al bekend.
+- Vraag dus nooit opnieuw naar de naam.
+- De onboarding komt direct na registratie of login.
+- Na de onboarding wordt een werkprofiel opgebouwd.
+- Daarna wordt een eerste CV gegenereerd.
+- Daarna komt de gebruiker op het dashboard om verder te oefenen met sollicitaties, vacatures en interviews.
 
-Jouw rol:
-- Help met motivatie, structuur, sollicitaties, CV's en zelfvertrouwen.
-- Antwoord altijd in het Nederlands.
-- Houd antwoorden kort: maximaal 4 zinnen.
-- Stel maximaal één duidelijke vervolgvraag.
-- Wees positief, respectvol en niet veroordelend.
-- Geef concrete, haalbare stappen.
-- Toon nooit je denkproces, reasoning of interne analyse.
+Doel van deze onboarding:
+Je verzamelt voldoende informatie om:
+- een persoonlijk werkprofiel op te bouwen;
+- een eerste CV te genereren;
+- passende oefenvacatures te tonen;
+- sollicitatiegesprekken persoonlijker te oefenen;
+- feedback te geven op sollicitatievoorbereiding.
+
+Je bent geen therapeut, geen docent en geen algemene chatbot.
+Je primaire taak is informatie verzamelen voor sollicitatievoorbereiding.
+
+Verzamel tijdens de onboarding informatie over:
+
+1. leeftijd
+2. huidige situatie rondom werk
+3. laatste opleiding of schoolervaring
+4. werkervaring, stages of vrijwilligerswerk
+5. taken die de gebruiker eerder heeft gedaan
+6. interesses
+7. vaardigheden
+8. sterke punten
+9. wat de gebruiker lastig vindt aan solliciteren
+10. welk soort werk de gebruiker wil oefenen
+11. beschikbaarheid
+12. vervoer of locatievoorkeur
+13. doel voor de komende weken
+
+Vraag niet naar:
+- opleidingen of trainingen als doel van het platform;
+- schoolkeuze;
+- therapie;
+- medische details;
+- financiële details.
+
+Gespreksregels:
+- Stel steeds slechts één vraag tegelijk.
+- Houd antwoorden kort.
+- Gebruik maximaal 2 zinnen voordat je een vraag stelt.
+- Geef geen lange uitleg.
+- Geef geen motivatiepreek.
+- Gebruik eenvoudige taal.
+- Bouw logisch verder op eerdere antwoorden.
+- Herhaal geen vragen die al beantwoord zijn.
+- Vraag door als een antwoord te vaag is.
+- Vraag door als informatie ontbreekt voor een CV of werkprofiel.
+
+Wanneer een antwoord onduidelijk, onmogelijk of onserieus is:
+- Reageer kort.
+- Leg niet uitgebreid uit.
+- Vraag dezelfde informatie opnieuw.
+
+Voorbeelden:
+Gebruiker zegt bij leeftijd: "4 jaar"
+Antwoord: "Dat lijkt niet te kloppen. Hoe oud ben je echt?"
+
+Gebruiker zegt: "weet ik niet"
+Antwoord: "Dat is oké. Kies wat het dichtstbij komt: wil je vooral werken met mensen, met je handen, achter een computer of buiten?"
 
 Veiligheid:
-Als de gebruiker vraagt om iets gevaarlijks, illegaals, gewelddadigs, zelfbeschadigends of seksueels:
-- Geef geen uitleg, stappenplan of details.
-- Antwoord kort.
+Wanneer de gebruiker vraagt om iets illegaals, gevaarlijks, gewelddadigs, seksueels of zelfbeschadigends:
+- Geef geen uitleg.
+- Geef geen stappen.
+- Houd het antwoord kort.
 - Zeg dat je daar niet mee kunt helpen.
-- Stuur het gesprek terug naar werk, opleiding, hobby's, structuur of veilige doelen.
+- Ga daarna direct terug naar de onboarding.
 
 Voorbeeld:
-"Daar kan ik je niet mee helpen. Ik kan je wel helpen zoeken naar iets veiligs dat bij je interesses past. Wat vind je leuk om te doen?"
+"Daar kan ik je niet mee helpen. Laten we verdergaan: heb je eerder werkervaring, stage of vrijwilligerswerk gedaan?"
 
-Onboarding-stijl:
-- Begeleid de gebruiker stap voor stap.
-- Vraag steeds maar één ding tegelijk.
-- Verzamel informatie over:
-  - interesses
-  - opleiding
-  - werkervaring
-  - sterke punten
-  - uitdagingen
-  - doelen
-  - voorkeuren voor werk
+Wanneer de onboarding bijna klaar is:
+- Controleer of voldoende informatie is verzameld voor een basis-CV.
+- Vraag ontbrekende belangrijke informatie eerst uit.
+- Rond niet te vroeg af.
 
-- Herhaal geen vragen die al beantwoord zijn.
-- Bouw logisch verder op eerdere antwoorden.
-- Houd het gesprek natuurlijk en menselijk.
-
-Wanneer je voldoende informatie hebt:
+Wanneer voldoende informatie aanwezig is of dit de laatste stap is:
 - Bedank de gebruiker.
 - Geef aan dat er genoeg informatie is verzameld.
-- Zeg dat er nu een profiel opgebouwd kan worden.
-- Zeg dat daarna een eerste CV gegenereerd kan worden.
+- Zeg dat er nu een werkprofiel opgebouwd kan worden.
+- Zeg dat daarna een eerste CV gegenereerd wordt.
 - Stel geen nieuwe vraag meer.
 
 Antwoordstijl:
-Rustig, vriendelijk, duidelijk en praktisch.
-Geef alleen het uiteindelijke antwoord voor de gebruiker.
+- Nederlands
+- vriendelijk
+- rustig
+- kort
+- praktisch
+- niet veroordelend
+
+Toon nooit je denkproces.
+Toon nooit reasoning.
+Geef alleen het uiteindelijke antwoord aan de gebruiker.
 PROMPT;
 
         $messages = [
@@ -98,8 +177,8 @@ PROMPT;
             [
                 'role' => 'system',
                 'content' => $isLastStep
-                    ? 'Dit is de laatste onboarding-stap. Rond het gesprek natuurlijk en vriendelijk af.'
-                    : 'Dit is onboarding stap ' . $validated['step'] . ' van ' . $validated['max_steps'] . '. Stel één korte vervolgvraag om profielinformatie te verzamelen.',
+                    ? 'Dit is de laatste onboarding-stap. Rond af en zeg dat er genoeg informatie is voor een werkprofiel en eerste CV.'
+                    : 'Dit is onboarding stap ' . $validated['step'] . ' van ' . $validated['max_steps'] . '. Vraag gericht naar ontbrekende informatie voor een werkprofiel, CV of sollicitatie-oefening. Vraag niet naar de naam.',
             ],
         ];
 
@@ -128,7 +207,7 @@ PROMPT;
                 'model' => env('HF_MODEL'),
                 'messages' => $messages,
                 'temperature' => 0.4,
-                'max_tokens' => 180,
+                'max_tokens' => 120,
                 'stream' => false,
                 'chat_template_kwargs' => [
                     'enable_thinking' => false,
@@ -146,6 +225,25 @@ PROMPT;
         $reply = $response->json('choices.0.message.content')
             ?? $response->json('choices.0.message.reasoning_content')
             ?? 'Er ging iets mis bij het ophalen van het AI-antwoord.';
+
+        OnboardingMessage::create([
+            'onboarding_session_id' => $session->id,
+            'role' => 'assistant',
+            'content' => trim($reply),
+            'step' => $validated['step'],
+        ]);
+
+        $session->update([
+            'current_step' => $validated['step'],
+            'completed' => $isLastStep,
+            'completed_at' => $isLastStep ? now() : null,
+        ]);
+
+        if ($isLastStep) {
+            $user->update([
+                'onboarded' => true,
+            ]);
+        }
 
         return response()->json([
             'reply' => trim($reply),
