@@ -1,7 +1,7 @@
 import {Link} from "react-router";
 import {GoArrowLeft} from "react-icons/go";
 
-export default function Editaccount() {
+export default function EditAccount() {
     return (
         <>
             <section className="max-w-100 md:max-w-4xl mx-auto max-h-200 space-y-10 md:p-6">
@@ -11,7 +11,8 @@ export default function Editaccount() {
                     </Link>
                 </div>
                 <div className="bg-primary/20 pb-10 md:rounded-lg md:flex md:flex-row md:pb-0 md:items-stretch">
-                    <div className="bg-primary/20 flex flex-row md:flex-col items-center space-x-3 md:space-x-0 md:space-y-4 p-6 md:w-1/3 md:justify-center md:rounded-l-lg">
+                    <div
+                        className="bg-primary/20 flex flex-row md:flex-col items-center space-x-3 md:space-x-0 md:space-y-4 p-6 md:w-1/3 md:justify-center md:rounded-l-lg">
                         <img alt="profiel foto" src="/front-end/public"/>
                         <h2>Vincent</h2>
                     </div>

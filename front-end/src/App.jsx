@@ -2,7 +2,7 @@ import {createBrowserRouter, RouterProvider} from "react-router";
 import Layout from "../layouts/Layout.jsx";
 import Home from "../pages/Home.jsx";
 import Account from "../pages/account/Account.jsx";
-import Editaccount from "../pages/account/Editaccount.jsx";
+import EditAccount from "../pages/account/EditAccount.jsx";
 import {History} from "../pages/account/History.jsx";
 import {Preferences} from "../pages/account/Preferences.jsx";
 import {Settings} from "../pages/account/Settings.jsx";
@@ -26,24 +26,6 @@ const router = createBrowserRouter([
                 element: <Home/>,
             },
             {
-                path: "/account",
-                element: <Account/>,
-            },
-            {
-                path: "/edit-account",
-                element: <Editaccount/>,
-            },
-            {
-                path: "/history",
-                element: <History/>,
-            },
-            {
-                path: "/preferences",
-                element: <Preferences/>,
-            },
-            {
-                path: "/Settings",
-                element: <Settings/>,
                 path: "/login",
                 element: <Login/>,
             },
@@ -76,6 +58,26 @@ const router = createBrowserRouter([
                 path: "/app/vacancies/:id",
                 element: <VacationDetail/>
             },
+            {
+                path: "/app/account",
+                element: <Account/>,
+            },
+            {
+                path: "/app/edit-account",
+                element: <EditAccount/>,
+            },
+            {
+                path: "/app/history",
+                element: <History/>,
+            },
+            {
+                path: "/app/preferences",
+                element: <Preferences/>,
+            },
+            {
+                path: "/app/settings",
+                element: <Settings/>
+            }
         ]
     }
 ]);
