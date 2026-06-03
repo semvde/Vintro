@@ -11,7 +11,6 @@ class VacancyFeedback extends Model
 
     protected $fillable = [
         'vacancy_id',
-        'user_id',
         'ai_feedback',
         'motivation_letter',
         'accepted',

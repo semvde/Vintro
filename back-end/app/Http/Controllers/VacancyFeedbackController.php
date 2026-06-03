@@ -10,12 +10,14 @@ class VacancyFeedbackController extends Controller
     {
         $user = auth('api')->user();
 
-        $feedbacks = VacancyFeedback::where('user_id', $user->id)
-            ->latest()
+        $feedback = VacancyFeedback::whereHas('vacancy', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->with('vacancy')
             ->get();
 
         return response()->json([
-            'data' => $feedbacks
+            'data' => $feedback
         ]);
     }
 
@@ -23,8 +25,11 @@ class VacancyFeedbackController extends Controller
     {
         $user = auth('api')->user();
 
-        $feedback = VacancyFeedback::where('user_id', $user->id)
-            ->where('id', $id)
+        $feedback = VacancyFeedback::where('id', $id)
+            ->whereHas('vacancy', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with('vacancy')
             ->first();
 
         if (!$feedback) {
