@@ -4,6 +4,8 @@ import Home from "../pages/Home.jsx";
 import Account from "../pages/account/Account.jsx";
 import Editaccount from "../pages/account/Editaccount.jsx";
 import {History} from "../pages/account/History.jsx";
+import {Preferences} from "../pages/account/Preferences.jsx";
+import {Settings} from "../pages/account/Settings.jsx";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
             {
                 path: "/history",
                 element: <History/>,
+            },
+            {
+                path: "/preferences",
+                element: <Preferences/>,
+            },
+            {
+                path: "/Settings",
+                element: <Settings/>,
             },
         ]
     }
