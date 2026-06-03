@@ -9,6 +9,7 @@ class Cv extends Model
 {
     use HasFactory;
 
+    protected $table = 'cvs';
     protected $fillable = [
         'user_id',
         'phone_number',

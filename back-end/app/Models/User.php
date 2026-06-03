@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
@@ -14,6 +15,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'onboarded'
     ];
 
     protected $hidden = [
@@ -29,20 +31,37 @@ class User extends Authenticatable
         ];
     }
 
+    // JWT REQUIRED METHODS
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
     // RELATIES
 
     public function profile()
     {
-        return $this->hasOne(UserProfile::class);
+        return $this->hasOne(UserProfile::class, 'user_id');
     }
 
-    public function cvs()
+    public function cv()
     {
-        return $this->hasMany(Cv::class);
+        return $this->hasOne(Cv::class);
     }
 
     public function vacancies()
     {
         return $this->hasMany(Vacancy::class);
+    }
+
+    public function onboardingSessions()
+    {
+        return $this->hasMany(OnboardingSession::class);
     }
 }
