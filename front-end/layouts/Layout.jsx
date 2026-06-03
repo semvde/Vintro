@@ -1,5 +1,5 @@
 import {Outlet} from "react-router";
-import Topnavigation from "../components/topnavigation.jsx";
+import Topnavigation from "../components/Topnavigation.jsx";
 
 export default function Layout() {
     return(
