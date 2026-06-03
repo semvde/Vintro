@@ -10,6 +10,7 @@ import {AppContext} from "./Contexts.jsx";
 import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
+import VacationDetail from "../pages/VacancyDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: "/app/vacancies",
                 element: <Vacancies/>,
+            },
+            {
+                path: "/app/vacancies/:id",
+                element: <VacationDetail/>
             },
         ]
     }
