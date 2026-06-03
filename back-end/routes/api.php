@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InterviewFeedbackController;
+use App\Http\Controllers\VacancyFeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\TTSController;
@@ -28,6 +30,11 @@ Route::middleware('user')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/vacancies', [VacancyController::class, 'index']);
     Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+    Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
+    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+
+    Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+    Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
 });
 
 Route::middleware('auth:api')->group(function () {
