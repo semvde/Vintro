@@ -17,6 +17,16 @@ export function CVPreview({ data }) {
                         </span>
                     ))}
                 </div>
+                <div className="flex flex-wrap gap-2">
+                    {data.strengths.map((s) => (
+                        <span key={s}>{s}</span>
+                    ))}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                    {data.interests.map((i) => (
+                        <li key={i}>{i}</li>
+                    ))}
+                </div>
             </section>
         </div>
     );
