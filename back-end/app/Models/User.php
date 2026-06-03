@@ -47,6 +47,7 @@ class User extends Authenticatable implements JWTSubject
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
+        
     }
 
     public function cvs()
@@ -57,5 +58,10 @@ class User extends Authenticatable implements JWTSubject
     public function vacancies()
     {
         return $this->hasMany(Vacancy::class);
+    }
+
+    public function onboardingSessions()
+    {
+        return $this->hasMany(OnboardingSession::class);
     }
 }
