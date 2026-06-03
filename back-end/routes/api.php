@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\TTSController;
+use App\Http\Controllers\CoachController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\VacancyController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::post('/coach', [CoachController::class, 'chat']);
 Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
