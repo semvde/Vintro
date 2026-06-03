@@ -22,8 +22,6 @@ class UserProfile extends Model
 
     protected $casts = [
         'skills' => 'array',
-        'work_experience' => 'array',
-        'education_level' => 'array',
     ];
 
     public function user()
