@@ -1,11 +1,38 @@
 import Card from "../components/Card.jsx";
+import {useEffect, useState} from "react";
+import {fetchAPI} from "../services/Fetch.js";
 
 export default function Vacancies() {
+    const [vacancies, setVacancies] = useState([]);
+
+    async function getVacancies() {
+        let {data} = await fetchAPI('/vacancies');
+
+        if (data === undefined) data = [{"title": "Fout met ophalen van vacatures"}];
+
+        setVacancies(data);
+    }
+
+    useEffect(() => {
+        getVacancies();
+    }, []);
+
     return (
         <>
-            <Card>
-                
-            </Card>
+            {
+                vacancies.map((vacancy) => {
+                    return (
+                        <Card key={vacancy.id}>
+                            <div className={"p-5"}>
+                                <h2 className={"text-primary"}>{vacancy.title}</h2>
+                                <span className={"text-xl font-bold"}>{vacancy.company}</span>
+                                <span className={"text-xl"}> • {vacancy.location}</span>
+                                <p className={"text-right mt-5"}>{vacancy.employment_type}</p>
+                            </div>
+                        </Card>
+                    );
+                })
+            }
         </>
     );
 }
