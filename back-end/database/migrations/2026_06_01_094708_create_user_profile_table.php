@@ -5,9 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
+  
     public function up(): void
     {
         Schema::create('user_profile', function (Blueprint $table) {
@@ -18,14 +16,17 @@ return new class extends Migration {
             $table->json('skills')->nullable();
             $table->json('work_experience')->nullable();
             $table->json('education_level')->nullable();
-            $table->string('preferred_language')->nullable();
+            $table->string('preferred_language');
+            $table->unsignedTinyInteger('age')->nullable();
+            $table->json('interests')->nullable();
+            $table->json('strengths')->nullable();
+            $table->json('job_preferences')->nullable();
+
+            $table->longText('profile_summary')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('user_profile');

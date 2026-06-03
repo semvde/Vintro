@@ -7,34 +7,53 @@ use Illuminate\Support\Facades\Http;
 
 class TTSController extends Controller
 {
-        public function tts(Request $request)
+    public function tts(Request $request)
     {
         $validated = $request->validate([
             'text' => 'required|string|max:5000',
             'voice' => 'nullable|string|max:50',
         ]);
 
-        $response = Http::withToken(env('HF_TOKEN'))
-            ->timeout(120)
-            ->withHeaders([
-                'Accept' => 'audio/wav',
-            ])
-            ->post('https://api-inference.huggingface.co/models/' . env('HF_TTS_MODEL', 'hexgrad/Kokoro-82M'), [
-                'inputs' => $validated['text'],
-                'parameters' => [
-                    'voice' => $validated['voice'] ?? 'af_heart',
-                ],
-            ]);
+        $providedVoice = $validated['voice'] ?? null;
+        $defaultVoice = env('ELEVENLABS_VOICE_ID');
+        $isValidElevenLabsVoice = is_string($providedVoice)
+            && preg_match('/^[A-Za-z0-9]{20}$/', $providedVoice) === 1;
+
+        $voiceId = $isValidElevenLabsVoice ? $providedVoice : $defaultVoice;
+
+        if (!$voiceId) {
+            return response()->json([
+                'error' => 'TTS configuration error',
+                'details' => 'ELEVENLABS_VOICE_ID is missing and no valid voice was provided.',
+            ], 500);
+        }
+
+        $response = Http::withHeaders([
+            'xi-api-key' => env('ELEVENLABS_API_KEY'),
+            'Accept' => 'audio/mpeg',
+            'Content-Type' => 'application/json',
+        ])->post(
+            "https://api.elevenlabs.io/v1/text-to-speech/{$voiceId}",
+            [
+                'text' => $validated['text'],
+                'model_id' => 'eleven_multilingual_v2',
+                'voice_settings' => [
+                    'stability' => 0.5,
+                    'similarity_boost' => 0.75,
+                ]
+            ]
+        );
 
         if ($response->failed()) {
             return response()->json([
                 'error' => 'TTS request failed',
                 'status' => $response->status(),
-                'details' => $response->json() ?? $response->body(),
+                'details' => $response->body(),
             ], $response->status());
         }
 
         return response($response->body(), 200)
-            ->header('Content-Type', 'audio/wav');
+            ->header('Content-Type', 'audio/mpeg')
+            ->header('Content-Disposition', 'inline; filename="tts.mp3"');
     }
 }
