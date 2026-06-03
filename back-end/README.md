@@ -23,8 +23,10 @@
 
 ## Base URL
 
-```txt
-http://127.0.0.1:8000/api
+Online (live):
+
+```
+http://145.24.223.123:8000/
 ```
 
 
@@ -61,7 +63,7 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/tts`              | Tekst omzetten naar audio       | Nee        |
 | GET    | `/user`             | Ingelogde gebruiker ophalen     | Ja         |
 | POST   | `/logout`           | Gebruiker uitloggen             | Ja         |
-
+| POST   | `/coach`            | Praten met Victoria :)          | Nee        |
 ---
 
 ## Auth endpoints
