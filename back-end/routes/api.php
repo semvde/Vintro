@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\TTSController;
+use App\Http\Controllers\CoachController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,8 @@ Route::prefix('onboarding')->group(function () {
     Route::post('/chat', [OnboardingController::class, 'chat']);
 });
 
+
+Route::post('/coach', [CoachController::class, 'chat']);
 Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
