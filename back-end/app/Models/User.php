@@ -46,13 +46,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function profile()
     {
-        return $this->hasOne(UserProfile::class);
-        
+        return $this->hasOne(UserProfile::class, 'user_id');
     }
 
-    public function cvs()
+    public function cv()
     {
-        return $this->hasMany(Cv::class);
+        return $this->hasOne(Cv::class);
     }
 
     public function vacancies()

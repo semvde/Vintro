@@ -4,9 +4,12 @@ import {useState} from "react";
 import {MdOutlineMail} from "react-icons/md";
 import {FaLock} from "react-icons/fa6";
 import ButtonPrimary from "../components/ButtonPrimary.jsx";
+import {fetchAPI} from "../services/Fetch.js";
 
 export default function Login() {
     const navigate = useNavigate();
+
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [form, setForm] = useState({
         email: "",
@@ -22,11 +25,25 @@ export default function Login() {
         }));
     };
 
-    function handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        alert('actually do something');
-    }
+        const response = await fetchAPI('/login', 'POST', {
+            email: form.email,
+            password: form.password
+        });
+
+        if (response.message === "Invalid credentials") {
+            setErrorMessage(response.message);
+            return;
+        }
+
+        const token = response.token;
+
+        localStorage.setItem("token", token);
+
+        navigate('/app');
+    };
 
     return (
         <>
@@ -47,6 +64,7 @@ export default function Login() {
                                required
                                onChange={handleInputChange}/>
                     <ButtonPrimary>Inloggen</ButtonPrimary>
+                    {errorMessage && <span className={"text-(--color-error)"}>{errorMessage}</span>}
                     <p className={"text-center"}>Nog geen account? <Link to={"/register"}
                                                                          className={"text-primary cursor-pointer hover:text-primary-hover"}>Maak
                         er eentje!</Link>

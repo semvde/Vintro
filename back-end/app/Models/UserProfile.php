@@ -9,6 +9,7 @@ class UserProfile extends Model
 {
     use HasFactory;
 
+    protected $table = 'user_profile';
     protected $fillable = [
         'user_id',
         'name',
@@ -35,6 +36,6 @@ class UserProfile extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

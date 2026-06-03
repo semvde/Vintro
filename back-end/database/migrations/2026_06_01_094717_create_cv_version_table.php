@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->integer('version');
             $table->string('pdf_url')->unique();
             $table->json('content');
+            $table->timestamps();
         });
     }
 
