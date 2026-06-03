@@ -14,6 +14,8 @@ import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import {AppContext} from "./Contexts.jsx";
 import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
+import Vacancies from "../pages/Vacancies.jsx";
+import VacationDetail from "../pages/VacancyDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -53,9 +55,9 @@ const router = createBrowserRouter([
     },
     {
         element: (
-            <ProtectedRoute>
-                <UserLayout/>
-            </ProtectedRoute>
+            // <ProtectedRoute>
+            <UserLayout/>
+            // </ProtectedRoute>
         ),
         children: [
             {
@@ -64,7 +66,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/onboarding",
-                element: <Onboarding />,
+                element: <Onboarding/>,
+            },
+            {
+                path: "/app/vacancies",
+                element: <Vacancies/>,
+            },
+            {
+                path: "/app/vacancies/:id",
+                element: <VacationDetail/>
             },
         ]
     }
