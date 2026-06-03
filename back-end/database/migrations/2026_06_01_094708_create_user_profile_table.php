@@ -16,7 +16,13 @@ return new class extends Migration {
             $table->json('skills')->nullable();
             $table->json('work_experience')->nullable();
             $table->json('education_level')->nullable();
-            $table->string('preferred_language')->nullable();
+            $table->string('preferred_language');
+            $table->unsignedTinyInteger('age')->nullable();
+            $table->json('interests')->nullable();
+            $table->json('strengths')->nullable();
+            $table->json('job_preferences')->nullable();
+
+            $table->longText('profile_summary')->nullable();
             $table->timestamps();
         });
     }

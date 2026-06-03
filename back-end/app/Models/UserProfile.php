@@ -18,10 +18,20 @@ class UserProfile extends Model
         'work_experience',
         'education_level',
         'preferred_language',
+        'age',
+        'interests',
+        'strengths',
+        'job_preferences',
+        'profile_summary',
     ];
 
     protected $casts = [
         'skills' => 'array',
+        'work_experience' => 'array',
+        'education_level' => 'array',
+        'interests' => 'array',
+        'strengths' => 'array',
+        'job_preferences' => 'array',
     ];
 
     public function user()
