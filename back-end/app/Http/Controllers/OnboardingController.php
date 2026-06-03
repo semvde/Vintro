@@ -4,15 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\OnboardingSession;
+use App\Models\OnboardingMessage;
 
 class OnboardingController extends Controller
 {
     public function start(Request $request)
     {
-        $name = $request->query('name', 'daar');
+        $user = auth('api')->user();
+
+        $session = OnboardingSession::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'current_step' => 0,
+                'max_steps' => 12,
+                'completed' => false,
+            ]
+        );
 
         return response()->json([
-            'reply' => "Hoi {$name}, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
+            'reply' => "Hoi {$user->name}, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
             'type' => 'onboarding_start',
         ]);
     }
@@ -26,7 +37,25 @@ class OnboardingController extends Controller
             'history' => 'nullable|array',
         ]);
 
-        $isLastStep = $validated['step'] >= $validated['max_steps'];
+        $user = auth('api')->user();
+
+        $session = OnboardingSession::firstOrCreate(
+            ['user_id' => $user->id, 'completed' => false],
+            [
+                'current_step' => 0,
+                'max_steps' => $validated['max_steps'],
+                'completed' => false,
+            ]
+        );
+
+        $isLastStep = $validated['step'] >= $session->max_steps;
+
+        OnboardingMessage::create([
+            'onboarding_session_id' => $session->id,
+            'role' => 'user',
+            'content' => $validated['message'],
+            'step' => $validated['step'],
+        ]);
 
 $systemPrompt = <<<'PROMPT'
 /no_think
@@ -196,6 +225,25 @@ PROMPT;
         $reply = $response->json('choices.0.message.content')
             ?? $response->json('choices.0.message.reasoning_content')
             ?? 'Er ging iets mis bij het ophalen van het AI-antwoord.';
+
+        OnboardingMessage::create([
+            'onboarding_session_id' => $session->id,
+            'role' => 'assistant',
+            'content' => trim($reply),
+            'step' => $validated['step'],
+        ]);
+
+        $session->update([
+            'current_step' => $validated['step'],
+            'completed' => $isLastStep,
+            'completed_at' => $isLastStep ? now() : null,
+        ]);
+
+        if ($isLastStep) {
+            $user->update([
+                'onboarded' => true,
+            ]);
+        }
 
         return response()->json([
             'reply' => trim($reply),
