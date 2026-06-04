@@ -22,15 +22,15 @@ export function CVPreview({ data }) {
                         ))}
                     </div>
                     <h2>Strengths</h2>
-                    <div className={"flex flex-col py-2"}>
+                    <div className={"flex gap-4 py-2"}>
                         {data.strengths.map((s) => (
-                            <span key={s}>{s}</span>
+                            <span key={s} className={"bg-secondary py-2 px-4 rounded-lg text-outline"}>{s}</span>
                         ))}
                     </div>
                     <h2>Interests</h2>
-                    <div className={"flex flex-col py-2"}>
+                    <div className={"flex gap-4 py-2"}>
                         {data.interests.map((i) => (
-                            <span key={i}>{i}</span>
+                            <span key={i} className={"bg-primary py-2 px-4 rounded-lg text-outline"}>{i}</span>
                         ))}
                     </div>
                 </div>

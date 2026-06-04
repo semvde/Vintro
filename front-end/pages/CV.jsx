@@ -45,11 +45,14 @@ export default function CVPage() {
         );
     }
 
-    console.log(cvData);
         return (
-            <div className="space-y-8 p-8">
-                <DownloadCVButton data={cvData}/>
+            <>
+                <div className={"flex justify-end pb-4 gap-4 items-center"}>
+                    { /* Button will be Link component to /app/cv/edit page once it exists */}
+                    <button className={"bg-secondary text-outline px-2 py-4 rounded-lg"}>Bewerken</button>
+                    <DownloadCVButton data={cvData}/>
+                </div>
                 <CVPreview data={cvData}/>
-            </div>
+            </>
         );
     }
