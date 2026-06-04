@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
+use app\Http\Controllers\ProfileGenerationController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -39,6 +40,8 @@ Route::middleware('user')->group(function () {
         Route::get('/start', [OnboardingController::class, 'start']);
         Route::post('/chat', [OnboardingController::class, 'chat']);
     });
+
+    Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
 });
 
 Route::middleware('auth:api')->group(function () {
