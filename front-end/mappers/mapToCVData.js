@@ -11,7 +11,7 @@ export function mapToCVData(profile, cv) {
         interests: profile?.interests || [],
         jobPreferences: profile?.job_preferences || [],
 
-        educationLevel: profile?.education_level || "",
+        educationLevel: profile?.education_level || [],
 
         workExperience: profile?.work_experience || [],
     };

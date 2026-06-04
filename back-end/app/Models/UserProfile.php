@@ -28,6 +28,7 @@ class UserProfile extends Model
     protected $casts = [
         'skills' => 'array',
         'work_experience' => 'array',
+        'education_level' => 'array',
         'interests' => 'array',
         'strengths' => 'array',
         'job_preferences' => 'array',
