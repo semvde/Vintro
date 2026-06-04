@@ -1,3 +1,6 @@
+import {FaPhoneAlt} from "react-icons/fa";
+import {IoIosMail} from "react-icons/io";
+
 export function CVPreview({ data }) {
     return (
         <div>
@@ -5,8 +8,14 @@ export function CVPreview({ data }) {
                 <img src={data.image} alt={""} className={"h-20 w-20"} />
                 <div className={"flex flex-col"}>
                     <h2>{data.name}</h2>
-                    <p>[Email]</p>
-                    <p>[Nummer]</p>
+                    <div className={"flex gap-2 items-center"}>
+                        <IoIosMail />
+                        <p className={"text-sm"}>{data.email}</p>
+                    </div>
+                    <div className={"flex gap-2 items-center"}>
+                        <FaPhoneAlt />
+                        <p className={"text-sm"}>{data.phoneNumber}</p>
+                    </div>
                 </div>
             </section>
 

@@ -1,6 +1,8 @@
 export function mapToCVData(profile, cv, cvVersion) {
     return {
         name: profile?.name || "",
+        email: cv?.email || "Bewerk om toe te voegen",
+        phoneNumber: cv?.phoneNumber || "Bewerk om toe te voegen",
         image: profile?.image || "",
         summary: profile?.profile_summary || "",
 
