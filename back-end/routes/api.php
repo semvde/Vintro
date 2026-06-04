@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InterviewFeedbackController;
+use App\Http\Controllers\VacancyFeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OnboardingController;
 use App\Http\Controllers\TTSController;
@@ -20,8 +22,18 @@ Route::middleware('user')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
+  
+  //vacancycontroller + feedback
     Route::get('/vacancies', [VacancyController::class, 'index']);
     Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+    Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+    Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
+    
+  //interview feedback
+    Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
+    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+
+  //Onboarding
     Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
     Route::prefix('onboarding')->group(function () {
         Route::get('/start', [OnboardingController::class, 'start']);
@@ -36,3 +48,11 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
+// als we de onboarding routes ook willen beschermen, kunnen we deze in de auth:api middleware zetten. Voor nu laten we ze open zodat we makkelijk kunnen testen zonder steeds te moeten inloggen.
+//Route::middleware('auth:api')->group(function () {
+//    Route::prefix('onboarding')->group(function () {
+//       Route::get('/start', [OnboardingController::class, 'start']);
+//        Route::post('/chat', [OnboardingController::class, 'chat']);
+//    });
+//});
+//frontend moet bearer token meesturen
