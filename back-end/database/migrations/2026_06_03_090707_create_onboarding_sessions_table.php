@@ -18,8 +18,10 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete();
 
-            $table->unsignedInteger('current_step')->default(1);
-            $table->unsignedInteger('max_steps')->default(12);
+            $table->unsignedInteger('current_step')->default(0);
+            $table->unsignedInteger('max_steps')->default(13);
+
+            $table->json('chat_history')->nullable();
 
             $table->boolean('completed')->default(false);
             $table->timestamp('completed_at')->nullable();
