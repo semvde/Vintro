@@ -1,6 +1,11 @@
 import {createBrowserRouter, RouterProvider} from "react-router";
 import Layout from "../layouts/Layout.jsx";
 import Home from "../pages/Home.jsx";
+import Account from "../pages/account/Account.jsx";
+import EditAccount from "../pages/account/EditAccount.jsx";
+import {History} from "../pages/account/History.jsx";
+import {Preferences} from "../pages/account/Preferences.jsx";
+import {Settings} from "../pages/account/Settings.jsx";
 import UserLayout from "../layouts/UserLayout.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import Login from "../pages/Login.jsx";
@@ -10,6 +15,8 @@ import {AppContext} from "./Contexts.jsx";
 import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
 import CV from "../pages/CV.jsx";
+import Vacancies from "../pages/Vacancies.jsx";
+import VacationDetail from "../pages/VacancyDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +39,7 @@ const router = createBrowserRouter([
     {
         element: (
             // <ProtectedRoute>
-                <UserLayout/>
+            <UserLayout/>
             // </ProtectedRoute>
         ),
         children: [
@@ -42,7 +49,35 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/onboarding",
-                element: <Onboarding />,
+                element: <Onboarding/>,
+            },
+            {
+                path: "/app/vacancies",
+                element: <Vacancies/>,
+            },
+            {
+                path: "/app/vacancies/:id",
+                element: <VacationDetail/>
+            },
+            {
+                path: "/app/account",
+                element: <Account/>,
+            },
+            {
+                path: "/app/edit-account",
+                element: <EditAccount/>,
+            },
+            {
+                path: "/app/history",
+                element: <History/>,
+            },
+            {
+                path: "/app/preferences",
+                element: <Preferences/>,
+            },
+            {
+                path: "/app/settings",
+                element: <Settings/>
             },
             {
                 path: "/app/cv",

@@ -1,4 +1,5 @@
 import {Link} from "react-router";
+import {GoArrowRight} from "react-icons/go";
 
 
 export default function Home() {
@@ -13,8 +14,8 @@ export default function Home() {
                             oefent sollicitatiegesprekken met AI en leert je
                             in korte video's hoe het echt werkt.</p>
                     </div>
-                    <div className="flex justify-between">
-                        <Link className="bg-primary shadow-md pb-3 pt-3 pl-8 pr-8 rounded-3xl text-white" to="/">Start nu!  </Link>
+                    <div className="mt-5 flex justify-between">
+                        <Link className="bg-primary shadow-md pb-3 pt-3 pl-8 pr-8 rounded-3xl text-white" to="/">Start nu! </Link>
 
                         <Link className="bg-white pb-3 pt-3 pl-8 pr-8 shadow-md rounded-3xl text-black" to="/">Zo werkt het</Link>
                     </div>

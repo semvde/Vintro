@@ -15,30 +15,42 @@
 <body>
     <h1>VINTRO Chat Test</h1>
 
+    <button onclick="logout()">Logout</button>
+
     <div id="chat"></div>
 
     <input id="message" type="text" placeholder="Typ je bericht..." />
     <button onclick="sendMessage()">Verstuur</button>
 
     <script>
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = '/login-test';
+        }
+
         let step = 0;
-        const maxSteps = 13;
-        let history = [];
+        const maxSteps = 10;
+        let finished = false;
 
         window.onload = async () => {
-            const response = await fetch('/api/onboarding/start');
+            const response = await fetch('/api/onboarding/start', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
             const data = await response.json();
 
             const chat = document.getElementById('chat');
-            chat.innerHTML += `<div class="bot">VINTRO: ${data.reply}</div>`;
-
-            history.push({
-                role: 'assistant',
-                content: data.reply
-            });
+            chat.innerHTML += `<div class="bot">Victoria: ${data.reply}</div>`;
         };
 
         async function sendMessage() {
+            if (finished) return;
+
             const input = document.getElementById('message');
             const chat = document.getElementById('chat');
             const message = input.value.trim();
@@ -48,11 +60,6 @@
             chat.innerHTML += `<div class="user">Jij: ${message}</div>`;
             input.value = '';
 
-            history.push({
-                role: 'user',
-                content: message
-            });
-
             step++;
 
             const response = await fetch('/api/onboarding/chat', {
@@ -60,27 +67,42 @@
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
                     message: message,
                     step: step,
-                    max_steps: maxSteps,
-                    history: history
+                    max_steps: maxSteps
                 })
             });
 
             const data = await response.json();
 
-            chat.innerHTML += `<div class="bot">VINTRO: ${data.reply ?? 'Geen antwoord ontvangen.'}</div>`;
-
-            history.push({
-                role: 'assistant',
-                content: data.reply
-            });
+            chat.innerHTML += `<div class="bot">Victoria: ${data.reply ?? 'Geen antwoord ontvangen.'}</div>`;
 
             if (data.finished) {
+                finished = true;
                 input.disabled = true;
             }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+            }
+
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            window.location.href = '/login-test';
         }
     </script>
 </body>

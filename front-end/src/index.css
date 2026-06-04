@@ -75,6 +75,24 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
 }
 
+.h2 {
+    font-family: "Bebas Neue", sans-serif;
+    line-height: 1.2;
+    font-weight: 400;
+
+    margin: 0;
+    font-size: 24px;
+}
+
+.h3 {
+    font-family: "Bebas Neue", sans-serif;
+    line-height: 1.2;
+    font-weight: 200;
+
+    margin: 0;
+    font-size: 18px;
+}
+
 h1 {
     font-size: 40px;
 }
@@ -93,7 +111,7 @@ main {
 
     min-width: min(1200px, 100%);
     max-width: min(1200px, 100%);
-    margin: 60px auto;
+    margin: 30px auto;
     padding: 0 12px;
 }
 
