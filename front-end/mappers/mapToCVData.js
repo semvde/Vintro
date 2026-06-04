@@ -1,4 +1,4 @@
-export function mapToCVData(profile, cv, cvVersion) {
+export function mapToCVData(profile, cv) {
     return {
         name: profile?.name || "",
         email: cv?.email || "Bewerk om toe te voegen",
@@ -13,6 +13,6 @@ export function mapToCVData(profile, cv, cvVersion) {
 
         educationLevel: profile?.education_level || "",
 
-        workExperience: cvVersion?.content?.workExperience || [],
+        workExperience: profile?.work_experience || [],
     };
 }

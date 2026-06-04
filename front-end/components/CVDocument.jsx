@@ -1,20 +1,55 @@
-import {Document, Page, Text, View, Image, StyleSheet,} from "@react-pdf/renderer";
+import {
+    Document,
+    Page,
+    Text,
+    View,
+    Image,
+    StyleSheet,
+} from "@react-pdf/renderer";
+
+import { Font } from "@react-pdf/renderer";
+
+Font.register({
+    family: "Poppins",
+    src: "https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Regular.ttf",
+});
+
+Font.register({
+    family: "Bebas Neue",
+    src: "https://raw.githubusercontent.com/google/fonts/main/ofl/bebasneue/BebasNeue-Regular.ttf",
+});
 
 const styles = StyleSheet.create({
     page: {
         padding: 20,
         fontSize: 12,
+        fontFamily: "Poppins",
+    },
+
+    h1: {
+        fontFamily: "Bebas Neue",
+        fontSize: 28,
+    },
+
+    h2: {
+        fontFamily: "Bebas Neue",
+        fontSize: 20,
+    },
+
+    h3: {
+        fontFamily: "Bebas Neue",
+        fontSize: 16,
     },
 
     header: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 16,
-        backgroundColor: "#408dd4",
-        color: "white",
+        gap: 12,
+        backgroundColor: "#408DD4",
         padding: 16,
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
+        color: "white",
     },
 
     avatar: {
@@ -22,54 +57,37 @@ const styles = StyleSheet.create({
         height: 80,
     },
 
-    headerInfo: {
-        flexDirection: "column",
+    section: {
+        paddingVertical: 12,
+        fontSize: 12,
     },
 
-    name: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 4,
+    smallText: {
+        fontSize: 10,
     },
 
-    content: {
-        marginTop: 16,
-    },
-
-    summary: {
-        fontSize: 11,
-        marginBottom: 16,
-        lineHeight: 1.5,
-    },
-
-    sectionTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-        marginTop: 12,
-        marginBottom: 8,
-    },
-
-    tagContainer: {
+    row: {
         flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 8,
-        marginBottom: 12,
+        justifyContent: "space-between",
+        alignItems: "center",
     },
 
-    primaryTag: {
-        backgroundColor: "#408dd4",
+    bottomSection: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        backgroundColor: "#408DD4",
+        padding: 16,
+        borderBottomLeftRadius: 8,
+        borderBottomRightRadius: 8,
         color: "white",
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 6,
     },
 
-    secondaryTag: {
-        backgroundColor: "#68b55e",
-        color: "white",
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 6,
+    column: {
+        width: "48%",
+    },
+
+    listItem: {
+        marginBottom: 6,
     },
 });
 
@@ -77,50 +95,73 @@ export function CVDocument({ data }) {
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                {/* Header */}
+
+                {/* HEADER */}
                 <View style={styles.header}>
                     <Image src={data.image} style={styles.avatar} />
 
-                    <View style={styles.headerInfo}>
-                        <Text style={styles.name}>{data.name}</Text>
-                        <Text>[Email]</Text>
-                        <Text>[Nummer]</Text>
+                    <View>
+                        <Text style={styles.h1}>{data.name}</Text>
+
+                        <Text style={styles.smallText}>{data.email}</Text>
+                        <Text style={styles.smallText}>{data.phoneNumber}</Text>
                     </View>
                 </View>
 
-                {/* Content */}
-                <View style={styles.content}>
-                    <Text style={styles.summary}>
-                        {data.summary}
-                    </Text>
+                {/* SUMMARY + EXPERIENCE + EDUCATION */}
+                <View style={styles.section}>
+                    <Text>{data.summary}</Text>
 
-                    <Text style={styles.sectionTitle}>Skills</Text>
-                    <View style={styles.tagContainer}>
+                    <Text style={styles.h2}>Werkervaring</Text>
+
+                    {data.workExperience?.map((job, i) => (
+                        <View key={i} style={{ marginBottom: 10 }}>
+                            <View style={styles.row}>
+                                <Text style={styles.h3}>{job.company}</Text>
+                                <Text style={styles.smallText}>{job.period}</Text>
+                            </View>
+                            <Text>{job.description}</Text>
+                        </View>
+                    ))}
+
+                    <Text style={styles.h2}>Educatie</Text>
+
+                    {data.educationLevel?.map((edu, i) => (
+                        <View key={i} style={{ marginBottom: 10 }}>
+                            <View style={styles.row}>
+                                <Text style={styles.h3}>{edu.school}</Text>
+                                <Text style={styles.smallText}>{edu.period}</Text>
+                            </View>
+                            <Text>{edu.degree}</Text>
+                        </View>
+                    ))}
+                </View>
+
+                {/* EXACT YOUR BOTTOM SECTION */}
+                <View style={styles.bottomSection}>
+
+                    <View style={styles.column}>
+                        <Text style={styles.h3}>Vaardigheden</Text>
+
                         {data.skills.map((skill) => (
-                            <Text key={skill} style={styles.primaryTag}>
-                                {skill}
+                            <Text key={skill} style={styles.listItem}>
+                                • {skill}
                             </Text>
                         ))}
                     </View>
 
-                    <Text style={styles.sectionTitle}>Strengths</Text>
-                    <View style={styles.tagContainer}>
-                        {data.strengths.map((strength) => (
-                            <Text key={strength} style={styles.secondaryTag}>
-                                {strength}
+                    <View style={styles.column}>
+                        <Text style={styles.h3}>Sterke punten</Text>
+
+                        {data.strengths.map((s) => (
+                            <Text key={s} style={styles.listItem}>
+                                • {s}
                             </Text>
                         ))}
                     </View>
 
-                    <Text style={styles.sectionTitle}>Interests</Text>
-                    <View style={styles.tagContainer}>
-                        {data.interests.map((interest) => (
-                            <Text key={interest} style={styles.primaryTag}>
-                                {interest}
-                            </Text>
-                        ))}
-                    </View>
                 </View>
+
             </Page>
         </Document>
     );
