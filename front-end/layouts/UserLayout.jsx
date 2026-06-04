@@ -23,7 +23,7 @@ export default function UserLayout() {
                     <Link to={"/app/vacancies"} className={"flex justify-center"}><IoNewspaperSharp size={40}/></Link>
                     <div className={"flex justify-center"}><FaMicrophoneAlt size={40}/></div>
                     <div className={"flex justify-center"}><MdEditDocument size={40}/></div>
-                    <div className={"flex justify-center"}><FaUser size={40}/></div>
+                    <Link to={"/app/account"} className={"flex justify-center"}><FaUser size={40}/></Link>
                 </nav>
             </footer>
         </>
