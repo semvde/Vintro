@@ -16,7 +16,7 @@ export function Settings() {
             <section className="max-w-100 md:max-w-4xl mx-auto max-h-200 space-y-10 md:p-6">
                 <div className="flex justify-between flex-row items-center">
                     <div className="shadow-md rounded-4xl bg-gray-100 max-w-fit max-h-fit p-2">
-                        <Link to="/account">
+                        <Link to="/app/account">
                             <GoArrowLeft/>
                         </Link>
                     </div>
@@ -31,10 +31,12 @@ export function Settings() {
                         <label className="relative inline-flex items-center cursor-pointer select-none">
                             <input type="checkbox" id="theme-toggle" className="sr-only peer"/>
 
-                            <div className="w-14 h-8 bg-gray-400 rounded-full transition-colors duration-300 ease-in-out peer-checked:bg-gray-200 peer-focus:ring-2">
+                            <div
+                                className="w-14 h-8 bg-gray-400 rounded-full transition-colors duration-300 ease-in-out peer-checked:bg-gray-200 peer-focus:ring-2">
                             </div>
 
-                            <div className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out peer-checked:translate-x-6 peer-checked:bg-primary">
+                            <div
+                                className="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out peer-checked:translate-x-6 peer-checked:bg-primary">
                             </div>
                         </label>
                     </div>
@@ -52,7 +54,8 @@ export function Settings() {
                                     stroke="currentColor"
                                     viewBox="0 0 24 24"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                          d="M19 9l-7 7-7-7"/>
                                 </svg>
                             </button>
 
