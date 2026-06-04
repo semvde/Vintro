@@ -13,6 +13,7 @@ class OnboardingSession extends Model
         'user_id',
         'current_step',
         'max_steps',
+        'chat_history',
         'completed',
         'completed_at',
     ];
@@ -20,6 +21,7 @@ class OnboardingSession extends Model
     protected $casts = [
         'current_step' => 'integer',
         'max_steps' => 'integer',
+        'chat_history' => 'array',
         'completed' => 'boolean',
         'completed_at' => 'datetime',
     ];
@@ -27,10 +29,5 @@ class OnboardingSession extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function messages()
-    {
-        return $this->hasMany(OnboardingMessage::class);
     }
 }

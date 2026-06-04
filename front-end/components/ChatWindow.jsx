@@ -7,8 +7,9 @@ export default function ChatWindow() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
+    const [isFinished, setIsFinished] = useState(false);
 
-    const maxSteps = 13;
+    const maxSteps = 20;
 
     useEffect(() => {
         const startOnboarding = async () => {
@@ -28,22 +29,19 @@ export default function ChatWindow() {
     const sendMessage = async (e) => {
         e.preventDefault();
 
-        if (!input.trim()) return;
+        if (!input.trim() || isFinished) return;
 
         const currentStep = step + 1;
         const userMsg = { role: "user", content: input };
 
-        const updatedMessages = [...messages, userMsg];
-
-        setMessages(updatedMessages);
+        setMessages((prev) => [...prev, userMsg]);
         setInput("");
         setLoading(true);
 
         const response = await fetchAPI("/onboarding/chat", "POST", {
             message: input,
             step: currentStep,
-            max_steps: maxSteps,
-            history: updatedMessages
+            max_steps: maxSteps
         });
 
         setMessages((prev) => [
@@ -55,14 +53,16 @@ export default function ChatWindow() {
         ]);
 
         setStep(currentStep);
+
+        if (response.finished) {
+            setIsFinished(true);
+        }
+
         setLoading(false);
     };
 
-    const isFinished = step >= maxSteps;
-
     return (
         <div className="rounded-lg flex flex-col overflow-hidden">
-
             <div className="flex-1 p-4 overflow-y-auto">
                 {messages.map((message, m) => (
                     <ChatMessage key={m} {...message} />
