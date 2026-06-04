@@ -2,6 +2,7 @@ import {FaPhoneAlt} from "react-icons/fa";
 import {IoIosMail} from "react-icons/io";
 
 export function CVPreview({ data }) {
+    console.log(data.educationLevel);
     return (
         <div>
             <section className={"flex items-center gap-4 bg-primary text-outline p-4 rounded-t-lg"}>
