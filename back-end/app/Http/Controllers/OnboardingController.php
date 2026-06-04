@@ -16,7 +16,7 @@ class OnboardingController extends Controller
             ['user_id' => $user->id, 'completed' => false],
             [
                 'current_step' => 0,
-                'max_steps' => 10,
+                'max_steps' => 20,
                 'chat_history' => [],
                 'completed' => false,
             ]
@@ -96,12 +96,17 @@ Verzamel tijdens de onboarding informatie over:
 1. Geboortedatum of leeftijd 
 2. laatste opleiding of schoolervaring
 3. werkervaring, stage of vrijwilligerswerk
-4. taken die de gebruiker eerder heeft gedaan
-5. interesses
-6. vaardigheden
-7. sterke punten
-8. wat de gebruiker lastig vindt aan solliciteren
-9. welk soort werk de gebruiker wil oefenen of ontdekken
+4. per ervaring:
+   - bedrijfsnaam of organisatie
+   - functie/rol
+   - periode, als de gebruiker dit weet
+   - taken of wat de gebruiker daar heeft geleerd
+5. taken die de gebruiker eerder heeft gedaan
+6. interesses
+7. vaardigheden
+8. sterke punten
+9. wat de gebruiker lastig vindt aan solliciteren
+10. welk soort werk de gebruiker wil oefenen of ontdekken
 
 Vraag niet naar:
 - opleidingen of trainingen als doel van het platform;
@@ -121,6 +126,7 @@ Gespreksregels:
 - Herhaal geen vragen die al beantwoord zijn.
 - Vraag door als een antwoord te vaag is.
 - Vraag door als informatie ontbreekt voor een CV of werkprofiel.
+- Als de gebruiker werkervaring noemt, vraag kort door naar functie, bedrijf, periode en taken. Vraag niet alles tegelijk; stel één vraag per keer.
 
 Wanneer een antwoord onduidelijk, onmogelijk of onserieus is:
 - Reageer kort.
