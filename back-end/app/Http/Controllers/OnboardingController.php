@@ -237,6 +237,7 @@ PROMPT;
             'werkprofiel opbouwen',
             'eerste cv',
             'cv genereren',
+            'profiel aanmaken',
         ];
 
         $aiFinished = false;
@@ -269,9 +270,41 @@ PROMPT;
                 'onboarded' => true,
             ]);
 
-            // prevent duplicates
-            if ($user->vacancies()->count() === 0) {
+            $skillResponse = Http::withToken(env('HF_TOKEN'))
+                ->timeout(60)
+                ->post('https://router.huggingface.co/v1/chat/completions', [
+                    'model' => env('HF_MODEL'),
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'Extract ONLY a JSON array of skills from this conversation. No explanation. Example: ["PHP", "Teamwork", "Communication"]'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => json_encode($chatHistory),
+                        ]
+                    ],
+                    'temperature' => 0.2,
+                    'max_tokens' => 200,
+                ]);
 
+            $skillsRaw = $skillResponse->json('choices.0.message.content');
+
+            $skillsClean = trim($skillsRaw);
+            $skillsClean = preg_replace('/```json|```/', '', $skillsClean);
+            $skillsClean = trim($skillsClean);
+
+            $skills = json_decode($skillsClean, true);
+
+            if (!is_array($skills)) {
+                $skills = [];
+            }
+
+            $user->update([
+                'skills' => $skills,
+            ]);
+
+            if ($user->vacancies()->count() === 0) {
                 \App\Models\Vacancy::factory()
                     ->count(15)
                     ->create([
@@ -279,6 +312,8 @@ PROMPT;
                     ]);
             }
         }
+
+
 
         return response()->json([
             'reply' => trim($reply),
