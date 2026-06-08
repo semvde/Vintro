@@ -54,16 +54,18 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ## Huidige API routes overzicht
 
-| Method | Endpoint            | Beschrijving                    | Auth nodig |
-| ------ | ------------------- | ------------------------------- | ---------- |
-| POST   | `/register`         | Nieuwe gebruiker registreren    | Nee        |
-| POST   | `/login`            | Gebruiker inloggen              | Nee        |
-| GET    | `/onboarding/start` | Startbericht onboarding ophalen | Nee        |
-| POST   | `/onboarding/chat`  | Onboarding-chat met AI          | Nee        |
-| POST   | `/tts`              | Tekst omzetten naar audio       | Nee        |
-| GET    | `/user`             | Ingelogde gebruiker ophalen     | Ja         |
-| POST   | `/logout`           | Gebruiker uitloggen             | Ja         |
-| POST   | `/coach`            | Praten met Victoria :)          | Nee        |
+| Method | Endpoint               | Beschrijving                    | Auth nodig |
+| ------ | -----------------------| ------------------------------- | ---------- |
+| POST   | `/register`            | Nieuwe gebruiker registreren    | Nee        |
+| POST   | `/login`               | Gebruiker inloggen              | Nee        |
+| GET    | `/profile`             | Profile info krijg              | Ja         | 
+| GET    | `/onboarding/sessions` | Session van ingelogde gebruiker | Ja         |
+| GET    | `/onboarding/start`    | Startbericht onboarding ophalen | Nee        |
+| POST   | `/onboarding/chat`     | Onboarding-chat met AI          | Nee        |
+| POST   | `/tts`                 | Tekst omzetten naar audio       | Nee        |
+| GET    | `/user`                | Ingelogde gebruiker ophalen     | Ja         |
+| POST   | `/logout`              | Gebruiker uitloggen             | Ja         |
+| POST   | `/coach`               | Praten met Victoria :)          | Nee        |
 ---
 
 ## Auth endpoints
@@ -83,7 +85,6 @@ Voorbeeld request:
   "name": "Test User",
   "email": "test@example.com",
   "password": "password123",
-  "password_confirmation": "password123"
 }
 ```
 

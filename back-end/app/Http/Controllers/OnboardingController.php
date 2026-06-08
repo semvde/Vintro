@@ -27,7 +27,7 @@ class OnboardingController extends Controller
             'type' => 'onboarding_start',
         ]);
     }
-    
+
     public function chat(Request $request)
     {
         $validated = $request->validate([
@@ -62,7 +62,7 @@ class OnboardingController extends Controller
             'step' => $validated['step'],
         ];
 
-$systemPrompt = <<<'PROMPT'
+        $systemPrompt = <<<'PROMPT'
 /no_think
 
 Je bent Victoria.
@@ -187,8 +187,8 @@ PROMPT;
                     ? 'Rond de onboarding nu af. Stel geen nieuwe vraag meer.'
                     : (
                         $canFinish
-                            ? 'Je mag de onboarding afronden als er genoeg informatie is voor een werkprofiel en eerste CV. Als er nog belangrijke informatie ontbreekt, stel dan nog één korte vraag.'
-                            : 'Stel één korte vraag die helpt om informatie te verzamelen voor een werkprofiel, CV of sollicitatie-oefening. Vraag niet naar de naam.'
+                        ? 'Je mag de onboarding afronden als er genoeg informatie is voor een werkprofiel en eerste CV. Als er nog belangrijke informatie ontbreekt, stel dan nog één korte vraag.'
+                        : 'Stel één korte vraag die helpt om informatie te verzamelen voor een werkprofiel, CV of sollicitatie-oefening. Vraag niet naar de naam.'
                     ),
             ],
         ];
@@ -260,10 +260,22 @@ PROMPT;
             'completed_at' => $isFinished ? now() : null,
         ]);
 
+
+        // aangepast door jeff, seeder voor vacancies
         if ($isFinished) {
             $user->update([
                 'onboarded' => true,
             ]);
+
+            // prevent duplicates
+            if ($user->vacancies()->count() === 0) {
+
+                \App\Models\Vacancy::factory()
+                    ->count(15)
+                    ->create([
+                        'user_id' => $user->id,
+                    ]);
+            }
         }
 
         return response()->json([
