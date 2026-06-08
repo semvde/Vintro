@@ -16,7 +16,8 @@ import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
 import CV from "../pages/CV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
-import VacationDetail from "../pages/VacancyDetail.jsx";
+import VacancyDetail from "../pages/VacancyDetail.jsx";
+import VacancyApply from "../pages/VacancyApply.jsx";
 
 const router = createBrowserRouter([
     {
@@ -57,7 +58,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/vacancies/:id",
-                element: <VacationDetail/>
+                element: <VacancyDetail/>
+            },
+            {
+                path: "/app/vacancies/:id/apply",
+                element: <VacancyApply/>
             },
             {
                 path: "/app/account",
