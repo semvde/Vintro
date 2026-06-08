@@ -118,3 +118,21 @@ main {
 .textbubble {
     clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 15% 85%, 0% 100%, 0% 0%)
 }
+
+@keyframes visible {
+    from {
+        scale: 0;
+    }
+    to {
+        scale: 100%;
+    }
+}
+
+@keyframes hide {
+    from {
+        scale: 100%;
+    }
+    to {
+        scale: 0;
+    }
+}
