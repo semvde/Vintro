@@ -10,6 +10,7 @@ class CoachController extends Controller
 {
     public function chat(Request $request)
     {
+
         $validated = $request->validate([
             'message' => 'required|string|max:5000',
             'page' => 'nullable|string|max:100',
@@ -17,7 +18,6 @@ class CoachController extends Controller
         ]);
 
         $page = $validated['page'] ?? 'onbekend';
-
         $pageContext = match ($page) {
             '/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
             '/vacatures' => 'De gebruiker bekijkt vacatures.',
@@ -120,30 +120,46 @@ Consistente toon gedurende het hele gesprek.
 PROMPT;
 
         $messages = [
-            [
-                'role' => 'system',
-                'content' => $systemPrompt,
-            ],
+            ['role' => 'system', 'content' => $systemPrompt],
         ];
+
+        $user = auth('api')->user();
+        if ($user) {
+            $user->load(['profile', 'cv']);
+
+            $profileParts = [];
+            if ($user->profile) {
+                $profileParts[] = 'Naam: ' . ($user->profile->name ?? 'onbekend');
+                $profileParts[] = 'Vaardigheden: ' . (is_array($user->profile->skills) ? implode(', ', $user->profile->skills) : ($user->profile->skills ?? 'geen'));
+                $profileParts[] = 'Opleidingsniveau: ' . ($user->profile->education_level ?? 'onbekend');
+                $profileParts[] = 'Voorkeur taal: ' . ($user->profile->preferred_language ?? 'NL');
+            }
+
+
+            // EMAIL word gemaskerd of helemaal weghalen
+            if ($user->cv) {
+                $email = $user->cv->email
+                    ? preg_replace('/(.{2}).+(@.+)/', '$1***$2', $user->cv->email)
+                    : 'niet opgegeven';
+                $profileParts[] = 'E-mail: ' . $email;
+            }
+
+            if (!empty($profileParts)) {
+                $profileSummary = "Gebruikersprofiel (gereduceerd en gemaskeerd):\n" . implode("\n", $profileParts);
+                $messages[] = ['role' => 'system', 'content' => $profileSummary];
+            }
+        }
 
         if (!empty($validated['history'])) {
             foreach ($validated['history'] as $item) {
-                if (
-                    isset($item['role'], $item['content']) &&
-                    in_array($item['role'], ['user', 'assistant'], true)
-                ) {
-                    $messages[] = [
-                        'role' => $item['role'],
-                        'content' => $item['content'],
-                    ];
+                if (isset($item['role'], $item['content']) && in_array($item['role'], ['user', 'assistant'], true)) {
+                    $messages[] = ['role' => $item['role'], 'content' => $item['content']];
                 }
             }
         }
 
-        $messages[] = [
-            'role' => 'user',
-            'content' => $validated['message'],
-        ];
+
+        $messages[] = ['role' => 'user', 'content' => $validated['message']];
 
         $response = Http::withToken(env('HF_TOKEN'))
             ->timeout(120)
