@@ -48,4 +48,9 @@ class VacancyController extends Controller
             'data' => $vacancy
         ]);
     }
+
+    public function sendVacancy(Request $request, $id)
+    {
+
+    }
 }
