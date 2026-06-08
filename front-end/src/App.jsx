@@ -14,7 +14,8 @@ import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import {AppContext} from "./Contexts.jsx";
 import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
-import CV from "../pages/CV.jsx";
+import CV from "../pages/cv/CV.jsx";
+import EditCV from "../pages/cv/EditCV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
 
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
             {
                 path: "/app/cv",
                 element: <CV />,
+            },
+            {
+                path: "/app/cv/edit",
+                element: <EditCV />,
             },
         ]
     }

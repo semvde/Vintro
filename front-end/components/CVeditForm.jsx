@@ -1,0 +1,453 @@
+import {FaPhoneAlt, FaPlus, FaTrash} from "react-icons/fa"
+import {IoIosMail} from "react-icons/io"
+import {useState} from "react"
+import {useNavigate} from "react-router"
+import {FaUpload} from "react-icons/fa"
+
+export function CVeditForm({data}) {
+    const [file, setFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate()
+    const [formData, setFormData] = useState({
+        Image: file,
+        userId: data?.id || "",
+        name: data?.name || "",
+        email: data?.email || "",
+        phoneNumber: data?.phoneNumber || "",
+        workExperience: data?.workExperience || [],
+        educationLevel: data?.educationLevel || [],
+        skills: data?.skills || [],
+        strengths: data?.strengths || [],
+    })
+
+    const [newJob, setNewJob] = useState({
+        company: "",
+        period: "",
+        job_title: "",
+        description: ""
+    })
+
+    const [newEducation, setNewEducation] = useState({
+        school: "",
+        degree: "",
+        period: ""
+    })
+
+    const [newSkill, setNewSkill] = useState("")
+    const [newStrength, setNewStrength] = useState("")
+
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    };
+
+    const handleInputChange = (event) => {
+        const {name, value} = event.target
+        setFormData({
+            ...formData,
+            [name]: value
+        })
+    }
+
+    // WORK EXPERIENCE //
+
+    const handleNewJobChange = (event) => {
+        const {name, value} = event.target
+        setNewJob((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const addWorkExperience = () => {
+        if (!newJob.company || !newJob.job_title) {
+            alert("Vul tenminste een bedrijf en een functie in.")
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            workExperience: [...prev.workExperience, newJob]
+        }))
+
+        setNewJob({company: "", period: "", job_title: "", description: ""})
+    }
+
+    const removeWorkExperience = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            workExperience: prev.workExperience.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
+    // EDUCATION //
+
+    const handleNewEducationChange = (event) => {
+        const {name, value} = event.target
+        setNewEducation((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const addEducation = () => {
+        if (!newEducation.school || !newEducation.degree) {
+            alert("Vul tenminste een school en diploma toe.")
+            return;
+        }
+
+        setFormData((prev) => ({
+            ...prev,
+            educationExperience: [...prev.educationExperience, newEducation]
+        }))
+
+        setNewEducation({school: "", degree: "", period: ""})
+    }
+
+    const removeEducation = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            educationExperience: prev.educationExperience.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
+    // SKILLS //
+
+    const addSkill = () => {
+        if (!newSkill.trim()) return;
+
+        setFormData((prev) => ({
+            ...prev,
+            skills: [...prev.skills, newSkill.trim()]
+        }))
+
+        setNewSkill("")
+    }
+
+
+    const removeSkill = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            skills: prev.skills.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
+    // STRENGTH //
+
+    const addStrength = () => {
+        if (!newStrength.trim()) return;
+
+        setFormData((prev) => ({
+            ...prev,
+            strengths: [...prev.strengths, newStrength.trim()]
+        }))
+
+        setNewStrength("")
+    }
+
+
+    const removeStrength = (indexToRemove) => {
+        setFormData((prev) => ({
+            ...prev,
+            strength: prev.strength.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        if (!file) return alert("Selecteer eerst een bestand!")
+
+        const submitData = new FormData();
+        if (file) submitData.append("image", file);
+
+        submitData.append("userId", data?.id)
+        submitData.append("name", data?.name)
+        submitData.append("email", data?.email)
+        submitData.append("phoneNumber", data?.phoneNumber)
+
+        submitData.append("workExperience", JSON.stringify(formData.workExperience))
+        submitData.append("educationLevel", JSON.stringify(formData.educationLevel))
+        submitData.append("skills", JSON.stringify(formData.skills))
+        submitData.append("strengths", JSON.stringify(formData.strengths))
+
+        try {
+            setLoading(true)
+
+
+            const response = await fetch("http://127.0.0.1:8000/api/app/cv/edit", {
+                method: "PUT",
+                body: formData,
+            })
+
+            const data = await response.json();
+            if (response.ok) {
+                console.log("Curriculum Vitae geüpdate!", data)
+                navigate("/app/cv")
+            } else {
+                alert("Upload mislukt: " + data.message)
+            }
+        } catch (error) {
+            console.error("Error met updaten:", error)
+        } finally {
+            setLoading(false)
+        }
+    }
+    return (
+        <div>
+            <form onSubmit={handleUpdate} className="p-4 space-y-4">
+
+                <section className={"flex items-center gap-4 bg-primary text-outline p-4 rounded-t-lg"}>
+                    <div className="flex flex-col ">
+                        <img src={data.image} alt={""} className={"h-20 w-20"}/>
+                        <div
+                            className="flex flex-col items-center gap-4 p-6 rounded-xl max-w-5px mx-auto">
+                            <input
+                                type="file"
+                                id="file-upload"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="hidden"
+                            />
+
+                            <label htmlFor="file-upload"
+                                   className="flex flex-col items-start justify-start border-2 border-dashed border-gray-300 hover:border-blue-500 bg-white p-4 rounded-xl cursor-pointer w-5px transition-colors text-center group">
+                                <FaUpload
+                                    className="text-3xl text-gray-400 group-hover:text-blue-500 transition-colors mb-2"/>
+                            </label>
+
+                            {file && (
+                                <div
+                                    className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-md border border-green-200 max-w-5px w-5px text-center truncate">
+                                    Geselecteerd: <span className="font-semibold">{file.name}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div className={"flex flex-col"}>
+                        <input name="name"
+                               className="focus:bg-white pl-2 pr-2 border-white border-solid border-2 focus:text-black focus:border-black text-white rounded-md"
+                               onChange={handleInputChange} value={formData.name}/>
+                        <div className={"flex gap-2 items-center"}>
+                            <IoIosMail className="w-7 h-8"/>
+                            <p className={"text-sm"}>{data.email}</p>
+                        </div>
+                        <div className={"flex gap-2 items-center"}>
+                            <FaPhoneAlt className="pl-1 w-6 h-6"/>
+                            <input name="phoneNumber"
+                                   className="focus:bg-white pl-2 pr-2 border-white border-solid border-2 focus:text-black focus:border-black text-white rounded-md"
+                                   onChange={handleInputChange} value={formData.phoneNumber}/>
+                        </div>
+                    </div>
+                </section>
+                <section className={"py-4 text-sm"}>
+                    <h2></h2>
+                    <p>{data.summary}</p>
+                    <div className={"py-8"}>
+                        <h2>Werkervaring</h2>
+                        {formData.workExperience.map((job, index) => (
+                            <div key={index}
+                                 className="py-2 px-3 bg-gray-50 rounded-lg border border-gray-200 mb-2 flex justify-between items-center">
+                                <div>
+                                    <p className="font-semibold text-black">{job.job_title} bij {job.company}</p>
+                                    <p className="text-xs text-gray-500">{job.period}</p>
+                                    <p className="text-gray-700 mt-1">{job.description}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => removeWorkExperience(index)}
+                                    className="text-red-500 hover:text-red-700 p-2"
+                                >
+                                    <FaTrash/>
+                                </button>
+                            </div>
+                        ))}
+
+                        <div
+                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                            <h3 className="font-medium text-gray-700">Nieuwe werkervaring toevoegen</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                <input
+                                    name="job_title"
+                                    placeholder="Functie (bijv. Front-end developer)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewJobChange}
+                                    value={newJob.job_title}
+                                />
+                                <input
+                                    name="company"
+                                    placeholder="Bedrijf (bijv. DPDK)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewJobChange}
+                                    value={newJob.company}
+                                />
+                                <input
+                                    name="period"
+                                    placeholder="Periode (bijv. okt 2026 t/m feb 2027)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewJobChange}
+                                    value={newJob.period}
+                                />
+                            </div>
+                            <input
+                                name="description"
+                                placeholder="Beschrijving van je werkzaamheden..."
+                                className="w-full p-2 border border-gray-300 rounded bg-white text-black"
+                                onChange={handleNewJobChange}
+                                value={newJob.description}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={addWorkExperience}
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                            >
+                                <FaPlus/>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={"py-2"}>
+                        <h2>Educatie</h2>
+                        {formData.educationLevel.map((education, index) => (
+                            <div key={index}
+                                 className="py-2 px-3 bg-gray-50 rounded-lg border border-gray-200 mb-2 flex justify-between items-center">
+                                <div>
+                                    <p className="font-semibold text-black">{education.school}</p>
+                                    <p className="text-xs text-gray-500">{education.period}</p>
+                                    <p className="text-gray-700 mt-1">{education.degree}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => removeEducation(index)}
+                                    className="text-red-500 hover:text-red-700 p-2"
+                                >
+                                    <FaTrash/>
+                                </button>
+                            </div>
+                        ))}
+
+                        <div
+                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                            <h3 className="font-medium text-gray-700">Nieuwe opleiding toevoegen</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                <input
+                                    name="school"
+                                    placeholder="School (bijv. Grafisch Lyceum)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewEducationChange}
+                                    value={newEducation.school}
+                                />
+                                <input
+                                    name="degree"
+                                    placeholder="Diploma (bijv. MBO)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewEducationChange}
+                                    value={newEducation.degree}
+                                />
+                                <input
+                                    name="period"
+                                    placeholder="Periode (bijv. okt 2026 t/m feb 2027)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleNewEducationChange}
+                                    value={newEducation.period}
+                                />
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={addEducation}
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                            >
+                                <FaPlus/>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section className={"bg-primary rounded-b-lg text-outline text-sm p-4"}>
+                    <div className={"flex justify-between"}>
+                        <div>
+                            <h3>Vaardigheden</h3>
+                            <ul className="flex flex-col gap-2 py-2">
+                                {formData.skills.map((skill, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex justify-between items-center bg-gray-100 p-2 rounded-md list-none"
+                                    >
+                                        <span className="font-semibold text-black">{skill}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeSkill(index)}
+                                            className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
+                                        >
+                                            <FaTrash/>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div>
+                                <input
+                                    name="skills"
+                                    placeholder="Voeg een vaardigheid toe)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={addSkill}
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                            >
+                                <FaPlus/>
+                            </button>
+                        </div>
+                        <div>
+                            <h3>Sterke punten</h3>
+                            <ul className="flex flex-col gap-2 py-2">
+                                {formData.strengths.map((strength, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex justify-between items-center bg-gray-100 p-2 rounded-md list-none"
+                                    >
+                                        <span className="font-semibold text-black">{strength}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeStrength(index)}
+                                            className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
+                                        >
+                                            <FaTrash/>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <div>
+                                <input
+                                    name="skills"
+                                    placeholder="Voeg een vaardigheid toe)"
+                                    className="p-2 border border-gray-300 rounded bg-white text-black"
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <button
+                                type="button"
+                                onClick={addStrength}
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                            >
+                                <FaPlus/>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-primary text-white px-4 py-2 mb-20 rounded hover:cursor-pointer hover:bg-primary/50"
+                >
+                    {loading ? "Updaten..." : "Curriculum Vitae bijwerken"}
+                </button>
+            </form>
+        </div>
+    )
+        ;
+}

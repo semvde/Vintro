@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { mapToCVData } from "../mappers/mapToCVData";
-import { CVPreview } from "../components/CVPreview";
-import { DownloadCVButton } from "../components/DownloadCV";
-import {fetchAPI} from "../services/Fetch.js";
+import { mapToCVData } from "../../mappers/mapToCVData.js";
+import { CVPreview } from "../../components/CVPreview.jsx";
+import { DownloadCVButton } from "../../components/DownloadCV.jsx";
+import {fetchAPI} from "../../services/Fetch.js";
+import {CVeditForm} from "../../components/CVeditForm.jsx";
 
-export default function CVPage() {
+
+export default function EditCV() {
     const [cvData, setCvData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -45,14 +47,13 @@ export default function CVPage() {
         );
     }
 
-        return (
-            <>
-                <div className={"flex justify-end pb-4 gap-4 items-center"}>
-                    { /* Button will be Link component to /app/cv/edit page once it exists */}
-                    <button className={"bg-secondary text-outline px-2 py-4 rounded-lg"}>Bewerken</button>
-                    <DownloadCVButton data={cvData}/>
-                </div>
-                <CVPreview data={cvData}/>
-            </>
-        );
-    }
+    return (
+        <>
+            <div className={"flex justify-end pb-4 gap-4 items-center"}>
+
+                <DownloadCVButton data={cvData}/>
+            </div>
+            <CVeditForm data={cvData}/>
+        </>
+    );
+}
