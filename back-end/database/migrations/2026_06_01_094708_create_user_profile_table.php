@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('image')->nullable();
             $table->json('skills')->nullable();
             $table->json('work_experience')->nullable();
-            $table->string('education_level')->nullable();
+            $table->json('education_level')->nullable();
             $table->string('preferred_language')->default('nl');
             $table->unsignedTinyInteger('age')->nullable();
             $table->json('interests')->nullable();

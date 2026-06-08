@@ -3,20 +3,27 @@
 ## Inhoudsopgave
 
 * [Base URL](#base-url)
+* [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
 * [Auth Endpoints](#auth-endpoints)
 
   * [Register](#register)
   * [Login](#login)
   * [Get Current User](#get-current-user)
   * [Logout](#logout)
+
 * [Onboarding Endpoints](#onboarding-endpoints)
 
   * [Start Onboarding](#start-onboarding)
   * [Onboarding Chat](#onboarding-chat)
+
+* [Profile Endpoints](#profile-endpoints)
+
+  * [Generate Profile](#generate-profile)
+
 * [Text-to-Speech Endpoint](#text-to-speech-endpoint)
 
   * [Generate Speech](#generate-speech)
-* [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
+
 * [Frontend Notes](#frontend-notes)
 
 ---
@@ -54,16 +61,18 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ## Huidige API routes overzicht
 
-| Method | Endpoint            | Beschrijving                    | Auth nodig |
-| ------ | ------------------- | ------------------------------- | ---------- |
-| POST   | `/register`         | Nieuwe gebruiker registreren    | Nee        |
-| POST   | `/login`            | Gebruiker inloggen              | Nee        |
-| GET    | `/onboarding/start` | Startbericht onboarding ophalen | Nee        |
-| POST   | `/onboarding/chat`  | Onboarding-chat met AI          | Nee        |
-| POST   | `/tts`              | Tekst omzetten naar audio       | Nee        |
-| GET    | `/user`             | Ingelogde gebruiker ophalen     | Ja         |
-| POST   | `/logout`           | Gebruiker uitloggen             | Ja         |
-| POST   | `/coach`            | Praten met Victoria :)          | Nee        |
+| Method | Endpoint            | Beschrijving                                             | Auth nodig |
+| ------ | ------------------- | -------------------------------------------------------- | ---------- |
+| POST   | `/register`         | Nieuwe gebruiker registreren                             | Nee        |
+| POST   | `/login`            | Gebruiker inloggen                                       | Nee        |
+| GET    | `/user`             | Ingelogde gebruiker ophalen                              | Ja         |
+| POST   | `/logout`           | Gebruiker uitloggen                                      | Ja         |
+| GET    | `/onboarding/start` | Startbericht onboarding ophalen                          | Ja         |
+| POST   | `/onboarding/chat`  | Onboarding-chat met Victoria                             | Ja         |
+| POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding | Ja         |
+| POST   | `/tts`              | Tekst omzetten naar audio                                | Nee        |
+| POST   | `/coach`            | Algemene coach-chat met Victoria                         | Nee        |
+
 ---
 
 ## Auth endpoints
@@ -184,15 +193,11 @@ Voorbeeld response:
 
 ---
 
-## Onboarding endpoints
+# Onboarding endpoints
 
-De onboarding wordt gebruikt om informatie van de gebruiker te verzamelen. Deze informatie wordt later gebruikt voor profielopbouw, CV-generatie en vacature-oefeningen.
+De onboarding verzamelt informatie voor een werkprofiel, eerste CV en sollicitatie-oefeningen.
 
----
-
-### Start onboarding
-
-Haalt het standaard startbericht van VINTRO op.
+## Start onboarding
 
 ```http
 GET /onboarding/start
@@ -204,9 +209,8 @@ Voorbeeld response:
 
 ```json
 {
-  "reply": "Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?",
-  "type": "onboarding_start",
-  "finished": false
+  "reply": "Hoi Test User, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
+  "type": "onboarding_start"
 }
 ```
 
@@ -215,65 +219,52 @@ Frontend flow:
 ```txt
 1. Gebruiker opent onboardingpagina
 2. Frontend roept GET /onboarding/start aan
-3. Frontend toont reply als eerste VINTRO-bericht
+3. Frontend toont reply als eerste assistant-bericht
 ```
 
 ---
 
-### Onboarding chat
-
-Stuurt een antwoord van de gebruiker naar de onboarding-AI. De AI geeft daarna een vervolgvraag of sluit de onboarding af.
+## Onboarding chat
 
 ```http
 POST /onboarding/chat
 ```
 
+Stuurt een antwoord van de gebruiker naar Victoria. De backend slaat de chatgeschiedenis op in `onboarding_sessions.chat_history`.
+
 Voorbeeld request:
 
 ```json
 {
-  "message": "Ik vind gamen leuk en ik help soms vrienden met computers.",
-  "step": 1,
-  "max_steps": 6,
-  "history": [
-    {
-      "role": "assistant",
-      "content": "Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?"
-    },
-    {
-      "role": "user",
-      "content": "Ik vind gamen leuk en ik help soms vrienden met computers."
-    }
-  ]
+  "message": "Ik ben 23 jaar",
+  "step": 1
 }
 ```
 
 Velden:
 
-| Field       | Type    | Required | Uitleg                                |
-| ----------- | ------- | -------: | ------------------------------------- |
-| `message`   | string  |       Ja | Het nieuwste bericht van de gebruiker |
-| `step`      | integer |       Ja | Huidige onboardingstap                |
-| `max_steps` | integer |       Ja | Maximaal aantal onboardingstappen     |
-| `history`   | array   |      Nee | Eerdere chatberichten voor context    |
+| Field     | Type    | Required | Uitleg                                            |
+| --------- | ------- | -------: | ------------------------------------------------- |
+| `message` | string  |       Ja | Het nieuwste bericht van de gebruiker             |
+| `step`    | integer |       Ja | Huidige onboardingstap, bijgehouden door frontend |
+
+Frontend hoeft geen `history` of `max_steps` mee te sturen. De backend bepaalt zelf wanneer de onboarding klaar is.
 
 Voorbeeld response tijdens onboarding:
 
 ```json
 {
-  "reply": "Dat klinkt alsof je interesse hebt in technologie en mensen helpen. Heb je al eens nagedacht over werk in ICT of klantenservice?",
-  "type": "onboarding_message",
+  "reply": "Wat is je laatste opleiding of schoolervaring?",
   "finished": false,
   "next_action": "continue_onboarding"
 }
 ```
 
-Voorbeeld response bij laatste stap:
+Voorbeeld response wanneer onboarding klaar is:
 
 ```json
 {
-  "reply": "Dankjewel, ik heb genoeg informatie om een eerste profiel voor je op te bouwen. Daarna kunnen we hiermee ook een eerste CV maken.",
-  "type": "onboarding_finished",
+  "reply": "Dankjewel voor je antwoorden. Ik heb genoeg informatie voor je werkprofiel en eerste CV.",
   "finished": true,
   "next_action": "generate_profile"
 }
@@ -284,9 +275,78 @@ Frontend flow:
 ```txt
 1. Gebruiker stuurt antwoord
 2. Frontend verhoogt step
-3. Frontend stuurt message, step, max_steps en history naar POST /onboarding/chat
+3. Frontend stuurt message en step naar POST /onboarding/chat
 4. Frontend toont reply
-5. Als finished true is, onboarding sluiten en doorgaan naar profiel/CV-generatie
+5. Als finished true is:
+   - input blokkeren
+   - POST /profile/generate aanroepen
+   - daarna door naar CV- of dashboardpagina
+```
+
+---
+
+# Profile Endpoints 
+#### (profile generation na onboarding )
+
+## Generate profile
+
+```http
+POST /profile/generate
+```
+
+Genereert een `user_profile` op basis van de afgeronde onboarding-chat.
+
+Deze endpoint heeft geen body nodig. De backend gebruikt de ingelogde gebruiker en zoekt automatisch de afgeronde onboarding session.
+
+Voorbeeld request:
+
+```http
+POST /profile/generate
+Authorization: Bearer jwt_token_here
+Accept: application/json
+```
+
+Voorbeeld response:
+
+```json
+{
+  "message": "Profiel gegenereerd.",
+  "profile": {
+    "id": 1,
+    "user_id": 1,
+    "name": "Test User",
+    "age": 23,
+    "education_level": {
+      "degree": "HAVO",
+      "school": "onbekend",
+      "status": "afgerond",
+      "period": "onbekend"
+    },
+    "skills": ["samenwerken", "organiseren"],
+    "work_experience": [
+      {
+        "company": "Jumbo",
+        "period": "september 2023 - juni 2025",
+        "job_title": "Vakkenvuller",
+        "description": "Eerste werkervaring opgedaan in de detailhandel."
+      }
+    ],
+    "interests": ["sport", "creativiteit"],
+    "strengths": ["leergierig", "ijverig"],
+    "job_preferences": ["werken met mensen"],
+    "profile_summary": "Korte profielsamenvatting..."
+  },
+  "next_action": "generate_cv"
+}
+```
+
+Frontend flow:
+
+```txt
+1. Wacht tot /onboarding/chat finished true teruggeeft
+2. Roep POST /profile/generate aan
+3. Gebruik response.profile voor preview, CV-generatie of dashboard
+4. Ga daarna door naar CV-pagina of dashboard
 ```
 
 ---

@@ -29,24 +29,36 @@ class ProfileGenerationController extends Controller
         $systemPrompt = <<<'PROMPT'
 /no_think
 
-Je bent een profielgenerator voor een sollicitatiecoach-app.
- Je ontvangt een chatgeschiedenis van een onboardinggesprek met een gebruiker, 
- waarin informatie is verzameld over hun achtergrond, vaardigheden, interesses en voorkeuren.
- Op basis van deze chatgeschiedenis moet je een gestructureerd profiel genereren dat kan worden opgeslagen in de user_profile tabel van onze database.
+/no_think
 
-Taak:
-Zet de onboarding-chat om naar gestructureerde JSON voor de user_profile tabel.
+Je bent een profielgenerator voor VINTRO, een sollicitatiecoach-app.
+
+Je ontvangt een chatgeschiedenis van een onboardinggesprek.
+Zet deze chatgeschiedenis om naar gestructureerde JSON voor de user_profile tabel.
+
+Doel van het profiel:
+- een eerste CV kunnen genereren;
+- passende oefenvacatures kunnen maken;
+- sollicitatiegesprekken persoonlijker kunnen oefenen.
 
 Geef alleen geldige JSON terug.
 Geen uitleg.
 Geen markdown.
 Geen ```json blokken.
+Verzin geen feiten.
+Gebruik alleen informatie uit de chatgeschiedenis.
+Als informatie ontbreekt, gebruik "onbekend" of een lege array.
 
 Gebruik exact deze structuur:
 
 {
   "age": 0,
-  "education_level": "onbekend",
+  "education_level": {
+    "degree": "onbekend",
+    "school": "onbekend",
+    "status": "onbekend",
+    "period": "onbekend"
+  },
   "skills": [],
   "work_experience": [
     {
@@ -62,14 +74,28 @@ Gebruik exact deze structuur:
   "profile_summary": "korte samenvatting"
 }
 
-Regels:
-- Als informatie ontbreekt, gebruik "onbekend" of een lege array.
-- age moet een nummer zijn.
-- skills, interests, strengths en job_preferences zijn arrays met strings.
+Veldregels:
+- age moet een nummer zijn. Als leeftijd onbekend is, gebruik 0.
+- education_level.degree is bijvoorbeeld "HAVO", "VMBO", "MBO", "HBO", "WO" of "onbekend".
+- education_level.school is de schoolnaam als die genoemd is, anders "onbekend".
+- education_level.status is bijvoorbeeld "afgerond", "gestopt", "bezig" of "onbekend".
+- education_level.period is de periode als die genoemd is, anders "onbekend".
+- skills is een array met concrete vaardigheden.
+- interests is een array met interesses/hobby's.
+- strengths is een array met persoonlijke sterke punten.
+- job_preferences is een array met soorten werk of werkrichtingen die passen bij de gebruiker.
 - work_experience is altijd een array.
 - work_experience objecten gebruiken exact deze keys: company, period, job_title, description.
-- Maak descriptions bruikbaar voor een CV.
-- Antwoord altijd met geldige JSON.
+- Maak work_experience.description bruikbaar voor een CV, maar verzin geen taken die niet logisch volgen uit de chat.
+- profile_summary is 2 tot 4 zinnen in het Nederlands en geschikt als basis voor een profieltekst.
+
+Normalisatie:
+- Zet opleidingsnamen netjes in hoofdletters waar logisch, bijvoorbeeld "havo" wordt "HAVO".
+- Als de gebruiker "vakkenvuller bij Jumbo" noemt, maak company "Jumbo" en job_title "Vakkenvuller".
+- Als periode ontbreekt, gebruik "onbekend".
+- Als er geen werkervaring is, gebruik een lege array voor work_experience.
+- Gebruik geen null.
+
 PROMPT;
 
         $messages = [
@@ -128,7 +154,12 @@ PROMPT;
             [
                 'name' => $user->name,
                 'age' => $profileData['age'] ?? null,
-                'education_level' => $profileData['education_level'] ?? 'onbekend',
+                'education_level' => $profileData['education_level'] ?? [
+                    'degree' => 'onbekend',
+                    'school' => 'onbekend',
+                    'status' => 'onbekend',
+                    'period' => 'onbekend',
+                ],
                 'preferred_language' => 'nl',
                 'skills' => $profileData['skills'] ?? [],
                 'work_experience' => $profileData['work_experience'] ?? [],
