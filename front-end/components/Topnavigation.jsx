@@ -4,7 +4,7 @@ export default function TopNavigation() {
     return (
         <>
             <div className="bg-primary w-full h-100px flex justify-between items-center text-outline flex-row">
-                <img src={VintroLogo} alt="Logo" width={60} height={60}/>
+                <Link to={"/"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 <div className={"mr-4"}>
                     <Link to={"/register"} className={"mr-8"}>
                         Registreer

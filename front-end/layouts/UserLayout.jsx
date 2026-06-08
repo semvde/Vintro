@@ -12,7 +12,7 @@ export default function UserLayout() {
             <header>
                 <ScrollToTop />
                 <div className={"bg-primary"}>
-                    <img src={VintroLogo} alt="Logo" width={60} height={60}/>
+                    <Link to={"/app"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 </div>
             </header>
             <main>
