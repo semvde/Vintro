@@ -13,3 +13,7 @@ Route::get('/login-test', function () {
 Route::get('/chat-test', function () {
     return view('chat-test');
 });
+
+Route::get('/profile-test', function () {
+    return view('profile-test');
+});

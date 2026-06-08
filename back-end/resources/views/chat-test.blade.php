@@ -22,6 +22,12 @@
     <input id="message" type="text" placeholder="Typ je bericht..." />
     <button onclick="sendMessage()">Verstuur</button>
 
+    <button id="generateProfileBtn" onclick="generateProfile()" style="display:none;">
+        Genereer profiel
+    </button>
+
+    <pre id="profileOutput"></pre>
+
     <script>
         const token = localStorage.getItem('token');
 
@@ -30,7 +36,7 @@
         }
 
         let step = 0;
-        const maxSteps = 10;
+        const maxSteps = 20;
         let finished = false;
 
         window.onload = async () => {
@@ -47,7 +53,7 @@
             const chat = document.getElementById('chat');
             chat.innerHTML += `<div class="bot">Victoria: ${data.reply}</div>`;
         };
-
+        
         async function sendMessage() {
             if (finished) return;
 
@@ -83,6 +89,7 @@
             if (data.finished) {
                 finished = true;
                 input.disabled = true;
+                document.getElementById('generateProfileBtn').style.display = 'block';
             }
         }
 
@@ -103,6 +110,21 @@
             localStorage.removeItem('user');
 
             window.location.href = '/login-test';
+        }
+
+        async function generateProfile() {
+            const response = await fetch('/api/profile/generate', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+
+            const data = await response.json();
+
+            document.getElementById('profileOutput').textContent =
+                JSON.stringify(data, null, 2);
         }
     </script>
 </body>
