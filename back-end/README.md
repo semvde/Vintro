@@ -78,18 +78,6 @@ http://127.0.0.1:8000/api/onboarding/start
 
 parameters:
 
-```
-'message' => 'required|string|max:5000',
-'page' => 'nullable|string|max:100',
-'history' => 'nullable|array',
-```
-
-
-```
-'/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
-'/vacatures' => 'De gebruiker bekijkt vacatures.',
-'/onboarding' => 'De gebruiker doorloopt de onboarding.',
-```
 
 ## Auth endpoints
 
