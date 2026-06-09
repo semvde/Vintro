@@ -20,6 +20,11 @@ export default function UserLayout() {
         content: 'Waar kan ik je mee helpen? Stel je vraag in een korte zin!'
     }]);
 
+    const animationClass =
+        chatAnimation === "visible"
+            ? "animate-[visible_0.5s_ease-in-out]"
+            : "animate-[hide_0.5s_ease-in-out]";
+
     function openChat() {
         setChatAnimation('visible');
         setChatOpen(true);
@@ -86,7 +91,7 @@ export default function UserLayout() {
             </main>
             {chatOpen &&
                 <section id={"chat"}
-                         className={`fixed bottom-2.5 right-2.5 bg-[#E1F0DF] outline-[#E1F0DF] outline-5 border-primary border-3 rounded-lg h-[calc(100%-80px)] w-80 p-5 z-9999 animate-[${chatAnimation}_0.5s_ease-in-out]`}>
+                         className={`fixed bottom-2.5 right-2.5 bg-[#E1F0DF] outline-[#E1F0DF] outline-5 border-primary border-3 rounded-lg h-[calc(100%-80px)] w-80 p-5 z-9999 ${animationClass}`}>
                     <button onClick={() => closeChat()} className={"absolute right-5 top-5"}><FaXmark size={25}/>
                     </button>
                     <h2>Chat met Victoria</h2>
