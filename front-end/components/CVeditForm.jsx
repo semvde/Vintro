@@ -5,9 +5,19 @@ import {useNavigate} from "react-router"
 import {FaUpload} from "react-icons/fa"
 
 export function CVeditForm({data}) {
-    const [file, setFile] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [file, setFile] = useState(null)
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+
+    const [errors, setErrors] = useState({
+        name: "",
+        phoneNumber: "",
+        workExperience: "",
+        educationLevel: "",
+        skills: "",
+        strengths: ""
+    })
+
     const [formData, setFormData] = useState({
         Image: file,
         userId: data?.id || "",
@@ -17,7 +27,7 @@ export function CVeditForm({data}) {
         workExperience: data?.workExperience || [],
         educationLevel: data?.educationLevel || [],
         skills: data?.skills || [],
-        strengths: data?.strengths || [],
+        strengths: data?.strengths || []
     })
 
     const [newJob, setNewJob] = useState({
@@ -37,11 +47,29 @@ export function CVeditForm({data}) {
     const [newStrength, setNewStrength] = useState("")
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-    };
+        setFile(e.target.files[0])
+    }
 
     const handleInputChange = (event) => {
         const {name, value} = event.target
+
+        if (name === "phoneNumber") {
+            const regex = /^[0-9\s+-]*$/
+            if (!regex.test(value)) {
+                setErrors((prev) => ({...prev, phoneNumber: "Telefoonnummer mag alleen cijfers en spaties/plussen bevatten"}))
+            } else {
+                setErrors((prev) => ({...prev, phoneNumber: ""}))
+            }
+        }
+
+        if (name === "name") {
+            if (value.trim() === "") {
+                setErrors((prev) => ({...prev, name: "Naam is verplicht"}))
+            } else {
+                setErrors((prev) => ({...prev, name: ""}))
+            }
+        }
+
         setFormData({
             ...formData,
             [name]: value
@@ -60,10 +88,11 @@ export function CVeditForm({data}) {
 
     const addWorkExperience = () => {
         if (!newJob.company || !newJob.job_title) {
-            alert("Vul tenminste een bedrijf en een functie in.")
-            return;
+            setErrors((prev) => ({...prev, workExperience: "Vul tenminste een bedrijf en een functie in"}))
+            return
         }
 
+        setErrors((prev) => ({...prev, workExperience: ""}))
         setFormData((prev) => ({
             ...prev,
             workExperience: [...prev.workExperience, newJob]
@@ -91,13 +120,14 @@ export function CVeditForm({data}) {
 
     const addEducation = () => {
         if (!newEducation.school || !newEducation.degree) {
-            alert("Vul tenminste een school en diploma toe.")
-            return;
+            setErrors((prev) => ({...prev, educationLevel: "Vul tenminste een school en diploma in"}))
+            return
         }
 
+        setErrors((prev) => ({...prev, educationLevel: ""}))
         setFormData((prev) => ({
             ...prev,
-            educationExperience: [...prev.educationExperience, newEducation]
+            educationLevel: [...prev.educationLevel, newEducation]
         }))
 
         setNewEducation({school: "", degree: "", period: ""})
@@ -106,15 +136,19 @@ export function CVeditForm({data}) {
     const removeEducation = (indexToRemove) => {
         setFormData((prev) => ({
             ...prev,
-            educationExperience: prev.educationExperience.filter((_, index) => index !== indexToRemove)
+            educationLevel: prev.educationLevel.filter((_, index) => index !== indexToRemove)
         }))
     }
 
     // SKILLS //
 
     const addSkill = () => {
-        if (!newSkill.trim()) return;
+        if (!newSkill.trim()) {
+            setErrors((prev) => ({...prev, skills: "Typ eerst een vaardigheid"}))
+            return
+        }
 
+        setErrors((prev) => ({...prev, skills: ""}))
         setFormData((prev) => ({
             ...prev,
             skills: [...prev.skills, newSkill.trim()]
@@ -122,7 +156,6 @@ export function CVeditForm({data}) {
 
         setNewSkill("")
     }
-
 
     const removeSkill = (indexToRemove) => {
         setFormData((prev) => ({
@@ -134,8 +167,12 @@ export function CVeditForm({data}) {
     // STRENGTH //
 
     const addStrength = () => {
-        if (!newStrength.trim()) return;
+        if (!newStrength.trim()) {
+            setErrors((prev) => ({...prev, strengths: "Typ eerst een sterk punt"}))
+            return
+        }
 
+        setErrors((prev) => ({...prev, strengths: ""}))
         setFormData((prev) => ({
             ...prev,
             strengths: [...prev.strengths, newStrength.trim()]
@@ -144,25 +181,28 @@ export function CVeditForm({data}) {
         setNewStrength("")
     }
 
-
     const removeStrength = (indexToRemove) => {
         setFormData((prev) => ({
             ...prev,
-            strength: prev.strength.filter((_, index) => index !== indexToRemove)
+            strengths: prev.strengths.filter((_, index) => index !== indexToRemove)
         }))
     }
 
     const handleUpdate = async (e) => {
-        e.preventDefault();
-        if (!file) return alert("Selecteer eerst een bestand!")
+        e.preventDefault()
 
-        const submitData = new FormData();
-        if (file) submitData.append("image", file);
+        if (!formData.name.trim()) {
+            alert("Naam is verplicht!")
+            return
+        }
 
-        submitData.append("userId", data?.id)
-        submitData.append("name", data?.name)
-        submitData.append("email", data?.email)
-        submitData.append("phoneNumber", data?.phoneNumber)
+        const submitData = new FormData()
+        if (file) submitData.append("image", file)
+
+        submitData.append("userId", formData.userId)
+        submitData.append("name", formData.name)
+        submitData.append("email", formData.email)
+        submitData.append("phoneNumber", formData.phoneNumber)
 
         submitData.append("workExperience", JSON.stringify(formData.workExperience))
         submitData.append("educationLevel", JSON.stringify(formData.educationLevel))
@@ -172,18 +212,21 @@ export function CVeditForm({data}) {
         try {
             setLoading(true)
 
-
-            const response = await fetch("http://127.0.0.1:8000/api/app/cv/edit", {
+            const response = await fetch("http://127.0.0.1:8000/api/profile", {
                 method: "PUT",
-                body: formData,
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                },
+                body: submitData
             })
 
-            const data = await response.json();
+            const resData = await response.json()
             if (response.ok) {
-                console.log("Curriculum Vitae geüpdate!", data)
+                console.log("Curriculum Vitae geüpdate!", resData)
                 navigate("/app/cv")
             } else {
-                alert("Upload mislukt: " + data.message)
+                alert("Upload mislukt: " + resData.message)
             }
         } catch (error) {
             console.error("Error met updaten:", error)
@@ -191,15 +234,15 @@ export function CVeditForm({data}) {
             setLoading(false)
         }
     }
+
     return (
         <div>
             <form onSubmit={handleUpdate} className="p-4 space-y-4">
 
-                <section className={"flex items-center gap-4 bg-primary text-outline p-4 rounded-t-lg"}>
+                <section className="flex items-center gap-4 bg-primary text-outline p-4 rounded-t-lg">
                     <div className="flex flex-col ">
-                        <img src={data.image} alt={""} className={"h-20 w-20"}/>
-                        <div
-                            className="flex flex-col items-center gap-4 p-6 rounded-xl max-w-5px mx-auto">
+                        <img src={data?.image || null} alt="" className="h-20 w-20"/>
+                        <div className="flex flex-col items-center gap-4 p-6 rounded-xl max-w-5px mx-auto">
                             <input
                                 type="file"
                                 id="file-upload"
@@ -210,38 +253,39 @@ export function CVeditForm({data}) {
 
                             <label htmlFor="file-upload"
                                    className="flex flex-col items-start justify-start border-2 border-dashed border-gray-300 hover:border-blue-500 bg-white p-4 rounded-xl cursor-pointer w-5px transition-colors text-center group">
-                                <FaUpload
-                                    className="text-3xl text-gray-400 group-hover:text-blue-500 transition-colors mb-2"/>
+                                <FaUpload className="text-3xl text-gray-400 group-hover:text-blue-500 transition-colors mb-2"/>
                             </label>
 
                             {file && (
-                                <div
-                                    className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-md border border-green-200 max-w-5px w-5px text-center truncate">
+                                <div className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-md border border-green-200 max-w-5px w-5px text-center truncate">
                                     Geselecteerd: <span className="font-semibold">{file.name}</span>
                                 </div>
                             )}
                         </div>
                     </div>
-                    <div className={"flex flex-col"}>
+                    <div className="flex flex-col">
                         <input name="name"
                                className="focus:bg-white pl-2 pr-2 border-white border-solid border-2 focus:text-black focus:border-black text-white rounded-md"
                                onChange={handleInputChange} value={formData.name}/>
-                        <div className={"flex gap-2 items-center"}>
+                        {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
+
+                        <div className="flex gap-2 items-center mt-2">
                             <IoIosMail className="w-7 h-8"/>
-                            <p className={"text-sm"}>{data.email}</p>
+                            <p className="text-sm">{data.email}</p>
                         </div>
-                        <div className={"flex gap-2 items-center"}>
+                        <div className="flex gap-2 items-center mt-2">
                             <FaPhoneAlt className="pl-1 w-6 h-6"/>
                             <input name="phoneNumber"
                                    className="focus:bg-white pl-2 pr-2 border-white border-solid border-2 focus:text-black focus:border-black text-white rounded-md"
                                    onChange={handleInputChange} value={formData.phoneNumber}/>
                         </div>
+                        {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
                     </div>
                 </section>
-                <section className={"py-4 text-sm"}>
-                    <h2></h2>
+
+                <section className="py-4 text-sm">
                     <p>{data.summary}</p>
-                    <div className={"py-8"}>
+                    <div className="py-8">
                         <h2>Werkervaring</h2>
                         {formData.workExperience.map((job, index) => (
                             <div key={index}
@@ -261,8 +305,7 @@ export function CVeditForm({data}) {
                             </div>
                         ))}
 
-                        <div
-                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                        <div className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
                             <h3 className="font-medium text-gray-700">Nieuwe werkervaring toevoegen</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
@@ -295,6 +338,8 @@ export function CVeditForm({data}) {
                                 value={newJob.description}
                             />
 
+                            {errors.workExperience && <p className="text-red-500 text-xs">{errors.workExperience}</p>}
+
                             <button
                                 type="button"
                                 onClick={addWorkExperience}
@@ -305,7 +350,7 @@ export function CVeditForm({data}) {
                         </div>
                     </div>
 
-                    <div className={"py-2"}>
+                    <div className="py-2">
                         <h2>Educatie</h2>
                         {formData.educationLevel.map((education, index) => (
                             <div key={index}
@@ -325,8 +370,7 @@ export function CVeditForm({data}) {
                             </div>
                         ))}
 
-                        <div
-                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                        <div className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
                             <h3 className="font-medium text-gray-700">Nieuwe opleiding toevoegen</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
@@ -352,6 +396,8 @@ export function CVeditForm({data}) {
                                 />
                             </div>
 
+                            {errors.educationLevel && <p className="text-red-500 text-xs">{errors.educationLevel}</p>}
+
                             <button
                                 type="button"
                                 onClick={addEducation}
@@ -363,8 +409,8 @@ export function CVeditForm({data}) {
                     </div>
                 </section>
 
-                <section className={"bg-primary rounded-b-lg text-outline text-sm p-4"}>
-                    <div className={"flex justify-between"}>
+                <section className="bg-primary rounded-b-lg text-outline text-sm p-4">
+                    <div className="flex justify-between">
                         <div>
                             <h3>Vaardigheden</h3>
                             <ul className="flex flex-col gap-2 py-2">
@@ -384,19 +430,22 @@ export function CVeditForm({data}) {
                                     </li>
                                 ))}
                             </ul>
-                            <div>
+                            <div className="flex flex-col gap-1">
                                 <input
-                                    name="skills"
-                                    placeholder="Voeg een vaardigheid toe)"
+                                    type="text"
+                                    name="newSkill"
+                                    placeholder="Voeg een vaardigheid toe"
                                     className="p-2 border border-gray-300 rounded bg-white text-black"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => setNewSkill(e.target.value)}
+                                    value={newSkill}
                                 />
+                                {errors.skills && <p className="text-red-400 text-xs">{errors.skills}</p>}
                             </div>
 
                             <button
                                 type="button"
                                 onClick={addSkill}
-                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer mt-2"
                             >
                                 <FaPlus/>
                             </button>
@@ -420,18 +469,21 @@ export function CVeditForm({data}) {
                                     </li>
                                 ))}
                             </ul>
-                            <div>
+                            <div className="flex flex-col gap-1">
                                 <input
-                                    name="skills"
-                                    placeholder="Voeg een vaardigheid toe)"
+                                    type="text"
+                                    name="newStrength"
+                                    placeholder="Voeg een sterktepunt toe"
                                     className="p-2 border border-gray-300 rounded bg-white text-black"
-                                    onChange={handleInputChange}
+                                    onChange={(e) => setNewStrength(e.target.value)}
+                                    value={newStrength}
                                 />
+                                {errors.strengths && <p className="text-red-400 text-xs">{errors.strengths}</p>}
                             </div>
                             <button
                                 type="button"
                                 onClick={addStrength}
-                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer"
+                                className="flex items-center gap-2 bg-primary text-white px-3 py-1.5 rounded text-xs hover:bg-primary/50 cursor-pointer mt-2"
                             >
                                 <FaPlus/>
                             </button>
@@ -449,5 +501,4 @@ export function CVeditForm({data}) {
             </form>
         </div>
     )
-        ;
 }
