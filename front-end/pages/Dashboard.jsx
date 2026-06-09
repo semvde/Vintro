@@ -5,6 +5,7 @@ import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
 import {Link} from "react-router";
+import {IoNewspaperSharp} from "react-icons/io5";
 
 export default function Dashboard() {
     return (
@@ -21,7 +22,7 @@ export default function Dashboard() {
                 {/* Cards will have Links once pages exist */}
                 <Link to={"/app/vacancies"}>
                     <DashboardCard
-                        icon={<MdEditDocument/>}
+                        icon={<IoNewspaperSharp/>}
                         title={"Vacature oefenen"}
                         description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
                     />
@@ -43,7 +44,7 @@ export default function Dashboard() {
                 <DashboardCard
                     icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
-                    description={"Bekijk en verbeter je CV"}
+                    description={"Hoe kan jij voorbereid het sollicitatiegesprek in?"}
                 />
 
             </section>
