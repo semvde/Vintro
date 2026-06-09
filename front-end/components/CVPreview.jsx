@@ -2,7 +2,20 @@ import {FaPhoneAlt} from "react-icons/fa";
 import {IoIosMail} from "react-icons/io";
 
 export function CVPreview({ data }) {
-    console.log(data.educationLevel);
+    const isValidValue = (value) =>
+        value &&
+        value.trim() !== "" &&
+        value.toLowerCase() !== "onbekend";
+
+    const validEducation = data.educationLevel?.filter((education) =>
+        [
+            education.school,
+            education.degree,
+            education.status,
+            education.period,
+        ].some(isValidValue)
+    );
+
     return (
         <div>
             <section className={"flex items-center gap-4 bg-primary text-outline p-4 rounded-t-lg"}>
@@ -22,6 +35,7 @@ export function CVPreview({ data }) {
             <section className={"py-4 text-sm"}>
                 <h2></h2>
                 <p>{data.summary}</p>
+                {data.workExperience?.length > 0 && (
                 <div className={"py-8"}>
                     <h2>Werkervaring</h2>
                         {data.workExperience?.map((job, index) => (
@@ -34,18 +48,33 @@ export function CVPreview({ data }) {
                             </div>
                         ))}
                 </div>
-                <div className={"py-2"}>
-                    <h2>Educatie</h2>
-                     {data.educationLevel?.map((education, index) => (
-                            <div key={index} className={"py-2"}>
-                                <div className={"flex justify-between items-center py-2"}>
-                                    <h3>{education.school}</h3>
-                                    <p className={"text-xs font-light text-nowrap"}>{education.period}</p>
+                )}
+                {validEducation?.length > 0 && (
+                    <div className="py-2">
+                        <h2>Educatie</h2>
+                        {validEducation.map((education, index) => (
+                            <div key={index} className="py-2">
+                                <div className="flex justify-between items-center py-2">
+                                    {isValidValue(education.school) && (
+                                        <h3>{education.school}</h3>
+                                    )}
+
+                                    {isValidValue(education.period) && (
+                                        <p className="text-xs font-light text-nowrap">
+                                            {education.period}
+                                        </p>
+                                    )}
                                 </div>
-                                <p>{education.degree}</p>
+                                {isValidValue(education.degree) && (
+                                    <p>{education.degree}</p>
+                                )}
+                                {isValidValue(education.status) && (
+                                    <p>{education.status}</p>
+                                )}
                             </div>
                         ))}
-                </div>
+                    </div>
+                )}
             </section>
 
             <section className={"bg-primary rounded-b-lg text-outline text-sm p-4"}>
