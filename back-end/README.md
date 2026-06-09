@@ -18,7 +18,24 @@
 
 * [Profile Endpoints](#profile-endpoints)
 
+  * [Get Profile](#get-profile)
+  * [Update Profile](#update-profile)
   * [Generate Profile](#generate-profile)
+
+* [Vacancies Endpoints](#vacancies-endpoints)
+
+  * [Get Vacancies](#get-vacancies)
+  * [Get Vacancy](#get-vacancy)
+
+* [Vacancy Feedback Endpoints](#vacancy-feedback-endpoints)
+
+  * [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
+  * [Get Vacancy Feedback](#get-vacancy-feedback)
+
+* [Interview Feedback Endpoints](#interview-feedback-endpoints)
+
+  * [Get Interview Feedbacks](#get-interview-feedbacks)
+  * [Get Interview Feedback](#get-interview-feedback)
 
 * [Text-to-Speech Endpoint](#text-to-speech-endpoint)
 
@@ -67,17 +84,17 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/logout`           | Gebruiker uitloggen                                      | Ja         |
 | GET    | `/onboarding/start` | Startbericht onboarding ophalen                          | Ja         |
 | POST   | `/onboarding/chat`  | Onboarding-chat met Victoria                             | Ja         |
-| POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding | Ja         |
-| POST   | `/tts`              | Tekst omzetten naar audio                                | Nee        |
-| POST   | `/coach`            | Algemene coach-chat met Victoria                         | Nee        |
-| POST   | /vacancies/generate | Vacatures Genereren                                      | Nee        |    
-
----
-
-## Coach Endpoints
-
-Parameters:
-
+| GET    | `/profile`            | Profiel en CV ophalen                                    | Ja         |
+| PUT    | `/profile`            | Profiel en CV bijwerken                                  | Ja         |
+| POST   | `/profile/generate`   | Genereert user_profile op basis van afgeronde onboarding | Ja         |
+| GET    | `/vacancies`            | Alle vacatures van gebruiker ophalen                      | Ja         |
+| GET    | `/vacancies/{id}`       | Specifieke vacature ophalen                              | Ja         |
+| GET    | `/vacancy-feedback`     | Alle vacancy feedback opgehaald                           | Ja         |
+| GET    | `/vacancy-feedback/{id}`| Specifieke vacancy feedback ophalen                       | Ja         |
+| GET    | `/interview-feedback`   | Alle interview feedback ophalen                           | Ja         |
+| GET    | `/interview-feedback/{id}` | Specifieke interview feedback ophalen                  | Ja         |
+| POST   | `/tts`                  | Tekst omzetten naar audio                                | Nee        |
+| POST   | `/coach`                | Algemene coach-chat met Victoria                         | Nee        |    
 
 ---
 
@@ -293,6 +310,185 @@ Frontend flow:
 
 ## Profile Endpoints
 
+### Get Profile
+
+Haalt het profiel en CV van de ingelogde gebruiker op.
+
+```http
+GET /profile
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "profile": {
+            "id": 1,
+            "user_id": 1,
+            "name": "Test User",
+            "image": "https://example.com/image.jpg",
+            "skills": ["samenwerken", "organiseren", "probleemoplossen"],
+            "work_experience": [
+                {
+                    "company": "Jumbo",
+                    "period": "september 2023 - juni 2025",
+                    "job_title": "Vakkenvuller",
+                    "description": "Eerste werkervaring opgedaan in de detailhandel."
+                }
+            ],
+            "education_level": {
+                "degree": "HAVO",
+                "school": "Openbare HAVO",
+                "status": "afgerond"
+            },
+            "preferred_language": "nl"
+        },
+        "cv": {
+            "id": 1,
+            "user_id": 1,
+            "phone_number": "+31612345678",
+            "email": "test@example.com"
+        }
+    }
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar profielpagina
+2. Frontend roept GET /profile aan
+3. Frontend toont profile en cv gegevens
+4. Gebruiker kan gegevens bijwerken (bijv. via formulier)
+```
+
+---
+
+### Update Profile
+
+Werkt het profiel en/of CV bij voor de ingelogde gebruiker.
+
+```http
+PUT /profile
+Authorization: Bearer jwt_token_here
+Content-Type: application/json
+```
+
+Voorbeeld request (bijwerken profiel):
+
+```json
+{
+    "name": "Test User Updated",
+    "image": "https://example.com/new-image.jpg",
+    "skills": ["samenwerken", "organiseren", "communicatie"],
+    "work_experience": [
+        {
+            "company": "Jumbo",
+            "period": "september 2023 - juni 2025",
+            "job_title": "Vakkenvuller",
+            "description": "Eerste werkervaring opgedaan in de detailhandel."
+        },
+        {
+            "company": "Albert Heijn",
+            "period": "juli 2025 - heden",
+            "job_title": "Kassier",
+            "description": "Werkend als kassier in de kassa-afdeling."
+        }
+    ],
+    "education_level": {
+        "degree": "HBO",
+        "school": "Universiteit van Amsterdam",
+        "status": "in_voorbereiding"
+    },
+    "preferred_language": "nl"
+}
+```
+
+Voorbeeld request (bijwerken CV-gegevens):
+
+```json
+{
+    "phone_number": "+31687654321",
+    "email": "newemail@example.com"
+}
+```
+
+Velden voor profiel:
+
+| Field                | Type    | Required | Uitleg                                                |
+| -------------------- | ------- | -------- | ----------------------------------------------------- |
+| `name`               | string  | Nee      | Volledige naam van de gebruiker                       |
+| `image`              | string  | Nee      | URL naar profielfoto                                  |
+| `skills`             | array   | Nee      | Array van vaardigheden (strings)                      |
+| `work_experience`    | array   | Nee      | Array van work experience objects met company/period  |
+| `education_level`    | object  | Nee      | Object met degree, school, status velden              |
+| `preferred_language` | string  | Nee      | Voorkeurtaal (bv. 'nl', 'en')                        |
+
+Velden voor CV:
+
+| Field          | Type   | Required | Uitleg                      |
+| -------------- | ------ | -------- | --------------------------- |
+| `phone_number` | string | Nee      | Telefoonnummer              |
+| `email`        | string | Nee      | Email adres                 |
+
+Voorbeeld response:
+
+```json
+{
+    "message": "Profile updated successfully",
+    "data": {
+        "profile": {
+            "id": 1,
+            "user_id": 1,
+            "name": "Test User Updated",
+            "image": "https://example.com/new-image.jpg",
+            "skills": ["samenwerken", "organiseren", "communicatie"],
+            "work_experience": [
+                {
+                    "company": "Jumbo",
+                    "period": "september 2023 - juni 2025",
+                    "job_title": "Vakkenvuller",
+                    "description": "Eerste werkervaring opgedaan in de detailhandel."
+                },
+                {
+                    "company": "Albert Heijn",
+                    "period": "juli 2025 - heden",
+                    "job_title": "Kassier",
+                    "description": "Werkend als kassier in de kassa-afdeling."
+                }
+            ],
+            "education_level": {
+                "degree": "HBO",
+                "school": "Universiteit van Amsterdam",
+                "status": "in_voorbereiding"
+            },
+            "preferred_language": "nl"
+        },
+        "cv": {
+            "id": 1,
+            "user_id": 1,
+            "phone_number": "+31687654321",
+            "email": "newemail@example.com"
+        }
+    }
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker vult profielvorm in (name, skills, etc.)
+2. Frontend stuurt PUT /profile met aangepaste gegevens
+3. Frontend ontvangt bijgewerkt profiel
+4. Frontend toont success bericht en bijgewerkte gegevens
+5. Optioneel: redirect naar CV- of dashboardpagina
+```
+
+
+---
+
 ### Generate Profile
 
 ```http
@@ -352,6 +548,347 @@ Frontend flow:
 2. Roep POST /profile/generate aan
 3. Gebruik response.profile voor preview, CV-generatie of dashboard
 4. Ga daarna door naar CV-pagina of dashboard
+```
+
+---
+
+## Vacancies Endpoints
+
+### Get Vacancies
+
+Haalt alle oefenvacatures op voor de ingelogde gebruiker.
+
+```http
+GET /vacancies
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js. Je werkt in een klein, dynamisch team aan innovative projecten.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "title": "Backend Developer",
+            "company": "Enterprise Solutions",
+            "location": "Rotterdam",
+            "employment_type": "full-time",
+            "salary": 3200,
+            "description": "Wij zoeken een ervaren backend developer met Python en Django kennis.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        }
+    ]
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar vacaturepagina
+2. Frontend roept GET /vacancies aan
+3. Frontend toont lijst van vacatures
+4. Gebruiker kan op vacature klikken voor details
+```
+
+---
+
+### Get Vacancy
+
+Haalt de details van één specifieke vacature op.
+
+```http
+GET /vacancies/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg                    |
+| --------- | ------- | -------- | ------------------------- |
+| `id`      | integer | Ja       | ID van de vacature        |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "title": "Junior Frontend Developer",
+        "company": "Tech Startup XYZ",
+        "location": "Amsterdam",
+        "employment_type": "full-time",
+        "salary": 2500,
+        "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js. Je werkt in een klein, dynamisch team aan innovative projecten. Vereisten: HTML/CSS, JavaScript, Git.",
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z"
+    }
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op vacature uit lijst
+2. Frontend roept GET /vacancies/{id} aan
+3. Frontend toont volledige vacaturedetails
+4. Gebruiker kan solliciteren of oefening starten
+```
+
+---
+
+## Vacancy Feedback Endpoints
+
+### Get Vacancy Feedbacks
+
+Haalt alle feedback op voor vacatures van de ingelogde gebruiker.
+
+```http
+GET /vacancy-feedback
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "vacancy_id": 1,
+            "ai_feedback": "Je motivatie is sterk en je relevante ervaring is duidelijk geformuleerd.",
+            "motivation_letter": "Ik ben zeer geïnteresseerd in deze rol omdat...",
+            "accepted": true,
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z",
+            "vacancy": {
+                "id": 1,
+                "title": "Junior Frontend Developer",
+                "company": "Tech Startup XYZ",
+                "location": "Amsterdam",
+                "employment_type": "full-time",
+                "salary": 2500
+            }
+        },
+        {
+            "id": 2,
+            "vacancy_id": 2,
+            "ai_feedback": "Uitstekende match met de vacature. Je skills aansluiten goed.",
+            "motivation_letter": "Met mijn achtergrond in...",
+            "accepted": true,
+            "created_at": "2026-06-09T11:00:00.000000Z",
+            "updated_at": "2026-06-09T11:00:00.000000Z",
+            "vacancy": {
+                "id": 2,
+                "title": "Backend Developer",
+                "company": "Enterprise Solutions",
+                "location": "Rotterdam",
+                "employment_type": "full-time",
+                "salary": 3200
+            }
+        }
+    ]
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar sollicitatiefeedback pagina
+2. Frontend roept GET /vacancy-feedback aan
+3. Frontend toont lijst van alle feedback items
+4. Feedback bevat AI-beoordeling en gebruiker motivatie
+5. Gebruiker kan op item klikken voor details
+```
+
+---
+
+### Get Vacancy Feedback
+
+Haalt de details van één specifiek feedback item op.
+
+```http
+GET /vacancy-feedback/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg                       |
+| --------- | ------- | -------- | ---------------------------- |
+| `id`      | integer | Ja       | ID van het feedback item     |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "ai_feedback": "Je motivatie is sterk en je relevante ervaring is duidelijk geformuleerd. Echter, je zou kunnen uitbreiden op je specifieke technische vaardigheden en hoe deze direct van toepassing zijn.",
+        "motivation_letter": "Ik ben zeer geïnteresseerd in deze rol omdat ik graag mijn frontend-vaardigheden wil verder ontwikkelen in een dynamisch team. Mijn ervaring met React en Vue.js biedt een solide basis.",
+        "accepted": true,
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z",
+        "vacancy": {
+            "id": 1,
+            "user_id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js..."
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field              | Type    | Uitleg                                              |
+| ------------------ | ------- | --------------------------------------------------- |
+| `id`               | integer | Feedback item ID                                    |
+| `vacancy_id`       | integer | gekoppelde vacature ID                              |
+| `ai_feedback`      | string  | AI gegenereerde beoordeling en suggesties           |
+| `motivation_letter`| string  | Gebruiker geschreven motivatiebrief                |
+| `accepted`         | boolean | Of de sollicitatie werd geaccepteerd               |
+| `vacancy`          | object  | Volledige vacature object                           |
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op feedback item uit lijst
+2. Frontend roept GET /vacancy-feedback/{id} aan
+3. Frontend toont volledige feedback details
+4. Gebruiker kan AI-feedback lezen en verbeteringen aanpassen
+5. Optioneel: feedback opslaan of opnieuw indienen
+```
+
+---
+
+## Interview Feedback Endpoints
+
+### Get Interview Feedbacks
+
+Haalt alle interview feedback op voor de ingelogde gebruiker.
+
+```http
+GET /interview-feedback
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "interview_id": 1,
+            "ai_feedback": "Je antwoorden waren goed gestructureerd. Zorg ervoor dat je meer voorbeelden geeft van je werkervaring.",
+            "accepted": true,
+            "created_at": "2026-06-09T12:00:00.000000Z",
+            "updated_at": "2026-06-09T12:00:00.000000Z",
+            "interview": {
+                "id": 1,
+                "vacancy_id": 1
+            }
+        },
+        {
+            "id": 2,
+            "interview_id": 2,
+            "ai_feedback": "Sterke voorbereiding zichtbaar. Je communicatie was duidelijk en professioneel.",
+            "accepted": true,
+            "created_at": "2026-06-09T13:00:00.000000Z",
+            "updated_at": "2026-06-09T13:00:00.000000Z",
+            "interview": {
+                "id": 2,
+                "vacancy_id": 2
+            }
+        }
+    ]
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar interview feedback pagina
+2. Frontend roept GET /interview-feedback aan
+3. Frontend toont lijst van alle interview feedback items
+4. Gebruiker kan op item klikken voor gedetailleerde feedback
+```
+
+---
+
+### Get Interview Feedback
+
+Haalt de details van één specifieke interview feedback op.
+
+```http
+GET /interview-feedback/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg                       |
+| --------- | ------- | -------- | ---------------------------- |
+| `id`      | integer | Ja       | ID van het feedback item     |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "interview_id": 1,
+        "ai_feedback": "Je antwoorden waren goed gestructureerd met concrete voorbeelden. Punten ter verbetering: zorg ervoor dat je meer je eigen rol in teamprojecten benadrukt. Je non-verbale communicatie was open en vriendelijk. Zorg ervoor dat je vragen stelt aan het einde van het interview om je interesse aan te tonen.",
+        "accepted": true,
+        "created_at": "2026-06-09T12:00:00.000000Z",
+        "updated_at": "2026-06-09T12:00:00.000000Z",
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field          | Type    | Uitleg                                    |
+| -------------- | ------- | ----------------------------------------- |
+| `id`           | integer | Feedback item ID                          |
+| `interview_id` | integer | gekoppelde interview ID                   |
+| `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback   |
+| `accepted`     | boolean | Of de interview goed is gegaan            |
+| `interview`    | object  | Interview object met vacancy_id           |
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op interview feedback item
+2. Frontend roept GET /interview-feedback/{id} aan
+3. Frontend toont gedetailleerde AI feedback
+4. Gebruiker kan feedback lezen en punten ter verbetering opnemen
+5. Optioneel: interview opnieuw volgen of naar volgende stap
 ```
 
 ---
