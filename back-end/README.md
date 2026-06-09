@@ -2,7 +2,6 @@
 
 ## Inhoudsopgave
 
-<<<<<<< HEAD
 * [Base URL](#base-url)
 * [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
 * [Auth Endpoints](#auth-endpoints)
@@ -26,24 +25,6 @@
   * [Generate Speech](#generate-speech)
 
 * [Frontend Notes](#frontend-notes)
-=======
-- [Base URL](#base-url)
-- [Auth Endpoints](#auth-endpoints)
-    - [Register](#register)
-    - [Login](#login)
-    - [Get Current User](#get-current-user)
-    - [Logout](#logout)
-
-- [Onboarding Endpoints](#onboarding-endpoints)
-    - [Start Onboarding](#start-onboarding)
-    - [Onboarding Chat](#onboarding-chat)
-
-- [Text-to-Speech Endpoint](#text-to-speech-endpoint)
-    - [Generate Speech](#generate-speech)
-
-- [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
-- [Frontend Notes](#frontend-notes)
->>>>>>> dev
 
 ---
 
@@ -79,7 +60,6 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ## Huidige API routes overzicht
 
-<<<<<<< HEAD
 | Method | Endpoint            | Beschrijving                                             | Auth nodig |
 | ------ | ------------------- | -------------------------------------------------------- | ---------- |
 | POST   | `/register`         | Nieuwe gebruiker registreren                             | Nee        |
@@ -91,18 +71,6 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding | Ja         |
 | POST   | `/tts`              | Tekst omzetten naar audio                                | Nee        |
 | POST   | `/coach`            | Algemene coach-chat met Victoria                         | Nee        |
-=======
-| Method | Endpoint            | Beschrijving                    | Auth nodig |
-| ------ | ------------------- | ------------------------------- | ---------- |           
-| POST   | `/register`         | Nieuwe gebruiker registreren    | Nee        |           
-| POST   | `/login`            | Gebruiker inloggen              | Nee        |           
-| GET    | `/onboarding/start` | Startbericht onboarding ophalen | Nee        |           
-| POST   | `/onboarding/chat`  | Onboarding-chat met AI          | Nee        |           
-| POST   | `/tts`              | Tekst omzetten naar audio       | Nee        |           
-| GET    | `/user`             | Ingelogde gebruiker ophalen     | Ja         |           
-| POST   | `/logout`           | Gebruiker uitloggen             | Ja         |           
-| POST   | `/coach`            | Praten met Victoria :)          | Nee        |           
->>>>>>> dev
 
 ---
 
@@ -110,18 +78,6 @@ http://127.0.0.1:8000/api/onboarding/start
 
 parameters:
 
-```
-'message' => 'required|string|max:5000',
-'page' => 'nullable|string|max:100',
-'history' => 'nullable|array',
-```
-
-
-```
-'/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
-'/vacatures' => 'De gebruiker bekijkt vacatures.',
-'/onboarding' => 'De gebruiker doorloopt de onboarding.',
-```
 
 ## Auth endpoints
 
@@ -257,14 +213,8 @@ Voorbeeld response:
 
 ```json
 {
-<<<<<<< HEAD
   "reply": "Hoi Test User, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
   "type": "onboarding_start"
-=======
-    "reply": "Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?",
-    "type": "onboarding_start",
-    "finished": false
->>>>>>> dev
 }
 ```
 
@@ -290,24 +240,8 @@ Voorbeeld request:
 
 ```json
 {
-<<<<<<< HEAD
   "message": "Ik ben 23 jaar",
   "step": 1
-=======
-    "message": "Ik vind gamen leuk en ik help soms vrienden met computers.",
-    "step": 1,
-    "max_steps": 6,
-    "history": [
-        {
-            "role": "assistant",
-            "content": "Hoi, ik ben VINTRO. Ik stel je een paar korte vragen zodat ik straks een profiel en eerste CV voor je kan opbouwen. We doen dit stap voor stap. Om te beginnen: wat vind je leuk om te doen?"
-        },
-        {
-            "role": "user",
-            "content": "Ik vind gamen leuk en ik help soms vrienden met computers."
-        }
-    ]
->>>>>>> dev
 }
 ```
 
@@ -324,16 +258,9 @@ Voorbeeld response tijdens onboarding:
 
 ```json
 {
-<<<<<<< HEAD
   "reply": "Wat is je laatste opleiding of schoolervaring?",
   "finished": false,
   "next_action": "continue_onboarding"
-=======
-    "reply": "Dat klinkt alsof je interesse hebt in technologie en mensen helpen. Heb je al eens nagedacht over werk in ICT of klantenservice?",
-    "type": "onboarding_message",
-    "finished": false,
-    "next_action": "continue_onboarding"
->>>>>>> dev
 }
 ```
 
@@ -341,16 +268,9 @@ Voorbeeld response wanneer onboarding klaar is:
 
 ```json
 {
-<<<<<<< HEAD
   "reply": "Dankjewel voor je antwoorden. Ik heb genoeg informatie voor je werkprofiel en eerste CV.",
   "finished": true,
   "next_action": "generate_profile"
-=======
-    "reply": "Dankjewel, ik heb genoeg informatie om een eerste profiel voor je op te bouwen. Daarna kunnen we hiermee ook een eerste CV maken.",
-    "type": "onboarding_finished",
-    "finished": true,
-    "next_action": "generate_profile"
->>>>>>> dev
 }
 ```
 
