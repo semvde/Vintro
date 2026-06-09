@@ -4,9 +4,11 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
+import {Link} from "react-router";
+import {IoNewspaperSharp} from "react-icons/io5";
 
 export default function Dashboard() {
-    return(
+    return (
         <>
             <section className={"mb-8"}>
                 {/* Placeholder name */}
@@ -18,26 +20,33 @@ export default function Dashboard() {
             <section className={"mb-8"}>
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
+                <Link to={"/app/vacancies"}>
+                    <DashboardCard
+                        icon={<IoNewspaperSharp/>}
+                        title={"Vacature oefenen"}
+                        description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
+                    />
+                </Link>
+
                 <DashboardCard
-                    icon={<MdEditDocument />}
-                    title={"Vacature oefenen"}
-                    description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
-                />
-                <DashboardCard
-                    icon={<FaMicrophoneAlt />}
+                    icon={<FaMicrophoneAlt/>}
                     title={"Interview oefenen"}
                     description={"Oefen een sollicitatiegesprek met AI"}
                 />
+                <Link to={"/app/cv"}>
                 <DashboardCard
-                    icon={<MdEditDocument />}
+                    icon={<MdEditDocument/>}
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
                 />
+                </Link>
+
                 <DashboardCard
-                    icon={<HiLightBulb />}
+                    icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
-                    description={"Bekijk en verbeter je CV"}
+                    description={"Hoe kan jij voorbereid het sollicitatiegesprek in?"}
                 />
+
             </section>
 
             <section>
