@@ -2,22 +2,29 @@
 
 ## Inhoudsopgave
 
-- [Base URL](#base-url)
-- [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
-- [Auth Endpoints](#auth-endpoints)
-  - [Register](#register)
-  - [Login](#login)
-  - [Get Current User](#get-current-user)
-  - [Logout](#logout)
-- [Onboarding Endpoints](#onboarding-endpoints)
-  - [Start Onboarding](#start-onboarding)
-  - [Onboarding Chat](#onboarding-chat)
-- [Profile Endpoints](#profile-endpoints)
-  - [Generate Profile](#generate-profile)
-- [Coach Endpoints](#coach-endpoints)
-- [Text-to-Speech Endpoint](#text-to-speech-endpoint)
-  - [Generate Speech](#generate-speech)
-- [Frontend Notes](#frontend-notes)
+* [Base URL](#base-url)
+* [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
+* [Auth Endpoints](#auth-endpoints)
+
+  * [Register](#register)
+  * [Login](#login)
+  * [Get Current User](#get-current-user)
+  * [Logout](#logout)
+
+* [Onboarding Endpoints](#onboarding-endpoints)
+
+  * [Start Onboarding](#start-onboarding)
+  * [Onboarding Chat](#onboarding-chat)
+
+* [Profile Endpoints](#profile-endpoints)
+
+  * [Generate Profile](#generate-profile)
+
+* [Text-to-Speech Endpoint](#text-to-speech-endpoint)
+
+  * [Generate Speech](#generate-speech)
+
+* [Frontend Notes](#frontend-notes)
 
 ---
 
@@ -46,17 +53,23 @@ Content-Type: application/json
 
 ## Huidige API Routes Overzicht
 
-| Method | Endpoint            | Beschrijving                                              | Auth nodig |
-| ------ | ------------------- | --------------------------------------------------------- | ---------- |
-| POST   | `/register`         | Nieuwe gebruiker registreren                              | Nee        |
-| POST   | `/login`            | Gebruiker inloggen                                        | Nee        |
-| GET    | `/user`             | Ingelogde gebruiker ophalen                               | Ja         |
-| POST   | `/logout`           | Gebruiker uitloggen                                       | Ja         |
-| GET    | `/onboarding/start` | Startbericht onboarding ophalen                           | Ja         |
-| POST   | `/onboarding/chat`  | Onboarding-chat met Victoria                              | Ja         |
-| POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding  | Ja         |
-| POST   | `/tts`              | Tekst omzetten naar audio                                 | Nee        |
-| POST   | `/coach`            | Algemene coach-chat met Victoria                          | Nee        |
+```txt
+http://127.0.0.1:8000/api/onboarding/start
+```
+
+## Huidige API routes overzicht
+
+| Method | Endpoint            | Beschrijving                                             | Auth nodig |
+| ------ | ------------------- | -------------------------------------------------------- | ---------- |
+| POST   | `/register`         | Nieuwe gebruiker registreren                             | Nee        |
+| POST   | `/login`            | Gebruiker inloggen                                       | Nee        |
+| GET    | `/user`             | Ingelogde gebruiker ophalen                              | Ja         |
+| POST   | `/logout`           | Gebruiker uitloggen                                      | Ja         |
+| GET    | `/onboarding/start` | Startbericht onboarding ophalen                          | Ja         |
+| POST   | `/onboarding/chat`  | Onboarding-chat met Victoria                             | Ja         |
+| POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding | Ja         |
+| POST   | `/tts`              | Tekst omzetten naar audio                                | Nee        |
+| POST   | `/coach`            | Algemene coach-chat met Victoria                         | Nee        |
 
 ---
 
@@ -64,19 +77,6 @@ Content-Type: application/json
 
 Parameters:
 
-```
-'message' => 'required|string|max:5000',
-'page'    => 'nullable|string|max:100',
-'history' => 'nullable|array',
-```
-
-Pagina-context:
-
-```
-'/cv'          => 'De gebruiker is bezig met het opstellen van een CV.',
-'/vacatures'   => 'De gebruiker bekijkt vacatures.',
-'/onboarding'  => 'De gebruiker doorloopt de onboarding.',
-```
 
 ---
 
@@ -214,9 +214,8 @@ Voorbeeld response:
 
 ```json
 {
-    "reply": "Hoi Test User, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
-    "type": "onboarding_start",
-    "finished": false
+  "reply": "Hoi Test User, ik ben Victoria. Ik help je stap voor stap om je voor te bereiden op solliciteren. We bouwen eerst een werkprofiel op, zodat we daarna een eerste CV kunnen maken en je sollicitaties kunt oefenen. Om te beginnen: hoe oud ben je?",
+  "type": "onboarding_start"
 }
 ```
 
@@ -242,8 +241,8 @@ Voorbeeld request:
 
 ```json
 {
-    "message": "Ik ben 23 jaar",
-    "step": 1
+  "message": "Ik ben 23 jaar",
+  "step": 1
 }
 ```
 
@@ -260,10 +259,9 @@ Voorbeeld response tijdens onboarding:
 
 ```json
 {
-    "reply": "Wat is je laatste opleiding of schoolervaring?",
-    "type": "onboarding_message",
-    "finished": false,
-    "next_action": "continue_onboarding"
+  "reply": "Wat is je laatste opleiding of schoolervaring?",
+  "finished": false,
+  "next_action": "continue_onboarding"
 }
 ```
 
@@ -271,10 +269,9 @@ Voorbeeld response wanneer onboarding klaar is:
 
 ```json
 {
-    "reply": "Dankjewel voor je antwoorden. Ik heb genoeg informatie voor je werkprofiel en eerste CV.",
-    "type": "onboarding_finished",
-    "finished": true,
-    "next_action": "generate_profile"
+  "reply": "Dankjewel voor je antwoorden. Ik heb genoeg informatie voor je werkprofiel en eerste CV.",
+  "finished": true,
+  "next_action": "generate_profile"
 }
 ```
 
