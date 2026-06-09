@@ -121,18 +121,18 @@ main {
 
 @keyframes visible {
     from {
-        scale: 0;
+        transform: translateY(100%);
     }
     to {
-        scale: 100%;
+        transform: translateY(0);
     }
 }
 
 @keyframes hide {
     from {
-        scale: 100%;
+        transform: translateY(0);
     }
     to {
-        scale: 0;
+        transform: translateY(100%);
     }
 }
