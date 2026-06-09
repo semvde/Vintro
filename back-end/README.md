@@ -26,6 +26,7 @@
 
   * [Get Vacancies](#get-vacancies)
   * [Get Vacancy](#get-vacancy)
+  * [Generate Vacancies](#generate-vacancies)
 
 * [Vacancy Feedback Endpoints](#vacancy-feedback-endpoints)
 
@@ -89,6 +90,7 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/profile/generate`   | Genereert user_profile op basis van afgeronde onboarding | Ja         |
 | GET    | `/vacancies`            | Alle vacatures van gebruiker ophalen                      | Ja         |
 | GET    | `/vacancies/{id}`       | Specifieke vacature ophalen                              | Ja         |
+| POST   | `/vacancies/generate`   | Genereert 15 oefenvacatures op basis van profiel          | Ja         |
 | GET    | `/vacancy-feedback`     | Alle vacancy feedback opgehaald                           | Ja         |
 | GET    | `/vacancy-feedback/{id}`| Specifieke vacancy feedback ophalen                       | Ja         |
 | GET    | `/interview-feedback`   | Alle interview feedback ophalen                           | Ja         |
@@ -649,6 +651,97 @@ Frontend flow:
 3. Frontend toont volledige vacaturedetails
 4. Gebruiker kan solliciteren of oefening starten
 ```
+
+---
+
+### Generate Vacancies
+
+Genereert automatisch 15 oefenvacatures op basis van het profiel van de gebruiker. De AI analyseert skills, voorkeur en ervaring en creëert relevante vacatures.
+
+```http
+POST /vacancies/generate
+Authorization: Bearer jwt_token_here
+Content-Type: application/json
+```
+
+Deze endpoint vereist geen request body.
+
+Voorbeeld request:
+
+```http
+POST /vacancies/generate
+Authorization: Bearer jwt_token_here
+Accept: application/json
+```
+
+Voorbeeld response:
+
+```json
+{
+    "message": "15 oefenvacatures aangemaakt.",
+    "count": 15,
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "title": "Customer Support Specialist",
+            "company": "RetailCo Nederland",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2000,
+            "description": "Wij zoeken iemand met sterke communicatievaardigheden en organisatievermogen.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "title": "Project Coordinator",
+            "company": "BuildTech Solutions",
+            "location": "Utrecht",
+            "employment_type": "full-time",
+            "salary": 2300,
+            "description": "Je coördineert projecten en werkt samen met diverse stakeholders.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        }
+    ]
+}
+```
+
+Response velden:
+
+| Field     | Type    | Uitleg                                    |
+| --------- | ------- | ----------------------------------------- |
+| `message` | string  | Bevestigingsbericht                       |
+| `count`   | integer | Aantal gegenereerde vacatures (altijd 15) |
+| `data`    | array   | Array van vacature objects                 |
+
+Error response (geen profiel):
+
+```json
+{
+    "message": "Geen profiel gevonden."
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op "Vacatures genereren" knop
+2. Frontend roept POST /vacancies/generate aan
+3. Backend analyseert user profiel via AI
+4. Backend genereert 15 relevante oefenvacatures
+5. Frontend toont bevestigingsbericht en vacaturelijst
+6. Gebruiker kan nu oefenvacatures beoordelen en sollicitaties oefenen
+```
+
+Opmerkingen:
+
+- Vacatures worden gegenereerd op basis van het user profiel (skills, CV, job preferences).
+- Dit endpoint genereert altijd precies 15 vacatures.
+- De gegenereerde vacatures zijn denkbeeldig en bedoeld voor oefendoeleinden.
+- Alle gegenereerde vacatures zijn gekoppeld aan de ingelogde gebruiker.
 
 ---
 
