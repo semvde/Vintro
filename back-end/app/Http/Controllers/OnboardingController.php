@@ -264,11 +264,15 @@ PROMPT;
         ]);
 
 
+
         // aangepast door jeff, seeder voor vacancies
         if ($isFinished) {
-            $user->update([
-                'onboarded' => true,
-            ]);
+
+            if ($user) {
+                $user->update([
+                    'onboarded' => true,
+                ]);
+            }
 
             $skillResponse = Http::withToken(env('HF_TOKEN'))
                 ->timeout(60)
@@ -277,43 +281,83 @@ PROMPT;
                     'messages' => [
                         [
                             'role' => 'system',
-                            'content' => 'Extract ONLY a JSON array of skills from this conversation. No explanation. Example: ["PHP", "Teamwork", "Communication"]'
+                            'content' =>
+"Return ONLY valid JSON. No markdown. No explanation.
+
+If you fail → return {}
+
+Schema:
+{
+  \"skills\": [
+    {
+      \"name\": \"PHP\",
+      \"level\": \"beginner|intermediate|advanced\"
+    }
+  ]
+}
+
+Only extract skills from work experience, school, projects or tasks."
                         ],
                         [
                             'role' => 'user',
-                            'content' => json_encode($chatHistory),
+                            'content' => collect($chatHistory)
+                                ->where('role', 'user')
+                                ->pluck('content')
+                                ->implode("\n"),
                         ]
                     ],
                     'temperature' => 0.2,
-                    'max_tokens' => 200,
+                    'max_tokens' => 250,
                 ]);
 
-            $skillsRaw = $skillResponse->json('choices.0.message.content');
+            $skills = [];
 
-            $skillsClean = trim($skillsRaw);
-            $skillsClean = preg_replace('/```json|```/', '', $skillsClean);
-            $skillsClean = trim($skillsClean);
+            if (!$skillResponse->failed()) {
 
-            $skills = json_decode($skillsClean, true);
+                $skillsRaw = $skillResponse->json('choices.0.message.content');
 
-            if (!is_array($skills)) {
-                $skills = [];
+                $skillsClean = trim($skillsRaw);
+                $skillsClean = preg_replace('/```json|```/', '', $skillsClean);
+                $skillsClean = trim($skillsClean);
+
+                $decoded = json_decode($skillsClean, true);
+
+                if (json_last_error() === JSON_ERROR_NONE && isset($decoded['skills']) && is_array($decoded['skills'])) {
+                    $skills = $decoded['skills'];
+                }
+
+                $skills = array_map(function ($skill) {
+                    if (is_array($skill)) {
+                        return [
+                            'name' => strtolower(trim($skill['name'] ?? '')),
+                            'level' => $skill['level'] ?? 'beginner',
+                        ];
+                    }
+
+                    return [
+                        'name' => strtolower(trim($skill)),
+                        'level' => 'beginner',
+                    ];
+                }, $skills);
+
+                $skills = array_values(array_filter($skills, fn($s) => !empty($s['name'])));
+                $skills = array_values(array_unique($skills, SORT_REGULAR));
             }
 
-            $user->update([
-                'skills' => $skills,
-            ]);
+            if ($user) {
+                $user->update([
+                    'skills' => $skills,
+                ]);
 
-            if ($user->vacancies()->count() === 0) {
-                \App\Models\Vacancy::factory()
-                    ->count(15)
-                    ->create([
-                        'user_id' => $user->id,
-                    ]);
+                if ($user->vacancies()->count() === 0) {
+                    \App\Models\Vacancy::factory()
+                        ->count(15)
+                        ->create([
+                            'user_id' => $user->id,
+                        ]);
+                }
             }
         }
-
-
 
         return response()->json([
             'reply' => trim($reply),
