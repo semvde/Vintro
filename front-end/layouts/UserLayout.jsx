@@ -4,13 +4,15 @@ import {IoMdHome} from "react-icons/io";
 import {IoNewspaperSharp} from "react-icons/io5";
 import {FaMicrophoneAlt, FaUser} from "react-icons/fa";
 import {MdEditDocument} from "react-icons/md";
+import ScrollToTop from "../components/ScrollToTop.jsx";
 
 export default function UserLayout() {
     return (
         <>
             <header>
+                <ScrollToTop />
                 <div className={"bg-primary"}>
-                    <img src={VintroLogo} alt="Logo" width={60} height={60}/>
+                    <Link to={"/app"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 </div>
             </header>
             <main>
