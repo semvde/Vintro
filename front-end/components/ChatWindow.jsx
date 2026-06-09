@@ -9,7 +9,6 @@ export default function ChatWindow() {
     const [step, setStep] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
 
-    const maxSteps = 20;
 
     useEffect(() => {
         const startOnboarding = async () => {
@@ -40,8 +39,7 @@ export default function ChatWindow() {
 
         const response = await fetchAPI("/onboarding/chat", "POST", {
             message: input,
-            step: currentStep,
-            max_steps: maxSteps
+            step: currentStep
         });
 
         setMessages((prev) => [
@@ -56,7 +54,12 @@ export default function ChatWindow() {
 
         if (response.finished) {
             setIsFinished(true);
+
+            const profileResponse = await fetchAPI("/profile/generate", "POST");
+
+            console.log("Generated profile:", profileResponse);
         }
+        // Kan bijvoorbeeld naar een aparte generated profile pagina gaan of naar cv pagina, maar hij stata nu gewoon als log in de console voor check.
 
         setLoading(false);
     };

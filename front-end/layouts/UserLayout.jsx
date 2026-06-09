@@ -12,6 +12,7 @@ import {MdOutlineQuestionAnswer} from "react-icons/md";
 import ChatMessage from "../components/ChatMessage.jsx";
 import {fetchAPI} from "../services/Fetch.js";
 import {FaAngleRight} from "react-icons/fa";
+import ScrollToTop from "../components/ScrollToTop.jsx";
 
 export default function UserLayout() {
     const messagesEndRef = useRef(null);
@@ -96,8 +97,9 @@ export default function UserLayout() {
     return (
         <>
             <header>
+                <ScrollToTop />
                 <div className={"bg-primary"}>
-                    <img src={VintroLogo} alt="Logo" width={60} height={60}/>
+                    <Link to={"/app"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 </div>
             </header>
             <main>

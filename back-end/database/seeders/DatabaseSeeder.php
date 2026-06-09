@@ -3,23 +3,23 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Vacancy;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Create 5 users
+        $users = User::factory(5)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Each user gets 15 vacancies = 75 total
+        foreach ($users as $user) {
+            Vacancy::factory()
+                ->count(15)
+                ->create([
+                    'user_id' => $user->id,
+                ]);
+        }
     }
 }
