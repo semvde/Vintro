@@ -20,34 +20,37 @@ Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
 Route::middleware('user')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show']);
-    Route::put('/profile', [ProfileController::class, 'update']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-  
+  Route::get('/profile', [ProfileController::class, 'show']);
+  Route::put('/profile', [ProfileController::class, 'update']);
+  Route::post('/logout', [AuthController::class, 'logout']);
+
   //vacancycontroller + feedback
-    Route::get('/vacancies', [VacancyController::class, 'index']);
-    Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
-    Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
-    Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
-    
+  Route::get('/vacancies', [VacancyController::class, 'index']);
+  Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+  Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+  Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
+
+  //VACANCIES GENEREREN?
+  Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
+
   //interview feedback
-    Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
-    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+  Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
+  Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
 
   //Onboarding
-    Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
-    Route::prefix('onboarding')->group(function () {
-        Route::get('/start', [OnboardingController::class, 'start']);
-        Route::post('/chat', [OnboardingController::class, 'chat']);
-    });
+  Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
+  Route::prefix('onboarding')->group(function () {
+    Route::get('/start', [OnboardingController::class, 'start']);
+    Route::post('/chat', [OnboardingController::class, 'chat']);
+  });
 
-    Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
+  Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
 });
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+  Route::get('/user', function (Request $request) {
+    return $request->user();
+  });
 
 });
 

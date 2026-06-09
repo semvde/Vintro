@@ -70,6 +70,7 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/profile/generate` | Genereert user_profile op basis van afgeronde onboarding | Ja         |
 | POST   | `/tts`              | Tekst omzetten naar audio                                | Nee        |
 | POST   | `/coach`            | Algemene coach-chat met Victoria                         | Nee        |
+| POST   | /vacancies/generate | Vacatures Genereren                                      | Nee        |    
 
 ---
 
