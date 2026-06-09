@@ -39,21 +39,27 @@ class ProfileController extends Controller
         if ($request->hasAny([
             'name', 'image', 'skills', 'work_experience', 'education_level', 'preferred_language'
         ])) {
-            $user->profile()->update($request->only([
-                'name',
-                'image',
-                'skills',
-                'work_experience',
-                'education_level',
-                'preferred_language',
-            ]));
+            $user->profile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $request->only([
+                    'name',
+                    'image',
+                    'skills',
+                    'work_experience',
+                    'education_level',
+                    'preferred_language',
+                ])
+            );
         }
 
         if ($request->hasAny(['phone_number', 'email'])) {
-            $user->cv()->update($request->only([
-                'phone_number',
-                'email',
-            ]));
+            $user->cv()->updateOrCreate(
+                ['user_id' => $user->id],
+                $request->only([
+                    'phone_number',
+                    'email',
+                ])
+            );
         }
 
         $user->load(['profile', 'cv']);
