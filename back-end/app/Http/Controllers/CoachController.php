@@ -19,10 +19,10 @@ class CoachController extends Controller
         $page = $validated['page'] ?? 'onbekend';
 
         $pageContext = match ($page) {
-            '/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
-            '/vacatures' => 'De gebruiker bekijkt vacatures.',
-            '/onboarding' => 'De gebruiker doorloopt de onboarding.',
-            default => '',
+            '/app/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
+            '/app/vacancies' => 'De gebruiker bekijkt vacatures.',
+            '/app/onboarding' => 'De gebruiker doorloopt de onboarding.',
+            default => 'De gebruiker bevindt zich op een onbekende pagina.',
         };
 
         $systemPrompt = $pageContext . "\n\n" . <<<'PROMPT'

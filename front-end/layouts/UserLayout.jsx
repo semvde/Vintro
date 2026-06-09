@@ -10,6 +10,7 @@ import {FaXmark} from "react-icons/fa6";
 import FormField from "../components/FormField.jsx";
 import {MdOutlineQuestionAnswer} from "react-icons/md";
 import ChatMessage from "../components/ChatMessage.jsx";
+import {fetchAPI} from "../services/Fetch.js";
 
 export default function UserLayout() {
     const [chatOpen, setChatOpen] = useState(false);
@@ -32,6 +33,47 @@ export default function UserLayout() {
         }, 500)
     }
 
+    const [form, setForm] = useState({
+        input: ""
+    });
+
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+
+        setForm(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setForm({input: ""});
+
+        setChatMessages((prev) => [
+            ...prev,
+            {
+                role: "user",
+                content: form.input
+            }
+        ])
+
+        const response = await fetchAPI('/coach', 'POST', {
+            message: form.input,
+            page: location.pathname,
+            history: chatMessages
+        });
+
+        setChatMessages((prev) => [
+            ...prev,
+            {
+                role: "assistant",
+                content: response.reply
+            }
+        ])
+    };
+
     return (
         <>
             <header>
@@ -48,15 +90,16 @@ export default function UserLayout() {
                     <button onClick={() => closeChat()} className={"absolute right-5 top-5"}><FaXmark size={25}/>
                     </button>
                     <h2>Chat met Victoria</h2>
-                    <div className={"overflow-y-auto"}>
+                    <div className={"overflow-y-auto h-[calc(100%-85px)] pt-5"}>
                         {
-                            chatMessages.map((message) => <ChatMessage role={message.role} content={message.content}/>)
+                            chatMessages.map((message, index) => <ChatMessage key={index} role={message.role}
+                                                                              content={message.content}/>)
                         }
                     </div>
-                    <div className={"absolute bottom-0 left-0 right-0"}>
-                        <FormField icon={<MdOutlineQuestionAnswer/>}
-                                   placeholder={"Stel je vraag..."}/>
-                    </div>
+                    <form className={"absolute bottom-0 left-0 right-0"} onSubmit={handleSubmit}>
+                        <FormField icon={<MdOutlineQuestionAnswer/>} id={'input'}
+                                   placeholder={"Stel je vraag..."} value={form.input} onChange={handleInputChange}/>
+                    </form>
                 </section>
             }
             <footer className={"fixed left-0 right-0 bottom-0 z-999"}>
