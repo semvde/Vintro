@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import { mapToCVData } from "../../mappers/mapToCVData.js";
-import { CVPreview } from "../../components/CVPreview.jsx";
-import { DownloadCVButton } from "../../components/DownloadCV.jsx";
 import {fetchAPI} from "../../services/Fetch.js";
 import {CVeditForm} from "../../components/CVeditForm.jsx";
 
@@ -22,13 +19,7 @@ export default function EditCV() {
                 return;
             }
 
-            const mapped = mapToCVData(
-                data.profile,
-                data.cv,
-                data.cvVersion
-            );
-
-            setCvData(mapped);
+            setCvData(data);
             setLoading(false);
         }
 
@@ -49,10 +40,6 @@ export default function EditCV() {
 
     return (
         <>
-            <div className={"flex justify-end pb-4 gap-4 items-center"}>
-
-                <DownloadCVButton data={cvData}/>
-            </div>
             <CVeditForm data={cvData}/>
         </>
     );

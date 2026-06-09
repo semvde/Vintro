@@ -1,8 +1,9 @@
 import {FaPhoneAlt, FaPlus, FaTrash} from "react-icons/fa"
 import {IoIosMail} from "react-icons/io"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {useNavigate} from "react-router"
 import {FaUpload} from "react-icons/fa"
+import {fetchAPI} from "../services/Fetch.js";
 
 export function CVeditForm({data}) {
     const [file, setFile] = useState(null)
@@ -11,24 +12,65 @@ export function CVeditForm({data}) {
 
     const [errors, setErrors] = useState({
         name: "",
-        phoneNumber: "",
-        workExperience: "",
-        educationLevel: "",
+        phone_number: "",
+        work_experience: "",
+        education_level: "",
         skills: "",
         strengths: ""
     })
 
+    const formatToArray = (field) => {
+        if (!field) return [];
+        if (typeof field === "string") {
+            try { return JSON.parse(field); } catch (e) { return []; }
+        }
+        return Array.isArray(field) ? field : [];
+    };
+
     const [formData, setFormData] = useState({
-        Image: file,
-        userId: data?.id || "",
-        name: data?.name || "",
-        email: data?.email || "",
-        phoneNumber: data?.phoneNumber || "",
-        workExperience: data?.workExperience || [],
-        educationLevel: data?.educationLevel || [],
-        skills: data?.skills || [],
-        strengths: data?.strengths || []
-    })
+        name: data?.profile?.name || "",
+        work_experience: formatToArray(data?.profile?.work_experience),
+        education_level: formatToArray(data?.profile?.education_level),
+        skills: formatToArray(data?.profile?.skills),
+        strengths: formatToArray(data?.profile?.strengths),
+
+        email: data?.cv?.email || "",
+        phone_number: data?.cv?.phone_number || ""
+    });
+
+    useEffect(() => {
+        if (data) {
+            console.log("Rauwe data gesplitst:", data);
+
+            const profile = data.profile || {};
+            const cv = data.cv || {};
+
+            const formatToArray = (field) => {
+                if (!field) return [];
+                if (typeof field === "string") {
+                    try {
+                        const parsed = JSON.parse(field);
+                        return Array.isArray(parsed) ? parsed : [];
+                    } catch (e) {
+                        console.error("FormatToArray parser error:", e);
+                        return [];
+                    }
+                }
+                return Array.isArray(field) ? field : [];
+            };
+
+            setFormData({
+                name: profile.name || "",
+                work_experience: formatToArray(profile.work_experience),
+                education_level: formatToArray(profile.education_level),
+                skills: formatToArray(profile.skills),
+                strengths: formatToArray(profile.strengths),
+
+                email: cv.email || "",
+                phone_number: cv.phone_number || ""
+            });
+        }
+    }, [data]);
 
     const [newJob, setNewJob] = useState({
         company: "",
@@ -53,15 +95,6 @@ export function CVeditForm({data}) {
     const handleInputChange = (event) => {
         const {name, value} = event.target
 
-        if (name === "phoneNumber") {
-            const regex = /^[0-9\s+-]*$/
-            if (!regex.test(value)) {
-                setErrors((prev) => ({...prev, phoneNumber: "Telefoonnummer mag alleen cijfers en spaties/plussen bevatten"}))
-            } else {
-                setErrors((prev) => ({...prev, phoneNumber: ""}))
-            }
-        }
-
         if (name === "name") {
             if (value.trim() === "") {
                 setErrors((prev) => ({...prev, name: "Naam is verplicht"}))
@@ -77,7 +110,6 @@ export function CVeditForm({data}) {
     }
 
     // WORK EXPERIENCE //
-
     const handleNewJobChange = (event) => {
         const {name, value} = event.target
         setNewJob((prev) => ({
@@ -88,14 +120,14 @@ export function CVeditForm({data}) {
 
     const addWorkExperience = () => {
         if (!newJob.company || !newJob.job_title) {
-            setErrors((prev) => ({...prev, workExperience: "Vul tenminste een bedrijf en een functie in"}))
+            setErrors((prev) => ({...prev, work_experience: "Vul tenminste een bedrijf en een functie in"}))
             return
         }
 
-        setErrors((prev) => ({...prev, workExperience: ""}))
+        setErrors((prev) => ({...prev, work_experience: ""}))
         setFormData((prev) => ({
             ...prev,
-            workExperience: [...prev.workExperience, newJob]
+            work_experience: [...prev.work_experience, newJob]
         }))
 
         setNewJob({company: "", period: "", job_title: "", description: ""})
@@ -104,12 +136,11 @@ export function CVeditForm({data}) {
     const removeWorkExperience = (indexToRemove) => {
         setFormData((prev) => ({
             ...prev,
-            workExperience: prev.workExperience.filter((_, index) => index !== indexToRemove)
+            work_experience: prev.work_experience.filter((_, index) => index !== indexToRemove)
         }))
     }
 
     // EDUCATION //
-
     const handleNewEducationChange = (event) => {
         const {name, value} = event.target
         setNewEducation((prev) => ({
@@ -120,14 +151,14 @@ export function CVeditForm({data}) {
 
     const addEducation = () => {
         if (!newEducation.school || !newEducation.degree) {
-            setErrors((prev) => ({...prev, educationLevel: "Vul tenminste een school en diploma in"}))
+            setErrors((prev) => ({...prev, education_level: "Vul tenminste een school en diploma in"}))
             return
         }
 
-        setErrors((prev) => ({...prev, educationLevel: ""}))
+        setErrors((prev) => ({...prev, education_level: ""}))
         setFormData((prev) => ({
             ...prev,
-            educationLevel: [...prev.educationLevel, newEducation]
+            education_level: [...prev.education_level, newEducation]
         }))
 
         setNewEducation({school: "", degree: "", period: ""})
@@ -136,12 +167,11 @@ export function CVeditForm({data}) {
     const removeEducation = (indexToRemove) => {
         setFormData((prev) => ({
             ...prev,
-            educationLevel: prev.educationLevel.filter((_, index) => index !== indexToRemove)
+            education_level: prev.education_level.filter((_, index) => index !== indexToRemove)
         }))
     }
 
     // SKILLS //
-
     const addSkill = () => {
         if (!newSkill.trim()) {
             setErrors((prev) => ({...prev, skills: "Typ eerst een vaardigheid"}))
@@ -165,7 +195,6 @@ export function CVeditForm({data}) {
     }
 
     // STRENGTH //
-
     const addStrength = () => {
         if (!newStrength.trim()) {
             setErrors((prev) => ({...prev, strengths: "Typ eerst een sterk punt"}))
@@ -196,37 +225,32 @@ export function CVeditForm({data}) {
             return
         }
 
-        const submitData = new FormData()
-        if (file) submitData.append("image", file)
-
-        submitData.append("userId", formData.userId)
-        submitData.append("name", formData.name)
-        submitData.append("email", formData.email)
-        submitData.append("phoneNumber", formData.phoneNumber)
-
-        submitData.append("workExperience", JSON.stringify(formData.workExperience))
-        submitData.append("educationLevel", JSON.stringify(formData.educationLevel))
-        submitData.append("skills", JSON.stringify(formData.skills))
-        submitData.append("strengths", JSON.stringify(formData.strengths))
-
         try {
             setLoading(true)
 
-            const response = await fetch("http://127.0.0.1:8000/api/profile", {
-                method: "PUT",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                },
-                body: submitData
-            })
+            const payload = {
+                name: formData.name,
+                email: formData.email,
+                phone_number: formData.phone_number,
 
-            const resData = await response.json()
-            if (response.ok) {
+                work_experience: formData.work_experience,
+                education_level: formData.education_level,
+                skills: formData.skills,
+                strengths: formData.strengths,
+            }
+
+            console.log("Dit sturen we naar de backend:", payload);
+
+            const resData = await fetchAPI("/profile", "PUT", payload)
+            console.log("De ontvangen data is:", resData);
+
+            if (resData && resData.items && resData.items[0]?.error) {
+                alert("Upload mislukt: " + resData.items[0].error)
+            } else if (resData) {
                 console.log("Curriculum Vitae geüpdate!", resData)
                 navigate("/app/cv")
             } else {
-                alert("Upload mislukt: " + resData.message)
+                alert("Upload mislukt: Er ging iets mis aan de serverkant.")
             }
         } catch (error) {
             console.error("Error met updaten:", error)
@@ -253,11 +277,13 @@ export function CVeditForm({data}) {
 
                             <label htmlFor="file-upload"
                                    className="flex flex-col items-start justify-start border-2 border-dashed border-gray-300 hover:border-blue-500 bg-white p-4 rounded-xl cursor-pointer w-5px transition-colors text-center group">
-                                <FaUpload className="text-3xl text-gray-400 group-hover:text-blue-500 transition-colors mb-2"/>
+                                <FaUpload
+                                    className="text-3xl text-gray-400 group-hover:text-blue-500 transition-colors mb-2"/>
                             </label>
 
                             {file && (
-                                <div className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-md border border-green-200 max-w-5px w-5px text-center truncate">
+                                <div
+                                    className="text-xs text-green-600 font-medium bg-green-50 px-3 py-1.5 rounded-md border border-green-200 max-w-5px w-5px text-center truncate">
                                     Geselecteerd: <span className="font-semibold">{file.name}</span>
                                 </div>
                             )}
@@ -275,11 +301,11 @@ export function CVeditForm({data}) {
                         </div>
                         <div className="flex gap-2 items-center mt-2">
                             <FaPhoneAlt className="pl-1 w-6 h-6"/>
-                            <input name="phoneNumber"
+                            <input name="phone_number"
                                    className="focus:bg-white pl-2 pr-2 border-white border-solid border-2 focus:text-black focus:border-black text-white rounded-md"
-                                   onChange={handleInputChange} value={formData.phoneNumber}/>
+                                   onChange={handleInputChange} value={formData.phone_number}/>
                         </div>
-                        {errors.phoneNumber && <p className="text-red-400 text-xs mt-1">{errors.phoneNumber}</p>}
+                        {errors.phone_number && <p className="text-red-400 text-xs mt-1">{errors.phone_number}</p>}
                     </div>
                 </section>
 
@@ -287,11 +313,11 @@ export function CVeditForm({data}) {
                     <p>{data.summary}</p>
                     <div className="py-8">
                         <h2>Werkervaring</h2>
-                        {formData.workExperience.map((job, index) => (
+                        {formData.work_experience.map((job, index) => (
                             <div key={index}
                                  className="py-2 px-3 bg-gray-50 rounded-lg border border-gray-200 mb-2 flex justify-between items-center">
                                 <div>
-                                    <p className="font-semibold text-black">{job.job_title} bij {job.company}</p>
+                                    <p className="font-semibold text-black">{job.job_title} bij {job.company} </p>
                                     <p className="text-xs text-gray-500">{job.period}</p>
                                     <p className="text-gray-700 mt-1">{job.description}</p>
                                 </div>
@@ -305,7 +331,8 @@ export function CVeditForm({data}) {
                             </div>
                         ))}
 
-                        <div className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                        <div
+                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
                             <h3 className="font-medium text-gray-700">Nieuwe werkervaring toevoegen</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
@@ -338,7 +365,7 @@ export function CVeditForm({data}) {
                                 value={newJob.description}
                             />
 
-                            {errors.workExperience && <p className="text-red-500 text-xs">{errors.workExperience}</p>}
+                            {errors.work_experience && <p className="text-red-500 text-xs">{errors.work_experience}</p>}
 
                             <button
                                 type="button"
@@ -352,13 +379,16 @@ export function CVeditForm({data}) {
 
                     <div className="py-2">
                         <h2>Educatie</h2>
-                        {formData.educationLevel.map((education, index) => (
+
+                        {formData.education_level.map((education, index) => (
                             <div key={index}
                                  className="py-2 px-3 bg-gray-50 rounded-lg border border-gray-200 mb-2 flex justify-between items-center">
                                 <div>
                                     <p className="font-semibold text-black">{education.school}</p>
                                     <p className="text-xs text-gray-500">{education.period}</p>
                                     <p className="text-gray-700 mt-1">{education.degree}</p>
+
+
                                 </div>
                                 <button
                                     type="button"
@@ -370,7 +400,8 @@ export function CVeditForm({data}) {
                             </div>
                         ))}
 
-                        <div className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
+                        <div
+                            className="mt-6 p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50/50 space-y-3">
                             <h3 className="font-medium text-gray-700">Nieuwe opleiding toevoegen</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                 <input
@@ -396,7 +427,7 @@ export function CVeditForm({data}) {
                                 />
                             </div>
 
-                            {errors.educationLevel && <p className="text-red-500 text-xs">{errors.educationLevel}</p>}
+                            {errors.education_level && <p className="text-red-500 text-xs">{errors.education_level}</p>}
 
                             <button
                                 type="button"
