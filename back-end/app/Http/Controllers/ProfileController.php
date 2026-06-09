@@ -31,13 +31,19 @@ class ProfileController extends Controller
             'work_experience' => ['nullable', 'array'],
             'education_level' => ['nullable', 'array'],
             'preferred_language' => ['nullable', 'string'],
-
+            'age' => ['nullable', 'integer'],
+            'interests' => ['nullable', 'array'],
+            'strengths' => ['nullable', 'array'],
+            'job_preferences' => ['nullable', 'array'],
+            'profile_summary' => ['nullable', 'string'],
             'phone_number' => ['nullable', 'string'],
             'email' => ['nullable', 'email'],
         ]);
 
         if ($request->hasAny([
-            'name', 'image', 'skills', 'work_experience', 'education_level', 'preferred_language'
+            'name', 'image', 'skills', 'work_experience',
+            'education_level', 'preferred_language',
+            'age', 'interests', 'strengths', 'job_preferences', 'profile_summary'
         ])) {
             $user->profile()->updateOrCreate(
                 ['user_id' => $user->id],
@@ -48,6 +54,11 @@ class ProfileController extends Controller
                     'work_experience',
                     'education_level',
                     'preferred_language',
+                    'age',
+                    'interests',
+                    'strengths',
+                    'job_preferences',
+                    'profile_summary',
                 ])
             );
         }
