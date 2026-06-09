@@ -219,6 +219,7 @@ export function CVeditForm({data}) {
 
     const handleUpdate = async (e) => {
         e.preventDefault()
+        console.log("clicked!")
 
         if (!formData.name.trim()) {
             alert("Naam is verplicht!")
@@ -525,6 +526,7 @@ export function CVeditForm({data}) {
                 <button
                     type="submit"
                     disabled={loading}
+                    onClick={handleUpdate}
                     className="bg-primary text-white px-4 py-2 mb-20 rounded hover:cursor-pointer hover:bg-primary/50"
                 >
                     {loading ? "Updaten..." : "Curriculum Vitae bijwerken"}
