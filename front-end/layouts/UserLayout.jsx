@@ -5,16 +5,20 @@ import {IoMdHome} from "react-icons/io";
 import {IoNewspaperSharp} from "react-icons/io5";
 import {FaMicrophoneAlt, FaUser} from "react-icons/fa";
 import {MdEditDocument} from "react-icons/md";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {FaXmark} from "react-icons/fa6";
 import FormField from "../components/FormField.jsx";
 import {MdOutlineQuestionAnswer} from "react-icons/md";
 import ChatMessage from "../components/ChatMessage.jsx";
 import {fetchAPI} from "../services/Fetch.js";
+import {FaAngleRight} from "react-icons/fa";
 
 export default function UserLayout() {
+    const messagesEndRef = useRef(null);
     const [chatOpen, setChatOpen] = useState(false);
     const [chatAnimation, setChatAnimation] = useState('visible');
+    const [placeholderText, setPlaceholderText] = useState('Stel je vraag...');
+    const [loading, setLoading] = useState(false);
     const [chatMessages, setChatMessages] = useState([{
         role: 'assistant',
         content: 'Waar kan ik je mee helpen? Stel je vraag in een korte zin!'
@@ -54,7 +58,9 @@ export default function UserLayout() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        setLoading(true);
         setForm({input: ""});
+        setPlaceholderText('Nadenken...');
 
         setChatMessages((prev) => [
             ...prev,
@@ -70,14 +76,22 @@ export default function UserLayout() {
             history: chatMessages
         });
 
+        setPlaceholderText('Stel je vraag...');
         setChatMessages((prev) => [
             ...prev,
             {
                 role: "assistant",
                 content: response.reply
             }
-        ])
+        ]);
+        setLoading(false);
     };
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+        });
+    }, [chatMessages]);
 
     return (
         <>
@@ -100,10 +114,14 @@ export default function UserLayout() {
                             chatMessages.map((message, index) => <ChatMessage key={index} role={message.role}
                                                                               content={message.content}/>)
                         }
+
+                        <div ref={messagesEndRef}/>
                     </div>
                     <form className={"absolute bottom-0 left-0 right-0"} onSubmit={handleSubmit}>
                         <FormField icon={<MdOutlineQuestionAnswer/>} id={'input'}
-                                   placeholder={"Stel je vraag..."} value={form.input} onChange={handleInputChange}/>
+                                   placeholder={placeholderText} value={form.input} onChange={handleInputChange}/>
+                        <button type={"submit"} disabled={loading} className={"absolute right-1 bottom-6"}>
+                            <FaAngleRight/></button>
                     </form>
                 </section>
             }
