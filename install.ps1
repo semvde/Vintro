@@ -124,3 +124,6 @@ Set-Location $RootPath
 Write-Host "Installatie klaar." -ForegroundColor Green
 Write-Host "Start de applicatie met:" -ForegroundColor Cyan
 Write-Host ".\start.ps1" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "Let op:" -ForegroundColor Yellow
+Write-Host "Als AI of TTS niet werkt, controleer back-end/.env en vul HF_TOKEN / ELEVENLABS_API_KEY in." -ForegroundColor Yellow
