@@ -38,21 +38,20 @@ http://145.24.223.123:8000/
 
 Base URL lokaal:
 
-```txt
+```
 http://127.0.0.1:8000/api
 ```
 
 Gebruik bij JSON requests altijd deze headers:
 
-```txt
+```
 Accept: application/json
 Content-Type: application/json
 ```
 
 ---
 
-- Alle endpoints beginnen met `/api`.
-- Voor lokale development is de volledige URL bijvoorbeeld:
+## Huidige API Routes Overzicht
 
 ```txt
 http://127.0.0.1:8000/api/onboarding/start
@@ -74,12 +73,14 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ---
 
-## Coach endpoints
+## Coach Endpoints
 
-parameters:
+Parameters:
 
 
-## Auth endpoints
+---
+
+## Auth Endpoints
 
 ### Register
 
@@ -149,17 +150,17 @@ Frontend moet deze token opslaan en meesturen bij protected routes.
 
 ---
 
-## Protected auth endpoints
+## Protected Auth Endpoints
 
 Voor deze endpoints is een JWT-token nodig.
 
 Header:
 
-```txt
+```
 Authorization: Bearer jwt_token_here
 ```
 
-### Get current user
+### Get Current User
 
 Haalt de ingelogde gebruiker op.
 
@@ -197,11 +198,11 @@ Voorbeeld response:
 
 ---
 
-# Onboarding endpoints
+## Onboarding Endpoints
 
 De onboarding verzamelt informatie voor een werkprofiel, eerste CV en sollicitatie-oefeningen.
 
-## Start onboarding
+### Start Onboarding
 
 ```http
 GET /onboarding/start
@@ -220,7 +221,7 @@ Voorbeeld response:
 
 Frontend flow:
 
-```txt
+```
 1. Gebruiker opent onboardingpagina
 2. Frontend roept GET /onboarding/start aan
 3. Frontend toont reply als eerste assistant-bericht
@@ -228,7 +229,7 @@ Frontend flow:
 
 ---
 
-## Onboarding chat
+### Onboarding Chat
 
 ```http
 POST /onboarding/chat
@@ -248,9 +249,9 @@ Voorbeeld request:
 Velden:
 
 | Field     | Type    | Required | Uitleg                                            |
-| --------- | ------- | -------: | ------------------------------------------------- |
-| `message` | string  |       Ja | Het nieuwste bericht van de gebruiker             |
-| `step`    | integer |       Ja | Huidige onboardingstap, bijgehouden door frontend |
+| --------- | ------- | -------- | ------------------------------------------------- |
+| `message` | string  | Ja       | Het nieuwste bericht van de gebruiker             |
+| `step`    | integer | Ja       | Huidige onboardingstap, bijgehouden door frontend |
 
 Frontend hoeft geen `history` of `max_steps` mee te sturen. De backend bepaalt zelf wanneer de onboarding klaar is.
 
@@ -276,7 +277,7 @@ Voorbeeld response wanneer onboarding klaar is:
 
 Frontend flow:
 
-```txt
+```
 1. Gebruiker stuurt antwoord
 2. Frontend verhoogt step
 3. Frontend stuurt message en step naar POST /onboarding/chat
@@ -289,10 +290,9 @@ Frontend flow:
 
 ---
 
-# Profile Endpoints 
-#### (profile generation na onboarding )
+## Profile Endpoints
 
-## Generate profile
+### Generate Profile
 
 ```http
 POST /profile/generate
@@ -314,39 +314,39 @@ Voorbeeld response:
 
 ```json
 {
-  "message": "Profiel gegenereerd.",
-  "profile": {
-    "id": 1,
-    "user_id": 1,
-    "name": "Test User",
-    "age": 23,
-    "education_level": {
-      "degree": "HAVO",
-      "school": "onbekend",
-      "status": "afgerond",
-      "period": "onbekend"
+    "message": "Profiel gegenereerd.",
+    "profile": {
+        "id": 1,
+        "user_id": 1,
+        "name": "Test User",
+        "age": 23,
+        "education_level": {
+            "degree": "HAVO",
+            "school": "onbekend",
+            "status": "afgerond",
+            "period": "onbekend"
+        },
+        "skills": ["samenwerken", "organiseren"],
+        "work_experience": [
+            {
+                "company": "Jumbo",
+                "period": "september 2023 - juni 2025",
+                "job_title": "Vakkenvuller",
+                "description": "Eerste werkervaring opgedaan in de detailhandel."
+            }
+        ],
+        "interests": ["sport", "creativiteit"],
+        "strengths": ["leergierig", "ijverig"],
+        "job_preferences": ["werken met mensen"],
+        "profile_summary": "Korte profielsamenvatting..."
     },
-    "skills": ["samenwerken", "organiseren"],
-    "work_experience": [
-      {
-        "company": "Jumbo",
-        "period": "september 2023 - juni 2025",
-        "job_title": "Vakkenvuller",
-        "description": "Eerste werkervaring opgedaan in de detailhandel."
-      }
-    ],
-    "interests": ["sport", "creativiteit"],
-    "strengths": ["leergierig", "ijverig"],
-    "job_preferences": ["werken met mensen"],
-    "profile_summary": "Korte profielsamenvatting..."
-  },
-  "next_action": "generate_cv"
+    "next_action": "generate_cv"
 }
 ```
 
 Frontend flow:
 
-```txt
+```
 1. Wacht tot /onboarding/chat finished true teruggeeft
 2. Roep POST /profile/generate aan
 3. Gebruik response.profile voor preview, CV-generatie of dashboard
@@ -355,9 +355,9 @@ Frontend flow:
 
 ---
 
-## Text-to-Speech endpoint
+## Text-to-Speech Endpoint
 
-### Generate speech
+### Generate Speech
 
 Zet tekst om naar audio. Deze endpoint geeft een `audio/wav` response terug.
 
@@ -377,13 +377,13 @@ Voorbeeld request:
 Velden:
 
 | Field   | Type   | Required | Uitleg                                |
-| ------- | ------ | -------: | ------------------------------------- |
-| `text`  | string |       Ja | De tekst die uitgesproken moet worden |
-| `voice` | string |      Nee | Steminstelling voor het TTS-model     |
+| ------- | ------ | -------- | ------------------------------------- |
+| `text`  | string | Ja       | De tekst die uitgesproken moet worden |
+| `voice` | string | Nee      | Steminstelling voor het TTS-model     |
 
 Response:
 
-```txt
+```
 Content-Type: audio/wav
 ```
 
@@ -410,24 +410,23 @@ audio.play();
 
 ---
 
-## Notes voor frontend
+## Frontend Notes
 
-- Alle endpoints beginnen met `/api`.
-- Voor lokale development is de volledige URL bijvoorbeeld:
+- Alle endpoints beginnen met `/api`. Voor lokale development is de volledige URL bijvoorbeeld:
 
-```txt
+```
 http://127.0.0.1:8000/api/onboarding/start
 ```
 
 - Protected routes hebben deze header nodig:
 
-```txt
+```
 Authorization: Bearer jwt_token_here
 ```
 
 - Onboarding werkt met een vaste flow vanuit frontend:
-    - `GET /onboarding/start`
-    - daarna meerdere keren `POST /onboarding/chat`
-    - als `finished: true`, doorgaan naar profiel/CV-scherm.
+  - `GET /onboarding/start`
+  - daarna meerdere keren `POST /onboarding/chat`
+  - als `finished: true`, doorgaan naar profiel/CV-scherm.
 
 - TTS geeft geen JSON terug maar audio. Gebruik daarom `response.blob()` in de frontend.
