@@ -3,6 +3,7 @@ import {Navigate, useLocation} from "react-router";
 import {fetchAPI} from "../services/Fetch.js";
 import {AppContext} from "../src/Contexts.jsx";
 import Layout from "../layouts/Layout.jsx";
+import UserLayout from "../layouts/UserLayout.jsx";
 
 export default function ProtectedRoute({children}) {
     const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export default function ProtectedRoute({children}) {
         checkLogin();
     }, [location.pathname]);
 
-    if (loading) return <Layout/>;
+    if (loading) return <UserLayout/>;
 
     if (!user) {
         return <Navigate to="/login" replace/>;

@@ -4,6 +4,8 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
+import {IoNewspaperSharp} from "react-icons/io5";
+import {Link} from "react-router";
 
 export default function Dashboard() {
     return(
@@ -18,25 +20,25 @@ export default function Dashboard() {
             <section className={"mb-8"}>
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
-                <DashboardCard
+                <Link to={"/app/vacancies"}><DashboardCard
                     icon={<MdEditDocument />}
                     title={"Vacature oefenen"}
                     description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
-                />
-                <DashboardCard
+                /></Link>
+                <Link to={"/app/interview"}><DashboardCard
                     icon={<FaMicrophoneAlt />}
                     title={"Interview oefenen"}
                     description={"Oefen een sollicitatiegesprek met AI"}
-                />
-                <DashboardCard
-                    icon={<MdEditDocument />}
+                /></Link>
+                <Link to={"/app/cv"}><DashboardCard
+                    icon={<IoNewspaperSharp />}
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
-                />
+                /></Link>
                 <DashboardCard
                     icon={<HiLightBulb />}
                     title={"Tips & Tricks"}
-                    description={"Bekijk en verbeter je CV"}
+                    description={"Ontdek tips & tricks die je helpen jezelf beter te presenteren"}
                 />
             </section>
 

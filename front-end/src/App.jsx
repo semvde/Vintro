@@ -17,6 +17,7 @@ import Onboarding from "../pages/Onboarding.jsx";
 import CV from "../pages/CV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
+import Interview from "../pages/Interview.jsx";
 
 const router = createBrowserRouter([
     {
@@ -38,9 +39,9 @@ const router = createBrowserRouter([
     },
     {
         element: (
-            // <ProtectedRoute>
-            <UserLayout/>
-            // </ProtectedRoute>
+            <ProtectedRoute>
+                <UserLayout/>
+            </ProtectedRoute>
         ),
         children: [
             {
@@ -82,6 +83,9 @@ const router = createBrowserRouter([
             {
                 path: "/app/cv",
                 element: <CV />,
+            },{
+                path: "/app/interview",
+                element: <Interview />,
             },
         ]
     }
