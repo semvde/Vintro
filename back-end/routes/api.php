@@ -23,11 +23,6 @@ Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
 Route::middleware('user')->group(function () {
-use App\Http\Controllers\VacancyController;
-use App\Http\Controllers\ProfileGenerationController;
-use App\Http\Controllers\VideoController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\InterviewController;
 
 // Profile & Auth
 Route::get('/profile', [ProfileController::class, 'show']);
