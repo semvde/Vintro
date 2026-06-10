@@ -2,47 +2,40 @@
 
 ## Inhoudsopgave
 
-* [Base URL](#base-url)
-* [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
-* [Auth Endpoints](#auth-endpoints)
+- [Base URL](#base-url)
+- [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
+- [Auth Endpoints](#auth-endpoints)
+    - [Register](#register)
+    - [Login](#login)
+    - [Get Current User](#get-current-user)
+    - [Logout](#logout)
 
-    * [Register](#register)
-    * [Login](#login)
-    * [Get Current User](#get-current-user)
-    * [Logout](#logout)
+- [Onboarding Endpoints](#onboarding-endpoints)
+    - [Start Onboarding](#start-onboarding)
+    - [Onboarding Chat](#onboarding-chat)
 
-* [Onboarding Endpoints](#onboarding-endpoints)
+- [Profile Endpoints](#profile-endpoints)
+    - [Get Profile](#get-profile)
+    - [Update Profile](#update-profile)
+    - [Generate Profile](#generate-profile)
 
-    * [Start Onboarding](#start-onboarding)
-    * [Onboarding Chat](#onboarding-chat)
+- [Vacancies Endpoints](#vacancies-endpoints)
+    - [Get Vacancies](#get-vacancies)
+    - [Get Vacancy](#get-vacancy)
+    - [Generate Vacancies](#generate-vacancies)
 
-* [Profile Endpoints](#profile-endpoints)
+- [Vacancy Feedback Endpoints](#vacancy-feedback-endpoints)
+    - [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
+    - [Get Vacancy Feedback](#get-vacancy-feedback)
 
-    * [Get Profile](#get-profile)
-    * [Update Profile](#update-profile)
-    * [Generate Profile](#generate-profile)
+- [Interview Feedback Endpoints](#interview-feedback-endpoints)
+    - [Get Interview Feedbacks](#get-interview-feedbacks)
+    - [Get Interview Feedback](#get-interview-feedback)
 
-* [Vacancies Endpoints](#vacancies-endpoints)
+- [Text-to-Speech Endpoint](#text-to-speech-endpoint)
+    - [Generate Speech](#generate-speech)
 
-    * [Get Vacancies](#get-vacancies)
-    * [Get Vacancy](#get-vacancy)
-    * [Generate Vacancies](#generate-vacancies)
-
-* [Vacancy Feedback Endpoints](#vacancy-feedback-endpoints)
-
-    * [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
-    * [Get Vacancy Feedback](#get-vacancy-feedback)
-
-* [Interview Feedback Endpoints](#interview-feedback-endpoints)
-
-    * [Get Interview Feedbacks](#get-interview-feedbacks)
-    * [Get Interview Feedback](#get-interview-feedback)
-
-* [Text-to-Speech Endpoint](#text-to-speech-endpoint)
-
-    * [Generate Speech](#generate-speech)
-
-* [Frontend Notes](#frontend-notes)
+- [Frontend Notes](#frontend-notes)
 
 ---
 
@@ -78,7 +71,7 @@ http://127.0.0.1:8000/api/onboarding/start
 ## Huidige API routes overzicht
 
 | Method | Endpoint                   | Beschrijving                                             | Auth nodig |
-|--------|----------------------------|----------------------------------------------------------|------------|
+| ------ | -------------------------- | -------------------------------------------------------- | ---------- |
 | POST   | `/register`                | Nieuwe gebruiker registreren                             | Nee        |
 | POST   | `/login`                   | Gebruiker inloggen                                       | Nee        |
 | GET    | `/user`                    | Ingelogde gebruiker ophalen                              | Ja         |
@@ -95,8 +88,10 @@ http://127.0.0.1:8000/api/onboarding/start
 | GET    | `/vacancy-feedback/{id}`   | Specifieke vacancy feedback ophalen                      | Ja         |
 | GET    | `/interview-feedback`      | Alle interview feedback ophalen                          | Ja         |
 | GET    | `/interview-feedback/{id}` | Specifieke interview feedback ophalen                    | Ja         |
+| GET    | `/interviews/{id}/start`   | Begin de Interview                                       | Ja         |
+| POST   | `/interviews/{id}/chat `   | Berichtjes naar interview                                | Ja         |
 | POST   | `/tts`                     | Tekst omzetten naar audio                                | Nee        |
-| POST   | `/coach`                   | Algemene coach-chat met Victoria                         | Nee        |    
+| POST   | `/coach`                   | Algemene coach-chat met Victoria                         | Nee        |
 
 ---
 
@@ -270,7 +265,7 @@ Voorbeeld request:
 Velden:
 
 | Field     | Type    | Required | Uitleg                                            |
-|-----------|---------|----------|---------------------------------------------------|
+| --------- | ------- | -------- | ------------------------------------------------- |
 | `message` | string  | Ja       | Het nieuwste bericht van de gebruiker             |
 | `step`    | integer | Ja       | Huidige onboardingstap, bijgehouden door frontend |
 
@@ -332,11 +327,7 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User",
             "image": "https://example.com/image.jpg",
-            "skills": [
-                "samenwerken",
-                "organiseren",
-                "probleemoplossen"
-            ],
+            "skills": ["samenwerken", "organiseren", "probleemoplossen"],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -389,11 +380,7 @@ Voorbeeld request (bijwerken profiel):
 {
     "name": "Test User Updated",
     "image": "https://example.com/new-image.jpg",
-    "skills": [
-        "samenwerken",
-        "organiseren",
-        "communicatie"
-    ],
+    "skills": ["samenwerken", "organiseren", "communicatie"],
     "work_experience": [
         {
             "company": "Jumbo",
@@ -415,17 +402,9 @@ Voorbeeld request (bijwerken profiel):
     },
     "preferred_language": "nl",
     "age": 25,
-    "interests": [
-        "sport",
-        "creativiteit"
-    ],
-    "strengths": [
-        "leergierig",
-        "ijverig"
-    ],
-    "job_preferences": [
-        "werken met mensen"
-    ],
+    "interests": ["sport", "creativiteit"],
+    "strengths": ["leergierig", "ijverig"],
+    "job_preferences": ["werken met mensen"],
     "profile_summary": "Gemotiveerde professional met ervaring in detailhandel en projectmanagement.",
     "phone_number": "+31687654321",
     "email": "newemail@example.com"
@@ -444,7 +423,7 @@ Voorbeeld request (bijwerken CV-gegevens):
 Velden voor profiel:
 
 | Field                | Type    | Required | Uitleg                                               |
-|----------------------|---------|----------|------------------------------------------------------|
+| -------------------- | ------- | -------- | ---------------------------------------------------- |
 | `name`               | string  | Nee      | Volledige naam van de gebruiker                      |
 | `image`              | string  | Nee      | URL naar profielfoto                                 |
 | `skills`             | array   | Nee      | Array van vaardigheden (strings)                     |
@@ -460,7 +439,7 @@ Velden voor profiel:
 Velden voor CV:
 
 | Field          | Type   | Required | Uitleg         |
-|----------------|--------|----------|----------------|
+| -------------- | ------ | -------- | -------------- |
 | `phone_number` | string | Nee      | Telefoonnummer |
 | `email`        | string | Nee      | Email adres    |
 
@@ -475,11 +454,7 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User Updated",
             "image": "https://example.com/new-image.jpg",
-            "skills": [
-                "samenwerken",
-                "organiseren",
-                "communicatie"
-            ],
+            "skills": ["samenwerken", "organiseren", "communicatie"],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -558,10 +533,7 @@ Voorbeeld response:
             "status": "afgerond",
             "period": "onbekend"
         },
-        "skills": [
-            "samenwerken",
-            "organiseren"
-        ],
+        "skills": ["samenwerken", "organiseren"],
         "work_experience": [
             {
                 "company": "Jumbo",
@@ -570,17 +542,9 @@ Voorbeeld response:
                 "description": "Eerste werkervaring opgedaan in de detailhandel."
             }
         ],
-        "interests": [
-            "sport",
-            "creativiteit"
-        ],
-        "strengths": [
-            "leergierig",
-            "ijverig"
-        ],
-        "job_preferences": [
-            "werken met mensen"
-        ],
+        "interests": ["sport", "creativiteit"],
+        "strengths": ["leergierig", "ijverig"],
+        "job_preferences": ["werken met mensen"],
         "profile_summary": "Korte profielsamenvatting..."
     },
     "next_action": "generate_cv"
@@ -665,7 +629,7 @@ Authorization: Bearer jwt_token_here
 URL Parameters:
 
 | Parameter | Type    | Required | Uitleg             |
-|-----------|---------|----------|--------------------|
+| --------- | ------- | -------- | ------------------ |
 | `id`      | integer | Ja       | ID van de vacature |
 
 Voorbeeld response:
@@ -757,7 +721,7 @@ Voorbeeld response:
 Response velden:
 
 | Field     | Type    | Uitleg                                    |
-|-----------|---------|-------------------------------------------|
+| --------- | ------- | ----------------------------------------- |
 | `message` | string  | Bevestigingsbericht                       |
 | `count`   | integer | Aantal gegenereerde vacatures (altijd 15) |
 | `data`    | array   | Array van vacature objects                |
@@ -868,7 +832,7 @@ Authorization: Bearer jwt_token_here
 URL Parameters:
 
 | Parameter | Type    | Required | Uitleg                   |
-|-----------|---------|----------|--------------------------|
+| --------- | ------- | -------- | ------------------------ |
 | `id`      | integer | Ja       | ID van het feedback item |
 
 Voorbeeld response:
@@ -900,7 +864,7 @@ Voorbeeld response:
 Response velden:
 
 | Field               | Type    | Uitleg                                    |
-|---------------------|---------|-------------------------------------------|
+| ------------------- | ------- | ----------------------------------------- |
 | `id`                | integer | Feedback item ID                          |
 | `vacancy_id`        | integer | gekoppelde vacature ID                    |
 | `ai_feedback`       | string  | AI gegenereerde beoordeling en suggesties |
@@ -987,7 +951,7 @@ Authorization: Bearer jwt_token_here
 URL Parameters:
 
 | Parameter | Type    | Required | Uitleg                   |
-|-----------|---------|----------|--------------------------|
+| --------- | ------- | -------- | ------------------------ |
 | `id`      | integer | Ja       | ID van het feedback item |
 
 Voorbeeld response:
@@ -1012,7 +976,7 @@ Voorbeeld response:
 Response velden:
 
 | Field          | Type    | Uitleg                                  |
-|----------------|---------|-----------------------------------------|
+| -------------- | ------- | --------------------------------------- |
 | `id`           | integer | Feedback item ID                        |
 | `interview_id` | integer | gekoppelde interview ID                 |
 | `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
@@ -1053,7 +1017,7 @@ Voorbeeld request:
 Velden:
 
 | Field   | Type   | Required | Uitleg                                |
-|---------|--------|----------|---------------------------------------|
+| ------- | ------ | -------- | ------------------------------------- |
 | `text`  | string | Ja       | De tekst die uitgesproken moet worden |
 | `voice` | string | Nee      | Steminstelling voor het TTS-model     |
 
