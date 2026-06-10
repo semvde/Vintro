@@ -27,8 +27,11 @@ Route::middleware('user')->group(function () {
   //vacancycontroller + feedback
   Route::get('/vacancies', [VacancyController::class, 'index']);
   Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+
+  Route::post('/vacancy-feedback', [VacancyFeedbackController::class, 'store']);
   Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
   Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
+  Route::get('/vacancies/{vacancy}/feedback', [VacancyFeedbackController::class, 'show']);
 
   //VACANCIES GENEREREN?
   Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
