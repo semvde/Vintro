@@ -18,6 +18,11 @@ class Video extends Model
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(
+            Category::class,
+            'video_category',
+            'video_id',
+            'category_id'
+        );
     }
 }
