@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {fetchAPI} from "../services/Fetch.js";
 import ButtonPrimary from "../components/ButtonPrimary.jsx";
 
 export default function VacancyApply() {
     const { id } = useParams();
+    let navigate = useNavigate();
 
     const [vacancy, setVacancy] = useState(null);
     const [text, setText] = useState("");
@@ -42,10 +43,17 @@ Met vriendelijke groet,
         );
     }, [vacancy]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("Sollicitatie verstuurd:", text);
+        const payload = {
+            vacancy_id: vacancy.id,
+            motivation_letter: text,
+        };
+
+        const data = await fetchAPI('/vacancy-feedback', "POST", payload);
+        navigate(`/app/vacancies/${id}/apply/feedback`);
+
     };
 
     if (!vacancy) {
@@ -63,14 +71,14 @@ Met vriendelijke groet,
                 <p className={"text-sm"}>
                    {vacancy.description}
                 </p>
+                <button type={"submit"}
+                        className={"bg-primary text-outline rounded-full cursor-pointer transition p-2.5 hover:bg-primary-hover "}>
+                    Verzenden
+                </button>
             </div>
 
             <textarea value={text} onChange={(e) => setText(e.target.value)}
                 rows={14} className="w-full p-3 border rounded-lg resize-y"/>
-
-            <ButtonPrimary type="submit">
-                Verzenden
-            </ButtonPrimary>
         </form>
     );
 }
