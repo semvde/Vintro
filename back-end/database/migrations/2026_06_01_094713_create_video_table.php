@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->longText('description');
             $table->string('video_url');
             $table->integer('duration_seconds');
+            $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
