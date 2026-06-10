@@ -36,6 +36,26 @@ export default function Vacancies() {
                     );
                 })
             }
+            {vacancies.length < 1 &&
+                <>
+                    <div className={"flex flex-col gap-3 bg-gray-200 rounded-lg shadow my-4 mx-1 p-5 animate-pulse"}>
+                        <div className={"bg-gray-300 h-5"}></div>
+                        <div className={"flex gap-2"}>
+                            <div className={"grow bg-gray-300 h-3"}></div>
+                            <div className={"grow bg-gray-300 h-3"}></div>
+                        </div>
+                        <div className={"bg-gray-300 h-3 mt-2 w-1/4 self-end"}></div>
+                    </div>
+                    <div className={"flex flex-col gap-3 bg-gray-200 rounded-lg shadow my-4 mx-1 p-5 animate-pulse"}>
+                        <div className={"bg-gray-300 h-5"}></div>
+                        <div className={"flex gap-2"}>
+                            <div className={"grow bg-gray-300 h-3"}></div>
+                            <div className={"grow bg-gray-300 h-3"}></div>
+                        </div>
+                        <div className={"bg-gray-300 h-3 mt-2 w-1/4 self-end"}></div>
+                    </div>
+                </>
+            }
         </>
     );
 }

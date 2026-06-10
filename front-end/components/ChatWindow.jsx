@@ -66,7 +66,12 @@ export default function ChatWindow() {
             const profileResponse = await fetchAPI("/profile/generate", "POST");
 
             console.log("Generated profile:", profileResponse);
+
             navigate('/app/cv');
+
+            const vacanciesResponse = await fetchAPI("/vacancies/generate", "POST");
+
+            console.log("Generated vacancies:", vacanciesResponse);
         }
 
         setLoading(false);
