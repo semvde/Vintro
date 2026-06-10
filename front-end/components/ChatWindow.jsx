@@ -67,11 +67,11 @@ export default function ChatWindow() {
 
             console.log("Generated profile:", profileResponse);
 
-            navigate('/app/cv');
-
             const vacanciesResponse = await fetchAPI("/vacancies/generate", "POST");
 
             console.log("Generated vacancies:", vacanciesResponse);
+
+            navigate('/app/cv');
         }
 
         setLoading(false);
@@ -99,7 +99,7 @@ export default function ChatWindow() {
                     onChange={(e) => setInput(e.target.value)}
                     disabled={isFinished || loading}
                     className="flex-1 px-3 py-2 outline-none border rounded-lg"
-                    placeholder={isFinished ? "Onboarding afgerond" : "Typ een bericht..."}
+                    placeholder={isFinished ? "Onboarding afgerond..." : "Typ een bericht..."}
                 />
 
                 <button

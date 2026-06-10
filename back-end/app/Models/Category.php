@@ -57,6 +57,7 @@ Als dit de laatste onboarding-stap is:
 - Bedank de gebruiker.
 - Zeg dat je genoeg informatie hebt om een profiel op te bouwen.
 - Zeg dat daarna een eerste CV gemaakt kan worden.
+- Zeg dat dit eventjes kan duren, en dat ze even een kopje koffie mogen halen (of vergelijkbare grap).
 PROMPT;
 
         $messages = [
