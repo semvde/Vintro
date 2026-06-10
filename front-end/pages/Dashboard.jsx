@@ -4,7 +4,7 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
-import {Link} from "react-router";
+import {Link, useNavigate} from "react-router";
 import {IoNewspaperSharp} from "react-icons/io5";
 import {fetchAPI} from "../services/Fetch.js";
 import {useEffect, useState} from "react";
@@ -12,22 +12,24 @@ import {useEffect, useState} from "react";
 export default function Dashboard() {
     const [name, setName] = useState(null)
     const [nameLoaded, setNameLoaded] = useState(false)
-
+const navigate = useNavigate()
     useEffect(() => {
         console.log("use effect getriggerd");
 
         async function getData() {
             try {
-                const response = await fetchAPI("/profile");
+                const response = await fetchAPI("/user");
                 const data = response;
 
-                console.log("Dashboard data binnen:", data.data.profile.name);
+                console.log("Dashboard data binnen:", data.onboarded);
 
-                if (data && data.data.profile) {
-                    setName(data.data.profile.name);
-                    setTimeout(() => setNameLoaded(true), 50);
-                } else if (data && data.items?.[0]?.error) {
-                    console.error("API error:", data.items[0].error);
+                if (data.onboarded === 1) {
+                    if (data) {
+                        setName(data.name);
+                        setTimeout(() => setNameLoaded(true), 50);
+                    }
+                }else if (data.onboarded === 0) {
+                    navigate("/app/onboarding")
                 }
             } catch (error) {
                 console.error("Fout bij ophalen dashboard data:", error);
