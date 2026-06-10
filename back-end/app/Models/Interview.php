@@ -11,6 +11,17 @@ class Interview extends Model
 
     protected $fillable = [
         'vacancy_id',
+        'current_step',
+        'chat_history',
+        'completed',
+        'completed_at',
+    ];
+
+    protected $casts = [
+        'current_step' => 'integer',
+        'chat_history' => 'array',
+        'completed' => 'boolean',
+        'completed_at' => 'datetime',
     ];
 
     public function vacancy()
