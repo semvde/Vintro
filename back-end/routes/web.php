@@ -21,3 +21,11 @@ Route::get('/interview-test', function () {
 Route::get('/profile-test', function () {
     return view('profile-test');
 });
+
+Route::get('/vacancies-test', function () {
+    return view('vacancies-test');
+});
+
+Route::get('/vacancy-test/{id}', function () {
+    return view('vacancy-test');
+});

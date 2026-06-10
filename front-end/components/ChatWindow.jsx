@@ -1,6 +1,7 @@
 import ChatMessage from "./ChatMessage.jsx";
-import { useEffect, useState } from "react";
-import { fetchAPI } from "../services/Fetch.js";
+import {useEffect, useRef, useState} from "react";
+import {fetchAPI} from "../services/Fetch.js";
+import {useNavigate} from "react-router";
 
 export default function ChatWindow() {
     const [messages, setMessages] = useState([]);
@@ -8,7 +9,8 @@ export default function ChatWindow() {
     const [loading, setLoading] = useState(false);
     const [step, setStep] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
-
+    const messagesEndRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const startOnboarding = async () => {
@@ -25,13 +27,19 @@ export default function ChatWindow() {
         startOnboarding();
     }, []);
 
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({
+            behavior: "smooth",
+        });
+    }, [messages]);
+
     const sendMessage = async (e) => {
         e.preventDefault();
 
         if (!input.trim() || isFinished) return;
 
         const currentStep = step + 1;
-        const userMsg = { role: "user", content: input };
+        const userMsg = {role: "user", content: input};
 
         setMessages((prev) => [...prev, userMsg]);
         setInput("");
@@ -58,18 +66,25 @@ export default function ChatWindow() {
             const profileResponse = await fetchAPI("/profile/generate", "POST");
 
             console.log("Generated profile:", profileResponse);
+
+            const vacanciesResponse = await fetchAPI("/vacancies/generate", "POST");
+
+            console.log("Generated vacancies:", vacanciesResponse);
+
+            navigate('/app/cv');
         }
-        // Kan bijvoorbeeld naar een aparte generated profile pagina gaan of naar cv pagina, maar hij stata nu gewoon als log in de console voor check.
 
         setLoading(false);
     };
 
     return (
         <div className="rounded-lg flex flex-col overflow-hidden">
-            <div className="flex-1 p-4 overflow-y-auto">
+            <div className="fixed top-35 left-0 right-0 flex-1 p-4 overflow-y-auto h-[calc(100%-240px)]">
                 {messages.map((message, m) => (
                     <ChatMessage key={m} {...message} />
                 ))}
+
+                <div ref={messagesEndRef}/>
 
                 {loading && (
                     <p className="text-sm">
@@ -78,13 +93,13 @@ export default function ChatWindow() {
                 )}
             </div>
 
-            <form className="flex p-2" onSubmit={sendMessage}>
+            <form className="flex bg-secondary/20 p-2 fixed bottom-0 left-0 right-0 py-7" onSubmit={sendMessage}>
                 <input
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     disabled={isFinished || loading}
                     className="flex-1 px-3 py-2 outline-none border rounded-lg"
-                    placeholder={isFinished ? "Onboarding afgerond" : "Typ een bericht..."}
+                    placeholder={isFinished ? "Onboarding afgerond..." : "Typ een bericht..."}
                 />
 
                 <button
