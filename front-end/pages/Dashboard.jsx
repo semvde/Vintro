@@ -6,13 +6,59 @@ import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
 import {Link} from "react-router";
 import {IoNewspaperSharp} from "react-icons/io5";
+import {fetchAPI} from "../services/Fetch.js";
+import {useEffect, useState} from "react";
 
 export default function Dashboard() {
+    const [name, setName] = useState(null)
+    const [nameLoaded, setNameLoaded] = useState(false)
+
+    useEffect(() => {
+        console.log("use effect getriggerd");
+
+        async function getData() {
+            try {
+                const response = await fetchAPI("/profile");
+                const data = response;
+
+                console.log("Dashboard data binnen:", data.data.profile.name);
+
+                if (data && data.data.profile) {
+                    setName(data.data.profile.name);
+                    setTimeout(() => setNameLoaded(true), 50);
+                } else if (data && data.items?.[0]?.error) {
+                    console.error("API error:", data.items[0].error);
+                }
+            } catch (error) {
+                console.error("Fout bij ophalen dashboard data:", error);
+            }
+        }
+
+        getData();
+    }, []);
+
     return (
         <>
+            <style>
+                {`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-5px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .fade-in-name {
+                    animation: fadeIn 0.8s ease-out forwards;
+                }
+                `}
+            </style>
+
             <section className={"mb-8"}>
-                {/* Placeholder name */}
-                <h1>Welkom, [NAAM]!</h1>
+
+                <h1 className={`transition-opacity duration-300 ${nameLoaded ? '' : 'opacity-0'}`}>
+                    Welkom,
+                    <span className={nameLoaded ? 'fade-in-name pl-2 inline-block' : 'opacity-0'}>
+                        {name || '...'}
+                    </span>!
+                </h1>
                 <p className={"font-bold"}>Klaar om je voor te bereiden?</p>
                 <p>Oefen met gesprekken of vacatures, verbeter je CV of bekijk de tips & tricks video's!</p>
             </section>
@@ -34,11 +80,11 @@ export default function Dashboard() {
                     description={"Oefen een sollicitatiegesprek met AI"}
                 />
                 <Link to={"/app/cv"}>
-                <DashboardCard
-                    icon={<MdEditDocument/>}
-                    title={"Bewerk je CV"}
-                    description={"Bekijk en verbeter je CV"}
-                />
+                    <DashboardCard
+                        icon={<MdEditDocument/>}
+                        title={"Bewerk je CV"}
+                        description={"Bekijk en verbeter je CV"}
+                    />
                 </Link>
 
                 <DashboardCard
