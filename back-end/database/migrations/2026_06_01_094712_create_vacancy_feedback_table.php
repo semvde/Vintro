@@ -12,10 +12,21 @@ return new class extends Migration {
     {
         Schema::create('vacancy_feedback', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vacancy_id')->constrained('vacancies')->cascadeOnDelete();
-            $table->longText('ai_feedback');
+
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete();
+
+            $table->foreignId('vacancy_id')
+                ->constrained('vacancies')
+                ->cascadeOnDelete();
+
             $table->longText('motivation_letter');
+
+            $table->longText('ai_feedback')->nullable();
+
             $table->boolean('accepted')->default(false);
+
             $table->timestamps();
         });
     }

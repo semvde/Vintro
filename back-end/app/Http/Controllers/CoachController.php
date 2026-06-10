@@ -19,6 +19,7 @@ class CoachController extends Controller
         $page = $validated['page'] ?? 'onbekend';
 
         $pageContext = match ($page) {
+            '/app' => 'De gebruiker bevindt zich op de hoofdpagina van waaruit die de andere pagina\'s kan bereiken',
             '/app/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
             '/app/vacancies' => 'De gebruiker bekijkt vacatures.',
             '/app/onboarding' => 'De gebruiker doorloopt de onboarding.',
