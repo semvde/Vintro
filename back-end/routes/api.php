@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ProfileGenerationController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\CategoryController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,37 +22,43 @@ Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
 Route::middleware('user')->group(function () {
-  Route::get('/profile', [ProfileController::class, 'show']);
-  Route::put('/profile', [ProfileController::class, 'update']);
-  Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-  //vacancycontroller + feedback
-  Route::get('/vacancies', [VacancyController::class, 'index']);
-  Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
-  Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
-  Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
+    //vacancycontroller + feedback
+    Route::get('/vacancies', [VacancyController::class, 'index']);
+    Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+    Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+    Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
 
-  //VACANCIES GENEREREN?
-  Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
+    //VACANCIES GENEREREN?
+    Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
 
-  //interview feedback
-  Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
-  Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+    //interview feedback
+    Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
+    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
 
-  //Onboarding
-  Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
-  Route::prefix('onboarding')->group(function () {
-    Route::get('/start', [OnboardingController::class, 'start']);
-    Route::post('/chat', [OnboardingController::class, 'chat']);
-  });
+    //Onboarding
+    Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
+    Route::prefix('onboarding')->group(function () {
+        Route::get('/start', [OnboardingController::class, 'start']);
+        Route::post('/chat', [OnboardingController::class, 'chat']);
+    });
+    //Videos
+    Route::get('/videos', [VideoController::class, 'index']);
+    Route::get('/videos/{id}', [VideoController::class, 'show']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{id}', [CategoryController::class, 'show']);
 
-  Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
+    //Profile generate
+    Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
 });
 
 Route::middleware('auth:api')->group(function () {
-  Route::get('/user', function (Request $request) {
-    return $request->user();
-  });
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
 });
 

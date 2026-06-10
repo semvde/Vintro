@@ -14,15 +14,11 @@ class Video extends Model
         'description',
         'video_url',
         'duration_seconds',
+        'category_id',
     ];
 
-    public function categories()
+    public function category()
     {
-        return $this->belongsToMany(
-            Category::class,
-            'video_category',
-            'video_id',
-            'category_id'
-        );
+        return $this->belongsTo(Category::class);
     }
 }

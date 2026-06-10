@@ -9,6 +9,8 @@ class Category extends Model
 {
     use HasFactory;
 
+    protected $table = 'Category';
+
     protected $fillable = [
         'name',
         'description',
@@ -16,11 +18,6 @@ class Category extends Model
 
     public function videos()
     {
-        return $this->belongsToMany(
-            Video::class,
-            'video_category',
-            'category_id',
-            'video_id'
-        );
+        return $this->hasMany(Video::class);
     }
 }
