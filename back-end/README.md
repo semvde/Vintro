@@ -42,6 +42,14 @@
 
     * [Generate Speech](#generate-speech)
 
+* [Videos Endpoints](#videos-endpoints)
+    * [Get Videos](#get-videos)
+    * [Get Video](#get-video)
+
+* [Categories Endpoints](#categories-endpoints)
+    * [Get Categories](#get-categories)
+    * [Get Category](#get-category)
+
 * [Frontend Notes](#frontend-notes)
 
 ---
@@ -1085,6 +1093,50 @@ audio.play();
 ```
 
 ---
+
+## Videos Endpoints
+
+### Get Videos
+
+GET /videos
+
+```http
+GET /interview-feedback
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "interview_id": 1,
+            "ai_feedback": "Je antwoorden waren goed gestructureerd. Zorg ervoor dat je meer voorbeelden geeft van je werkervaring.",
+            "accepted": true,
+            "created_at": "2026-06-09T12:00:00.000000Z",
+            "updated_at": "2026-06-09T12:00:00.000000Z",
+            "interview": {
+                "id": 1,
+                "vacancy_id": 1
+            }
+        },
+        {
+            "id": 2,
+            "interview_id": 2,
+            "ai_feedback": "Sterke voorbereiding zichtbaar. Je communicatie was duidelijk en professioneel.",
+            "accepted": true,
+            "created_at": "2026-06-09T13:00:00.000000Z",
+            "updated_at": "2026-06-09T13:00:00.000000Z",
+            "interview": {
+                "id": 2,
+                "vacancy_id": 2
+            }
+        }
+    ]
+}
+```
 
 ## Frontend Notes
 
