@@ -23,6 +23,8 @@ Route::middleware('user')->group(function () {
   Route::get('/profile', [ProfileController::class, 'show']);
   Route::put('/profile', [ProfileController::class, 'update']);
   Route::post('/logout', [AuthController::class, 'logout']);
+  Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
+
 
   //vacancycontroller + feedback
   Route::get('/vacancies', [VacancyController::class, 'index']);
@@ -44,7 +46,7 @@ Route::middleware('user')->group(function () {
     Route::post('/chat', [OnboardingController::class, 'chat']);
   });
 
-  Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
+
 });
 
 Route::middleware('auth:api')->group(function () {
