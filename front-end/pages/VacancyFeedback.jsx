@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { fetchAPI } from "../services/Fetch.js";
 import Victoria from "../src/assets/Victoria - Job coach.png";
+import {useParams} from "react-router";
 
 export default function VacancyFeedback() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+    const params = useParams();
 
     useEffect(() => {
         const loadFeedback = async () => {
             try {
-                const res = await fetchAPI("/vacancies/1/feedback", "GET");
+                const res = await fetchAPI(`/vacancies/${params.id}/feedback`, "GET");
                 setData(res);
             } catch (err) {
                 console.error(err);
