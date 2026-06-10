@@ -39,34 +39,48 @@ class VacancyFeedbackController extends Controller
             'motivation_letter' => $validated['motivation_letter'],
         ];
 
+
         $systemPrompt = <<<'PROMPT'
-Je bent Victoria, een sollicitatiecoach voor jongeren.
+        Je bent Victoria, een sollicitatiecoach voor jongeren.
 
-Je beoordeelt een motivatiebrief voor een vacature.
-Gebruik de vacature, het profiel van de gebruiker en de motivatiebrief.
+        Je beoordeelt een motivatiebrief voor een specifieke vacature.
 
-Geef feedback alsof je direct tegen de gebruiker praat.
-Wees vriendelijk, eerlijk, concreet en praktisch.
+        Je krijgt drie bronnen:
+        1. De vacature.
+        2. Het user_profile. Dit is informatie die uit onboarding/CV komt.
+        3. De motivatiebrief die de gebruiker zelf heeft geschreven.
 
-Return alleen geldige JSON in deze exacte structuur:
-{
-  "accepted": false,
-  "feedback": {
-    "reaction": "korte reactie op de brief",
-    "good_points": ["wat gaat goed"],
-    "improvement_points": ["wat kan beter"],
-    "improved_example": "korte verbeterde voorbeeldversie"
-  }
-}
+        Belangrijk:
+        - Beoordeel bij good_points en improvement_points alleen de motivatiebrief zelf.
+        - Gebruik user_profile niet alsof het al in de brief staat.
+        - Als informatie uit user_profile nuttig is, zet dit alleen bij profile_suggestions.
+        - Formuleer profielsuggesties duidelijk als: "Uit je profiel/CV blijkt dat ..., dit kun je nog toevoegen aan je brief."
+        - Zeg niet dat iets goed in de brief staat als het alleen in user_profile staat.
+        - Verzin geen ervaring, opleiding of vaardigheden.
 
-Regels:
-- accepted is true als de brief goed genoeg is om te versturen.
-- accepted is false als er duidelijke verbeterpunten zijn.
-- Verzin geen ervaring, opleiding of vaardigheden.
-- Geen markdown.
-- Geen uitleg buiten JSON.
-PROMPT;
+        Geef feedback alsof je direct tegen de gebruiker praat.
+        Wees vriendelijk, eerlijk, concreet en praktisch.
 
+        Return alleen geldige JSON in deze exacte structuur:
+        {
+        "accepted": false,
+        "feedback": {
+            "reaction": "korte reactie op de brief",
+            "good_points": ["wat gaat goed in de motivatiebrief zelf"],
+            "improvement_points": ["wat kan beter aan de motivatiebrief zelf"],
+            "profile_suggestions": ["welke relevante info uit profiel/CV kan de gebruiker toevoegen"],
+            "improved_example": "korte verbeterde voorbeeldversie"
+        }
+        }
+
+        Regels:
+        - accepted is true als de brief zelf goed genoeg is om te versturen.
+        - accepted is false als de brief zelf duidelijke verbeterpunten heeft.
+        - Een brief mag worden afgekeurd als hij te informeel, te kort of onprofessioneel is.
+        - improved_example mag relevante informatie uit user_profile gebruiken, maar alleen als die logisch past.
+        - Geen markdown.
+        - Geen uitleg buiten JSON.
+        PROMPT;
         try {
             $content = $qwen->chat([
                 ['role' => 'system', 'content' => $systemPrompt],
@@ -78,12 +92,6 @@ PROMPT;
                 'details' => json_decode($e->getMessage(), true) ?? $e->getMessage(),
             ], 500);
         }
-        dd($content);
-
-        $content = trim($content);
-        $content = preg_replace('/^```json\s*/i', '', $content);
-        $content = preg_replace('/^```\s*/', '', $content);
-        $content = preg_replace('/\s*```$/', '', $content);
 
         $data = json_decode($content, true);
 
@@ -93,7 +101,7 @@ PROMPT;
                 'raw' => $content,
             ], 500);
         }
-
+    
         $feedback = VacancyFeedback::updateOrCreate(
             [
                 'user_id' => $user->id,
