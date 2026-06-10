@@ -14,6 +14,10 @@ Route::get('/chat-test', function () {
     return view('chat-test');
 });
 
+Route::get('/interview-test', function () {
+    return view('interview-test');
+});
+
 Route::get('/profile-test', function () {
     return view('profile-test');
 });

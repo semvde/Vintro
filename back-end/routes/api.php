@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ProfileGenerationController;
+use App\Http\Controllers\interviewController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -24,6 +25,9 @@ Route::middleware('user')->group(function () {
   Route::put('/profile', [ProfileController::class, 'update']);
   Route::post('/logout', [AuthController::class, 'logout']);
 
+  //VACANCIES GENEREREN?
+  Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
+
   //vacancycontroller + feedback
   Route::get('/vacancies', [VacancyController::class, 'index']);
   Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
@@ -33,12 +37,14 @@ Route::middleware('user')->group(function () {
   Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
   Route::get('/vacancies/{vacancy}/feedback', [VacancyFeedbackController::class, 'show']);
 
-  //VACANCIES GENEREREN?
-  Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
-
   //interview feedback
   Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
   Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+
+Route::prefix('interviews/{vacancyId}')->group(function () {
+    Route::get('/start', [interviewController::class, 'start']);
+    Route::post('/chat', [interviewController::class, 'chat']);
+  });
 
   //Onboarding
   Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
