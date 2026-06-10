@@ -18,6 +18,7 @@ import CV from "../pages/cv/CV.jsx";
 import EditCV from "../pages/cv/EditCV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
+import OnboardLayout from "../layouts/OnboardLayout.jsx";
 
 const router = createBrowserRouter([
     {
@@ -38,10 +39,19 @@ const router = createBrowserRouter([
         ]
     },
     {
+        element: (<ProtectedRoute><OnboardLayout/></ProtectedRoute>),
+        children: [
+            {
+                path: "/app/onboarding",
+                element: <Onboarding/>,
+            }
+        ]
+    },
+    {
         element: (
-            // <ProtectedRoute>
-            <UserLayout/>
-            // </ProtectedRoute>
+            <ProtectedRoute>
+                <UserLayout/>
+            </ProtectedRoute>
         ),
         children: [
             {
@@ -82,11 +92,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/cv",
-                element: <CV />,
+                element: <CV/>,
             },
             {
                 path: "/app/cv/edit",
-                element: <EditCV />,
+                element: <EditCV/>,
             },
         ]
     }
