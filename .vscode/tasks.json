@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Backend",
+      "type": "shell",
+      "command": "php artisan serve",
+      "options": {
+        "cwd": "${workspaceFolder}/back-end"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "group": "vintro"
+      }
+    },
+    {
+      "label": "Frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/front-end"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "group": "vintro"
+      }
+    },
+    {
+      "label": "Start VINTRO",
+      "dependsOn": [
+        "Backend",
+        "Frontend"
+      ],
+      "dependsOrder": "parallel"
+    }
+  ]
+}

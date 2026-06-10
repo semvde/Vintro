@@ -2,7 +2,7 @@ export function mapToCVData(profile, cv) {
     return {
         name: profile?.name || "",
         email: cv?.email || "Bewerk om toe te voegen",
-        phoneNumber: cv?.phoneNumber || "Bewerk om toe te voegen",
+        phoneNumber: cv?.phone_number || "Bewerk om toe te voegen",
         image: profile?.image || "",
         summary: profile?.profile_summary || "",
 
@@ -12,7 +12,6 @@ export function mapToCVData(profile, cv) {
         jobPreferences: profile?.job_preferences || [],
 
         educationLevel: profile?.education_level || [],
-
         workExperience: profile?.work_experience || [],
     };
 }

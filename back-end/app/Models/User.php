@@ -60,6 +60,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Vacancy::class);
     }
 
+    public function interviews()
+    {
+        return $this->hasManyThrough(Interview::class, Vacancy::class);
+    }
+
     public function onboardingSessions()
     {
         return $this->hasMany(OnboardingSession::class);
