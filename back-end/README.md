@@ -51,6 +51,14 @@
 
     * [Generate Speech](#generate-speech)
 
+* [Videos Endpoints](#videos-endpoints)
+    * [Get Videos](#get-videos)
+    * [Get Video](#get-video)
+
+* [Categories Endpoints](#categories-endpoints)
+    * [Get Categories](#get-categories)
+    * [Get Category](#get-category)
+
 * [Frontend Notes](#frontend-notes)
 
 ---
@@ -914,18 +922,260 @@ audio.play();
 
 ---
 
+## Videos Endpoints
+
+### Get Videos
+
+Haal alle video's op
+
+```http
+GET /videos
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "title": "Intro to React Hooks",
+            "description": "Leer de basis van React Hooks zoals useState en useEffect.",
+            "video_url": "https://example.com/videos/react-hooks",
+            "duration_seconds": 540,
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z",
+            "category": {
+                "id": 1,
+                "name": "Frontend",
+                "description": "Frontend development"
+            }
+        }
+    ]
+}
+```
+
+---
+Response velden:
+
+| Field            | Type    | Uitleg                        |
+|------------------|---------|-------------------------------|
+| id               | integer | Video ID                      |
+| title            | string  | Titel van de video            |
+| description      | string  | Omschrijving van de video     |
+| video_url        | string  | Link naar de video            |
+| duration_seconds | integer | Duur van de video in seconden |
+| category         | object  | Gekoppelde category           |
+
+---
+Frontend Flow
+
+```
+1. Gebruiker navigeert naar video overzicht
+2. Frontend roept GET /videos aan
+3. Backend retourneert lijst van videos met category
+4. Frontend toont videos in cards/lijst
+5. Gebruiker kan video selecteren
+```
+
+---
+
+### Get video
+
+Haal 1 specifieke video op
+
+```http
+GET /videos/{id}
+Authorization: Bearer jwt_token_here
+```
+
+---
+Url parameters:
+
+| Parameter | Type    | Required | Uitleg          |
+|-----------|---------|----------|-----------------|
+| id        | integer | Ja       | ID van de video |
+
+---
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "title": "Intro to React Hooks",
+        "description": "Leer de basis van React Hooks zoals useState en useEffect.",
+        "video_url": "https://example.com/videos/react-hooks",
+        "duration_seconds": 540,
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z",
+        "category": {
+            "id": 1,
+            "name": "Frontend",
+            "description": "Frontend development"
+        }
+    }
+}
+```
+
+---
+velden:
+
+| Field            | Type    | Uitleg                |
+|------------------|---------|-----------------------|
+| id               | integer | Video ID              |
+| title            | string  | Titel van de video    |
+| description      | string  | Omschrijving          |
+| video_url        | string  | Video link            |
+| duration_seconds | integer | Duur in seconden      |
+| category         | object  | Bijbehorende category |
+
+---
+Frontend Flow
+
+```
+1. Gebruiker klikt op video
+2. Frontend roept GET /videos/{id} aan
+3. Backend retourneert video details
+4. Frontend toont video player + info
+5. Gebruiker bekijkt video
+```
+
+## Categories Endpoints
+
+### Get categories
+
+Haal alle categorieën op
+
+```http
+GET /videos/{id}
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Frontend",
+            "description": "Frontend development",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        },
+        {
+            "id": 2,
+            "name": "Backend",
+            "description": "Backend development",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        }
+    ]
+}
+```
+
+---
+Response velden:
+
+| Field       | Type    | Uitleg            |
+|-------------|---------|-------------------|
+| id          | integer | Category ID       |
+| name        | string  | Naam van category |
+| description | string  | Omschrijving      |
+
+---
+frontend flow
+
+```
+1. Frontend laadt categories bij filter/page load
+2. GET /categories wordt aangeroepen
+3. Backend retourneert lijst van categories
+4. Frontend gebruikt categories voor filtering
+5. Gebruiker filtert videos/vacancies
+```
+
+### Get category
+
+Haalt de details van één specifieke categorie op.
+
+```http
+GET /videos/{id}
+Authorization: Bearer jwt_token_here
+```
+
+---
+Url parameters:
+
+| Parameter | Type    | Required | Uitleg      |
+|-----------|---------|----------|-------------|
+| id        | integer | Ja       | Category ID |
+
+---
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "name": "Frontend",
+        "description": "Frontend development",
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z",
+        "videos": [
+            {
+                "id": 1,
+                "title": "Intro to React Hooks",
+                "description": "Leer de basis van React Hooks.",
+                "video_url": "https://example.com/videos/react-hooks",
+                "duration_seconds": 540
+            }
+        ]
+    }
+}
+```
+
+---
+Response velden:
+
+| Field       | Type    | Uitleg                      |
+|-------------|---------|-----------------------------|
+| id          | integer | Category ID                 |
+| name        | string  | Category naam               |
+| description | string  | Category omschrijving       |
+| videos      | array   | Alle videos binnen category |
+
+---
+
+Frontend flow
+
+```
+1. Gebruiker klikt op category
+2. Frontend roept GET /categories/{id} aan
+3. Backend retourneert category + videos
+4. Frontend toont category detail pagina
+5. Gebruiker bekijkt videos binnen category
+```
+
+---
+
 ## Frontend Notes
 
 - Alle endpoints beginnen met `/api`. Voor lokale development is de volledige URL bijvoorbeeld:
 
 ```
+
 http://127.0.0.1:8000/api/onboarding/start
+
 ```
 
 - Protected routes hebben deze header nodig:
 
 ```
+
 Authorization: Bearer jwt_token_here
+
 ```
 
 - Onboarding werkt met een vaste flow vanuit frontend:
