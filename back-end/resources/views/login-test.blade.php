@@ -7,7 +7,7 @@
 <body>
     <h1>Login Test</h1>
 
-    <input id="email" type="email" placeholder="Email" value="tester2@test.nl">
+    <input id="email" type="email" placeholder="Email" value="test@example.com">
     <input id="password" type="password" placeholder="Password" value="password">
     <button onclick="login()">Login</button>
 

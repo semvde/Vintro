@@ -123,8 +123,9 @@
 
             const data = await response.json();
 
-            document.getElementById('profileOutput').textContent =
-                JSON.stringify(data, null, 2);
+            localStorage.setItem('profile', JSON.stringify(data));
+
+            window.location.href = '/profile-test';
         }
     </script>
 </body>
