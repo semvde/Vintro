@@ -40,7 +40,7 @@ export default function ProtectedRoute({children}) {
     }
 
     if (user.onboarded === 1 && location.pathname === "/app/onboarding") {
-        return <Navigate to="/app" replace/>;
+        return <Navigate to="/app/cv" replace/>;
     }
 
     return children;
