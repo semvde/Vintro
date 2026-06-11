@@ -14,9 +14,13 @@ import ProtectedRoute from "../components/ProtectedRoute.jsx";
 import {AppContext} from "./Contexts.jsx";
 import {useState} from "react";
 import Onboarding from "../pages/Onboarding.jsx";
-import CV from "../pages/CV.jsx";
+import CV from "../pages/cv/CV.jsx";
+import EditCV from "../pages/cv/EditCV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
+import OnboardLayout from "../layouts/OnboardLayout.jsx";
+import VacancyApply from "../pages/VacancyApply.jsx";
+import VacancyFeedback from "../pages/VacancyFeedback.jsx";
 
 const router = createBrowserRouter([
     {
@@ -37,10 +41,19 @@ const router = createBrowserRouter([
         ]
     },
     {
+        element: (<ProtectedRoute><OnboardLayout/></ProtectedRoute>),
+        children: [
+            {
+                path: "/app/onboarding",
+                element: <Onboarding/>,
+            }
+        ]
+    },
+    {
         element: (
-            // <ProtectedRoute>
-            <UserLayout/>
-            // </ProtectedRoute>
+            <ProtectedRoute>
+                <UserLayout/>
+            </ProtectedRoute>
         ),
         children: [
             {
@@ -58,6 +71,14 @@ const router = createBrowserRouter([
             {
                 path: "/app/vacancies/:id",
                 element: <VacationDetail/>
+            },
+            {
+                path: "/app/vacancies/:id/apply",
+                element: <VacancyApply />
+            },
+            {
+                path: "/app/vacancies/:id/apply/feedback",
+                element: <VacancyFeedback />
             },
             {
                 path: "/app/account",
@@ -81,7 +102,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/cv",
-                element: <CV />,
+                element: <CV/>,
+            },
+            {
+                path: "/app/cv/edit",
+                element: <EditCV/>,
             },
         ]
     }

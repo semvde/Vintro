@@ -4,13 +4,63 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
+import {Link, useNavigate} from "react-router";
+import {IoNewspaperSharp} from "react-icons/io5";
+import {fetchAPI} from "../services/Fetch.js";
+import {useEffect, useState} from "react";
 
 export default function Dashboard() {
-    return(
+    const [name, setName] = useState(null)
+    const [nameLoaded, setNameLoaded] = useState(false)
+const navigate = useNavigate()
+    useEffect(() => {
+        console.log("use effect getriggerd");
+
+        async function getData() {
+            try {
+                const response = await fetchAPI("/user");
+                const data = response;
+
+                console.log("Dashboard data binnen:", data.onboarded);
+
+                if (data.onboarded === 1) {
+                    if (data) {
+                        setName(data.name);
+                        setTimeout(() => setNameLoaded(true), 50);
+                    }
+                }else if (data.onboarded === 0) {
+                    navigate("/app/onboarding")
+                }
+            } catch (error) {
+                console.error("Fout bij ophalen dashboard data:", error);
+            }
+        }
+
+        getData();
+    }, []);
+
+    return (
         <>
+            <style>
+                {`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-5px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .fade-in-name {
+                    animation: fadeIn 0.8s ease-out forwards;
+                }
+                `}
+            </style>
+
             <section className={"mb-8"}>
-                {/* Placeholder name */}
-                <h1>Welkom, [NAAM]!</h1>
+
+                <h1 className={`transition-opacity duration-300 ${nameLoaded ? '' : 'opacity-0'}`}>
+                    Welkom,
+                    <span className={nameLoaded ? 'fade-in-name pl-2 inline-block' : 'opacity-0'}>
+                        {name || '...'}
+                    </span>!
+                </h1>
                 <p className={"font-bold"}>Klaar om je voor te bereiden?</p>
                 <p>Oefen met gesprekken of vacatures, verbeter je CV of bekijk de tips & tricks video's!</p>
             </section>
@@ -18,26 +68,33 @@ export default function Dashboard() {
             <section className={"mb-8"}>
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
+                <Link to={"/app/vacancies"}>
+                    <DashboardCard
+                        icon={<IoNewspaperSharp/>}
+                        title={"Vacature oefenen"}
+                        description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
+                    />
+                </Link>
+
                 <DashboardCard
-                    icon={<MdEditDocument />}
-                    title={"Vacature oefenen"}
-                    description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
-                />
-                <DashboardCard
-                    icon={<FaMicrophoneAlt />}
+                    icon={<FaMicrophoneAlt/>}
                     title={"Interview oefenen"}
                     description={"Oefen een sollicitatiegesprek met AI"}
                 />
+                <Link to={"/app/cv"}>
+                    <DashboardCard
+                        icon={<MdEditDocument/>}
+                        title={"Bewerk je CV"}
+                        description={"Bekijk en verbeter je CV"}
+                    />
+                </Link>
+
                 <DashboardCard
-                    icon={<MdEditDocument />}
-                    title={"Bewerk je CV"}
-                    description={"Bekijk en verbeter je CV"}
-                />
-                <DashboardCard
-                    icon={<HiLightBulb />}
+                    icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
-                    description={"Bekijk en verbeter je CV"}
+                    description={"Hoe kan jij voorbereid het sollicitatiegesprek in?"}
                 />
+
             </section>
 
             <section>

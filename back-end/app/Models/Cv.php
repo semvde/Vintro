@@ -10,6 +10,11 @@ class Cv extends Model
     use HasFactory;
 
     protected $table = 'cvs';
+
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'user_id',
         'phone_number',

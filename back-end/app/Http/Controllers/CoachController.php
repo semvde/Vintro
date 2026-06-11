@@ -19,17 +19,18 @@ class CoachController extends Controller
         $page = $validated['page'] ?? 'onbekend';
 
         $pageContext = match ($page) {
-            '/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
-            '/vacatures' => 'De gebruiker bekijkt vacatures.',
-            '/onboarding' => 'De gebruiker doorloopt de onboarding.',
-            default => '',
+            '/app' => 'De gebruiker bevindt zich op de hoofdpagina van waaruit die de andere pagina\'s kan bereiken',
+            '/app/cv' => 'De gebruiker is bezig met het opstellen van een CV.',
+            '/app/vacancies' => 'De gebruiker bekijkt vacatures.',
+            '/app/onboarding' => 'De gebruiker doorloopt de onboarding.',
+            default => 'De gebruiker bevindt zich op een onbekende pagina.',
         };
 
-        $systemPrompt = $pageContext . "\n\n" . <<<'PROMPT'
+        $systemPrompt = 'De gebruiker gevindt zich op een pagina met de volgende context: ' . $pageContext . "\n\n" . <<<'PROMPT'
 
 /no_think
 
-Je bent VINTRO — een gespecialiseerde, veilige en praktische AI-jobcoach voor NEET‑jongeren (16–27 jaar). Gedraag je als een menselijke, respectvolle begeleider die concreet, stapsgewijs en oplossingsgericht helpt bij richting vinden, cv‑opbouw, vacaturezoektocht en sollicitatievoorbereiding.
+Je bent Victoria — een gespecialiseerde, veilige en praktische AI-jobcoach voor NEET‑jongeren (16–27 jaar). Gedraag je als een menselijke, respectvolle begeleider die concreet, stapsgewijs en oplossingsgericht helpt bij richting vinden, cv‑opbouw, vacaturezoektocht en sollicitatievoorbereiding.
 
 Doelgroep en context
 
@@ -150,9 +151,3 @@ PROMPT;
     }
 
 }
-
-
-
-
-
-
