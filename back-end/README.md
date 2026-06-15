@@ -23,7 +23,7 @@
     * [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
     * [Get Vacancy Feedback](#get-vacancy-feedback)
 
-* [Vacancies Endpoints](#vacancy-endpoints)
+* [Vacancies Endpoints](#vacancies-endpoints)
     * [Get Vacancies](#get-vacancies)
     * [Get Vacancy](#get-vacancy)
     * [Generate Vacancies](#generate-vacancies)
@@ -607,6 +607,70 @@ Frontend flow:
 
 ## Vacancy Feedback Endpoints
 
+### Get Vacancy Feedbacks
+
+Haalt alle feedback op voor vacatures van de ingelogde gebruiker.
+
+```http
+GET /vacancy-feedback
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "vacancy_id": 1,
+            "ai_feedback": "Je motivatie is sterk en je relevante ervaring is duidelijk geformuleerd.",
+            "motivation_letter": "Ik ben zeer geïnteresseerd in deze rol omdat...",
+            "accepted": true,
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z",
+            "vacancy": {
+                "id": 1,
+                "title": "Junior Frontend Developer",
+                "company": "Tech Startup XYZ",
+                "location": "Amsterdam",
+                "employment_type": "full-time",
+                "salary": 2500
+            }
+        },
+        {
+            "id": 2,
+            "vacancy_id": 2,
+            "ai_feedback": "Uitstekende match met de vacature. Je skills aansluiten goed.",
+            "motivation_letter": "Met mijn achtergrond in...",
+            "accepted": true,
+            "created_at": "2026-06-09T11:00:00.000000Z",
+            "updated_at": "2026-06-09T11:00:00.000000Z",
+            "vacancy": {
+                "id": 2,
+                "title": "Backend Developer",
+                "company": "Enterprise Solutions",
+                "location": "Rotterdam",
+                "employment_type": "full-time",
+                "salary": 3200
+            }
+        }
+    ]
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar sollicitatiefeedback pagina
+2. Frontend roept GET /vacancy-feedback aan
+3. Frontend toont lijst van alle feedback items
+4. Feedback bevat AI-beoordeling en gebruiker motivatie
+5. Gebruiker kan op item klikken voor details
+```
+
+---
+
 ### Get Vacancy Feedback
 
 Haalt de details van één specifiek feedback item op.
@@ -771,13 +835,26 @@ Frontend flow:
 
 ---
 
-### Vacatures genereren
+### Generate Vacancies
+
+Genereert automatisch 15 oefenvacatures op basis van het profiel van de gebruiker. De AI analyseert skills, voorkeur en
+ervaring en creëert relevante vacatures.
 
 ```http
 POST /vacancies/generate
+Authorization: Bearer jwt_token_here
+Content-Type: application/json
 ```
 
-Laat Victoria 15 oefenvacatures genereren op basis van het gebruikersprofiel.
+Deze endpoint vereist geen request body.
+
+Voorbeeld request:
+
+```http
+POST /vacancies/generate
+Authorization: Bearer jwt_token_here
+Accept: application/json
+```
 
 Voorbeeld response:
 
@@ -786,10 +863,69 @@ Voorbeeld response:
     "message": "15 oefenvacatures aangemaakt.",
     "count": 15,
     "data": [
-        ...
+        {
+            "id": 1,
+            "user_id": 1,
+            "title": "Customer Support Specialist",
+            "company": "RetailCo Nederland",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2000,
+            "description": "Wij zoeken iemand met sterke communicatievaardigheden en organisatievermogen.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "title": "Project Coordinator",
+            "company": "BuildTech Solutions",
+            "location": "Utrecht",
+            "employment_type": "full-time",
+            "salary": 2300,
+            "description": "Je coördineert projecten en werkt samen met diverse stakeholders.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        }
     ]
 }
 ```
+
+Response velden:
+
+| Field     | Type    | Uitleg                                    |
+|-----------|---------|-------------------------------------------|
+| `message` | string  | Bevestigingsbericht                       |
+| `count`   | integer | Aantal gegenereerde vacatures (altijd 15) |
+| `data`    | array   | Array van vacature objects                |
+
+Error response (geen profiel):
+
+```json
+{
+    "message": "Geen profiel gevonden."
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op "Vacatures genereren" knop
+2. Frontend roept POST /vacancies/generate aan
+3. Backend analyseert user profiel via AI
+4. Backend genereert 15 relevante oefenvacatures
+5. Frontend toont bevestigingsbericht en vacaturelijst
+6. Gebruiker kan nu oefenvacatures beoordelen en sollicitaties oefenen
+```
+
+Opmerkingen:
+
+- Vacatures worden gegenereerd op basis van het user profiel (skills, CV, job preferences).
+- Dit endpoint genereert altijd precies 15 vacatures.
+- De gegenereerde vacatures zijn denkbeeldig en bedoeld voor oefendoeleinden.
+- Alle gegenereerde vacatures zijn gekoppeld aan de ingelogde gebruiker.
+
+---
 
 ---
 
