@@ -98,7 +98,12 @@ export function CVDocument({ data }) {
 
                 {/* HEADER */}
                 <View style={styles.header}>
-                    <Image src={data.image} style={styles.avatar} />
+                    {data.image ? (
+                        <Image src={data.image} style={styles.avatar} />
+                    ) : (
+
+                        <View style={[styles.avatar, { backgroundColor: "#ccc" }]} />
+                    )}
 
                     <View>
                         <Text style={styles.h1}>{data.name}</Text>

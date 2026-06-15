@@ -11,6 +11,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VacancyController;
 use App\Http\Controllers\ProfileGenerationController;
+use App\Http\Controllers\VideoController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\interviewController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,28 +23,48 @@ Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
 Route::middleware('user')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show']);
-    Route::put('/profile', [ProfileController::class, 'update']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-  
-  //vacancycontroller + feedback
-    Route::get('/vacancies', [VacancyController::class, 'index']);
-    Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
-    Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
-    Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
-    
-  //interview feedback
-    Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
-    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
 
-  //Onboarding
-    Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
-    Route::prefix('onboarding')->group(function () {
-        Route::get('/start', [OnboardingController::class, 'start']);
-        Route::post('/chat', [OnboardingController::class, 'chat']);
-    });
+// Profile & Auth
+Route::get('/profile', [ProfileController::class, 'show']);
+Route::put('/profile', [ProfileController::class, 'update']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
+// Vacancies
+Route::post('/vacancies/generate', [VacancyController::class, 'generateFakeVacancies']);
+Route::get('/vacancies', [VacancyController::class, 'index']);
+Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
+
+// Vacancy Feedback
+Route::post('/vacancy-feedback', [VacancyFeedbackController::class, 'store']);
+Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'show']);
+Route::get('/vacancies/{vacancy}/feedback', [VacancyFeedbackController::class, 'show']);
+
+// Interview Feedback
+Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
+Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
+
+// Interviews
+Route::prefix('interviews/{vacancyId}')->group(function () {
+    Route::get('/start', [InterviewController::class, 'start']);
+    Route::post('/chat', [InterviewController::class, 'chat']);
+});
+
+// Onboarding
+Route::get('/onboarding/sessions', [OnboardingController::class, 'sessions']);
+Route::prefix('onboarding')->group(function () {
+    Route::get('/start', [OnboardingController::class, 'start']);
+    Route::post('/chat', [OnboardingController::class, 'chat']);
+});
+
+// Videos & Categories (from feature/US11-videos)
+Route::get('/videos', [VideoController::class, 'index']);
+Route::get('/videos/{id}', [VideoController::class, 'show']);
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{id}', [CategoryController::class, 'show']);
+
+// Profile Generation
+Route::post('/profile/generate', [ProfileGenerationController::class, 'generate']);
 });
 
 Route::middleware('auth:api')->group(function () {

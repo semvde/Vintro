@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router";
+import {Link, useNavigate, useParams} from "react-router";
 import {fetchAPI} from "../services/Fetch.js";
 import ButtonPrimary from "../components/ButtonPrimary.jsx";
 
@@ -32,10 +32,10 @@ export default function VacationDetail() {
             </section>
             <section className={"flex flex-col gap-2.5"}>
                 <p>Klinkt dit goed? Solliciteer dan nu!</p>
-                <div className={"flex items-center gap-2.5"}>
+                <Link to={`/app/vacancies/${params.id}/apply`} className={"flex items-center gap-2.5"}>
                     <ButtonPrimary style={"rounded-lg w-fit px-4"}>Solliciteren</ButtonPrimary>
                     <p className={"text-right font-bold w-full"}>{vacancy.employment_type}</p>
-                </div>
+                </Link>
             </section>
             <section className={"pt-5"}>
                 <p className={"text-sm text-balance italic"}>Deze vacature is slechts een simulatie. Door te
