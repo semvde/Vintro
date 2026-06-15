@@ -33,14 +33,14 @@
     - [Get Interview Feedback](#get-interview-feedback)
 
 * [Vacancies Endpoints](#vacancy-endpoints)
-  * [Get Vacancies](#get-vacancies)
-  * [Get Vacancy](#get-vacancy)
-  * [Generate Vacancies](#generate-vacancies)
+    * [Get Vacancies](#get-vacancies)
+    * [Get Vacancy](#get-vacancy)
+    * [Generate Vacancies](#generate-vacancies)
 
 * [Motivation Letter Feedback](#motivation-letter-feedback)
 
-  * [Generate Feedback](#generate-feedback)
-  * [Get Feedback](#get-feedback)
+    * [Generate Feedback](#generate-feedback)
+    * [Get Feedback](#get-feedback)
 
 * [Interview Feedback Endpoints](#interview-feedback-endpoints)
 
@@ -95,7 +95,7 @@ http://127.0.0.1:8000/api/onboarding/start
 ## Huidige API routes overzicht
 
 | Method | Endpoint                   | Beschrijving                                             | Auth nodig |
-| ------ | -------------------------- | -------------------------------------------------------- | ---------- |
+|--------|----------------------------|----------------------------------------------------------|------------|
 | POST   | `/register`                | Nieuwe gebruiker registreren                             | Nee        |
 | POST   | `/login`                   | Gebruiker inloggen                                       | Nee        |
 | GET    | `/user`                    | Ingelogde gebruiker ophalen                              | Ja         |
@@ -289,7 +289,7 @@ Voorbeeld request:
 Velden:
 
 | Field     | Type    | Required | Uitleg                                            |
-| --------- | ------- | -------- | ------------------------------------------------- |
+|-----------|---------|----------|---------------------------------------------------|
 | `message` | string  | Ja       | Het nieuwste bericht van de gebruiker             |
 | `step`    | integer | Ja       | Huidige onboardingstap, bijgehouden door frontend |
 
@@ -351,7 +351,11 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User",
             "image": "https://example.com/image.jpg",
-            "skills": ["samenwerken", "organiseren", "probleemoplossen"],
+            "skills": [
+                "samenwerken",
+                "organiseren",
+                "probleemoplossen"
+            ],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -404,7 +408,11 @@ Voorbeeld request (bijwerken profiel):
 {
     "name": "Test User Updated",
     "image": "https://example.com/new-image.jpg",
-    "skills": ["samenwerken", "organiseren", "communicatie"],
+    "skills": [
+        "samenwerken",
+        "organiseren",
+        "communicatie"
+    ],
     "work_experience": [
         {
             "company": "Jumbo",
@@ -426,9 +434,17 @@ Voorbeeld request (bijwerken profiel):
     },
     "preferred_language": "nl",
     "age": 25,
-    "interests": ["sport", "creativiteit"],
-    "strengths": ["leergierig", "ijverig"],
-    "job_preferences": ["werken met mensen"],
+    "interests": [
+        "sport",
+        "creativiteit"
+    ],
+    "strengths": [
+        "leergierig",
+        "ijverig"
+    ],
+    "job_preferences": [
+        "werken met mensen"
+    ],
     "profile_summary": "Gemotiveerde professional met ervaring in detailhandel en projectmanagement.",
     "phone_number": "+31687654321",
     "email": "newemail@example.com"
@@ -447,7 +463,7 @@ Voorbeeld request (bijwerken CV-gegevens):
 Velden voor profiel:
 
 | Field                | Type    | Required | Uitleg                                               |
-| -------------------- | ------- | -------- | ---------------------------------------------------- |
+|----------------------|---------|----------|------------------------------------------------------|
 | `name`               | string  | Nee      | Volledige naam van de gebruiker                      |
 | `image`              | string  | Nee      | URL naar profielfoto                                 |
 | `skills`             | array   | Nee      | Array van vaardigheden (strings)                     |
@@ -463,7 +479,7 @@ Velden voor profiel:
 Velden voor CV:
 
 | Field          | Type   | Required | Uitleg         |
-| -------------- | ------ | -------- | -------------- |
+|----------------|--------|----------|----------------|
 | `phone_number` | string | Nee      | Telefoonnummer |
 | `email`        | string | Nee      | Email adres    |
 
@@ -478,7 +494,11 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User Updated",
             "image": "https://example.com/new-image.jpg",
-            "skills": ["samenwerken", "organiseren", "communicatie"],
+            "skills": [
+                "samenwerken",
+                "organiseren",
+                "communicatie"
+            ],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -557,7 +577,10 @@ Voorbeeld response:
             "status": "afgerond",
             "period": "onbekend"
         },
-        "skills": ["samenwerken", "organiseren"],
+        "skills": [
+            "samenwerken",
+            "organiseren"
+        ],
         "work_experience": [
             {
                 "company": "Jumbo",
@@ -566,9 +589,17 @@ Voorbeeld response:
                 "description": "Eerste werkervaring opgedaan in de detailhandel."
             }
         ],
-        "interests": ["sport", "creativiteit"],
-        "strengths": ["leergierig", "ijverig"],
-        "job_preferences": ["werken met mensen"],
+        "interests": [
+            "sport",
+            "creativiteit"
+        ],
+        "strengths": [
+            "leergierig",
+            "ijverig"
+        ],
+        "job_preferences": [
+            "werken met mensen"
+        ],
         "profile_summary": "Korte profielsamenvatting..."
     },
     "next_action": "generate_cv"
@@ -600,17 +631,17 @@ Voorbeeld response:
 
 ```json
 {
-  "data": [
-    {
-      "id": 1,
-      "title": "Winkelmedewerker",
-      "company": "Albert Heijn",
-      "location": "Utrecht",
-      "employment_type": "part-time",
-      "salary": 14,
-      "description": "Je helpt klanten, vult schappen en zorgt dat de winkel netjes blijft."
-    }
-  ]
+    "data": [
+        {
+            "id": 1,
+            "title": "Winkelmedewerker",
+            "company": "Albert Heijn",
+            "location": "Utrecht",
+            "employment_type": "part-time",
+            "salary": 14,
+            "description": "Je helpt klanten, vult schappen en zorgt dat de winkel netjes blijft."
+        }
+    ]
 }
 ```
 
@@ -644,9 +675,11 @@ Voorbeeld response:
 
 ```json
 {
-  "message": "15 oefenvacatures aangemaakt.",
-  "count": 15,
-  "data": [...]
+    "message": "15 oefenvacatures aangemaakt.",
+    "count": 15,
+    "data": [
+        ...
+    ]
 }
 ```
 
@@ -687,8 +720,8 @@ Request:
 
 ```json
 {
-  "vacancy_id": 1,
-  "motivation_letter": "Beste Albert Heijn, ik wil graag bij jullie werken omdat..."
+    "vacancy_id": 1,
+    "motivation_letter": "Beste Albert Heijn, ik wil graag bij jullie werken omdat..."
 }
 ```
 
@@ -696,26 +729,26 @@ Voorbeeld response:
 
 ```json
 {
-  "message": "Motivatiebrief opgeslagen en feedback gegenereerd.",
-  "data": {
-    "id": 1,
-    "vacancy_id": 1,
-    "motivation_letter": "Beste Albert Heijn...",
-    "ai_feedback": {
-      "reaction": "Je hebt een goede basis gelegd.",
-      "good_points": [
-        "Je motivatie is duidelijk."
-      ],
-      "improvement_points": [
-        "Maak de brief persoonlijker."
-      ],
-      "profile_suggestions": [
-        "Uit je profiel blijkt dat je ervaring hebt als vakkenvuller bij Jumbo. Dit kun je benoemen."
-      ],
-      "improved_example": "Beste Albert Heijn..."
-    },
-    "accepted": false
-  }
+    "message": "Motivatiebrief opgeslagen en feedback gegenereerd.",
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "motivation_letter": "Beste Albert Heijn...",
+        "ai_feedback": {
+            "reaction": "Je hebt een goede basis gelegd.",
+            "good_points": [
+                "Je motivatie is duidelijk."
+            ],
+            "improvement_points": [
+                "Maak de brief persoonlijker."
+            ],
+            "profile_suggestions": [
+                "Uit je profiel blijkt dat je ervaring hebt als vakkenvuller bij Jumbo. Dit kun je benoemen."
+            ],
+            "improved_example": "Beste Albert Heijn..."
+        },
+        "accepted": false
+    }
 }
 ```
 
@@ -739,21 +772,221 @@ Voorbeeld response:
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "vacancy_id": 1,
-    "motivation_letter": "...",
-    "ai_feedback": {
-      "reaction": "...",
-      "good_points": [],
-      "improvement_points": [],
-      "profile_suggestions": [],
-      "improved_example": "..."
-    },
-    "accepted": true
-  }
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "motivation_letter": "...",
+        "ai_feedback": {
+            "reaction": "...",
+            "good_points": [],
+            "improvement_points": [],
+            "profile_suggestions": [],
+            "improved_example": "..."
+        },
+        "accepted": true
+    }
 }
 ```
+
+---
+
+## Interview Endpoints
+
+### Start Interview
+
+Start een nieuw interview voor een specifieke vacature.
+
+```http
+GET /interviews/{vacancyId}/start
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg          |
+|-----------|---------|----------|-----------------|
+| vacancyId | integer | Ja       | ID van vacature |
+
+Voorbeeld response:
+
+```json
+{
+    "reply": "Goedemiddag Ahmed, mijn naam is Emma en ik doe vandaag het gesprek met u namens Tech Startup XYZ. We spreken over de functie Junior Frontend Developer. Fijn dat u er bent. Kunt u zichzelf kort introduceren en vertellen wat u naar deze functie heeft gebracht?",
+    "type": "interview_start",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 0,
+            "chat_history": [],
+            "completed": false,
+            "completed_at": null,
+            "created_at": "2026-06-15T10:30:00.000000Z",
+            "updated_at": "2026-06-15T10:30:00.000000Z"
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js."
+        },
+        "interviewer": "Emma"
+    }
+}
+```
+
+Response velden:
+
+| Field        | Type     | Uitleg                             |
+|--------------|----------|------------------------------------|
+| reply        | string   | Eerste AI bericht                  |
+| type         | string   | Response type                      |
+| interview    | object   | Interview object                   |
+| vacancy      | object   | Gekoppelde vacature                |
+| interviewer  | string   | Naam van interviewer               |
+| current_step | integer  | Huidige interview stap             |
+| chat_history | array    | Geschiedenis van gesprek           |
+| completed    | boolean  | Geeft aan of interview voltooid is |
+| completed_at | datetime | Tijdstip van afronding             |
+
+Frontend flow:
+
+```text
+1. Gebruiker opent vacature
+2. Frontend roept GET /interviews/{vacancyId}/start aan
+3. Backend maakt interview sessie aan
+4. Frontend toont eerste interview vraag
+```
+
+---
+
+### Interview Chat
+
+Stuurt een bericht naar het interview en ontvangt een AI reactie.
+
+```http
+POST /interviews/{vacancyId}/chat
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg          |
+|-----------|---------|----------|-----------------|
+| vacancyId | integer | Ja       | ID van vacature |
+
+Request body:
+
+```json
+{
+    "message": "Ik heb gewerkt met React en Vue.",
+    "step": 1
+}
+```
+
+Request velden:
+
+| Field   | Type    | Required | Uitleg                 |
+|---------|---------|----------|------------------------|
+| message | string  | Ja       | Bericht van gebruiker  |
+| step    | integer | Ja       | Huidige interview stap |
+
+Voorbeeld response:
+
+```json
+{
+    "reply": "Dat klinkt interessant. Kunt u daar meer over vertellen?",
+    "finished": false,
+    "next_action": "continue_interview",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 1,
+            "chat_history": [
+                {
+                    "role": "user",
+                    "content": "Ik heb gewerkt met React en Vue.",
+                    "step": 1
+                },
+                {
+                    "role": "assistant",
+                    "content": "Dat klinkt interessant. Kunt u daar meer over vertellen?",
+                    "step": 1
+                }
+            ],
+            "completed": false,
+            "completed_at": null
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ"
+        },
+        "feedback": null
+    }
+}
+```
+
+Voorbeeld response (afgerond interview):
+
+```json
+{
+    "reply": "Bedankt voor het prettige gesprek. We nemen binnenkort contact met u op.",
+    "finished": true,
+    "next_action": "generate_interview_feedback",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 10,
+            "completed": true,
+            "completed_at": "2026-06-15T11:15:00.000000Z"
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ"
+        },
+        "feedback": {
+            "id": 1,
+            "interview_id": 1,
+            "ai_feedback": "Je antwoorden waren goed gestructureerd en professioneel.",
+            "accepted": true,
+            "created_at": "2026-06-15T11:15:00.000000Z",
+            "updated_at": "2026-06-15T11:15:00.000000Z"
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field       | Type    | Uitleg                             |
+|-------------|---------|------------------------------------|
+| reply       | string  | AI reactie                         |
+| finished    | boolean | Geeft aan of interview afgerond is |
+| next_action | string  | Volgende actie voor frontend       |
+| interview   | object  | Interview object                   |
+| vacancy     | object  | Gekoppelde vacature                |
+| feedback    | object  | Gegenereerde interview feedback    |
+
+Frontend flow:
+
+```text
+1. Gebruiker stuurt antwoord
+2. Frontend roept POST /interviews/{vacancyId}/chat aan
+3. Backend verwerkt bericht
+4. AI genereert nieuwe vraag
+5. Frontend toont reactie
+6. Proces herhaalt totdat interview voltooid is
+```
+
+---
+
 ---
 
 ## Interview Feedback Endpoints
@@ -823,7 +1056,7 @@ Authorization: Bearer jwt_token_here
 URL Parameters:
 
 | Parameter | Type    | Required | Uitleg                   |
-| --------- | ------- | -------- | ------------------------ |
+|-----------|---------|----------|--------------------------|
 | `id`      | integer | Ja       | ID van het feedback item |
 
 Voorbeeld response:
@@ -848,7 +1081,7 @@ Voorbeeld response:
 Response velden:
 
 | Field          | Type    | Uitleg                                  |
-| -------------- | ------- | --------------------------------------- |
+|----------------|---------|-----------------------------------------|
 | `id`           | integer | Feedback item ID                        |
 | `interview_id` | integer | gekoppelde interview ID                 |
 | `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
@@ -889,7 +1122,7 @@ Voorbeeld request:
 Velden:
 
 | Field   | Type   | Required | Uitleg                                |
-| ------- | ------ | -------- | ------------------------------------- |
+|---------|--------|----------|---------------------------------------|
 | `text`  | string | Ja       | De tekst die uitgesproken moet worden |
 | `voice` | string | Nee      | Steminstelling voor het TTS-model     |
 
