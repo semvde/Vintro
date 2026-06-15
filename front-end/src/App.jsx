@@ -21,6 +21,7 @@ import VacationDetail from "../pages/VacancyDetail.jsx";
 import OnboardLayout from "../layouts/OnboardLayout.jsx";
 import VacancyApply from "../pages/VacancyApply.jsx";
 import VacancyFeedback from "../pages/VacancyFeedback.jsx";
+import HistoryVacancyDetail from "../pages/account/HistoryVacancyDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
             {
                 path: "/app/history",
                 element: <History/>,
+            },
+            {
+                path: "/app/history/vacancy-feedback/:id",
+                element: <HistoryVacancyDetail/>
             },
             {
                 path: "/app/preferences",
