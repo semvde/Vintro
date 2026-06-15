@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { GoArrowLeft } from "react-icons/go";
 import { useState } from "react";
 import HistoryVacancyComponent from "../../components/HistoryVacancyComponent.jsx";
+import HistoryInterviewComponent from "../../components/HistoryInterviewComponent.jsx";
 
 export function History() {
     const [currentPage, setCurrentPage] = useState("applications");
@@ -54,9 +55,11 @@ export function History() {
                 )}
 
                 {currentPage === "interviews" && (
-                    <HistoryVacancyComponent category={currentPage} />
+                    <HistoryInterviewComponent />
                 )}
             </div>
+
+            
         </section>
     );
 }
