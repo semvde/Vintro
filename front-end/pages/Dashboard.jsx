@@ -26,7 +26,7 @@ const navigate = useNavigate()
 
                 if (data.onboarded === 1) {
                     if (data) {
-                        setName(data2.profile.name);
+                        setName(data2.data.profile.name);
                         setTimeout(() => setNameLoaded(true), 50);
                     }
                 }else if (data.onboarded === 0) {
