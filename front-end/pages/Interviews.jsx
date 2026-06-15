@@ -7,47 +7,17 @@ import { fetchAPI } from "../services/Fetch.js";
 
 export default function Interviews() {
     const [loading, setLoading] = useState(true);
-    const [vacancies, setVacancies] = useState([]);
+    const [feedbackItems, setFeedbackItems] = useState([]);
 
-    //Ik schaam me als front-ender, maar back-end weigerde een endpoint aan te leveren,
-    // dus geniet van een lijst van 404 errors.
     useEffect(() => {
-        async function loadData() {
-            setLoading(true);
+        async function loadAccepted() {
+            const res = await fetchAPI("/vacancy-feedback/accepted");
 
-            try {
-                // 1. alle "applications / vacancies"
-                const res = await fetchAPI("/vacancies");
-                const allVacancies = res.data ?? [];
-
-                // 2. per vacancy feedback ophalen
-                const feedbackResponses = await Promise.all(
-                    allVacancies.map((v) =>
-                        fetchAPI(`/vacancies/${v.id}/feedback`)
-                    )
-                );
-
-                // 3. combineren + filteren op accepted
-                const acceptedVacancies = allVacancies
-                    .map((vacancy, index) => {
-                        const feedback = feedbackResponses[index]?.data;
-
-                        return {
-                            ...vacancy,
-                            feedback
-                        };
-                    })
-                    .filter((v) => v.feedback?.accepted === true);
-
-                setVacancies(acceptedVacancies);
-            } catch (error) {
-                setVacancies([]);
-            } finally {
-                setLoading(false);
-            }
+            setFeedbackItems(res?.data || []);
+            setLoading(false);
         }
 
-        loadData();
+        loadAccepted();
     }, []);
 
     // LOADING
@@ -60,7 +30,7 @@ export default function Interviews() {
     }
 
     // EMPTY STATE
-    if (!vacancies || vacancies.length === 0) {
+    if (!feedbackItems.length) {
         return (
             <div className="p-12 text-center">
                 <img src={Victoria} alt="Victoria" />
@@ -85,34 +55,36 @@ export default function Interviews() {
             </h1>
 
             <div className="space-y-4">
-                {vacancies.map((item) => (
-                    <Link
-                        key={item.id}
-                        to={`/app/interview/${item.id}`}
-                        className="block"
-                    >
-                        <Card>
-                            <div className="p-5">
-                                <h2 className="text-primary text-lg font-bold">
-                                    {item.title}
-                                </h2>
+                {feedbackItems.map((item) => {
+                    const vacancy = item.vacancy;
 
-                                <div className="text-sm mt-1">
-                                    <p className="font-semibold">
-                                        {item.company}
-                                    </p>
-                                    <p>
-                                        {" "}• {item.location}
+                    return (
+                        <Link
+                            key={item.id}
+                            to={`/app/interview/${item.id}`}
+                            className="block"
+                        >
+                            <Card>
+                                <div className="p-5">
+                                    <h2 className="text-primary text-lg font-bold">
+                                        {vacancy?.title}
+                                    </h2>
+
+                                    <div className="text-sm mt-1">
+                                        <p className="font-semibold">
+                                            {vacancy?.company}
+                                        </p>
+                                        <p> • {vacancy?.location}</p>
+                                    </div>
+
+                                    <p className="text-right mt-4 text-sm">
+                                        {vacancy?.employment_type}
                                     </p>
                                 </div>
-
-                                <p className="text-right mt-4 text-sm">
-                                    {item.employment_type}
-                                </p>
-                            </div>
-                        </Card>
-                    </Link>
-                ))}
+                            </Card>
+                        </Link>
+                    );
+                })}
             </div>
         </div>
     );
