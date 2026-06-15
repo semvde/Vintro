@@ -13,6 +13,7 @@ import ChatMessage from "../components/ChatMessage.jsx";
 import {fetchAPI} from "../services/Fetch.js";
 import {FaAngleRight} from "react-icons/fa";
 import ScrollToTop from "../components/ScrollToTop.jsx";
+import VoiceInput from "../components/VoiceInput.jsx";
 
 export default function UserLayout() {
     const messagesEndRef = useRef(null);
@@ -41,6 +42,10 @@ export default function UserLayout() {
         setTimeout(() => {
             setChatOpen(false);
         }, 500)
+    }
+
+    function setInput(x) {
+        setForm({input: x});
     }
 
     const [form, setForm] = useState({
@@ -97,7 +102,7 @@ export default function UserLayout() {
     return (
         <>
             <header>
-                <ScrollToTop />
+                <ScrollToTop/>
                 <div className={"bg-primary"}>
                     <Link to={"/app"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 </div>
@@ -119,6 +124,7 @@ export default function UserLayout() {
 
                         <div ref={messagesEndRef}/>
                     </div>
+                    <VoiceInput inputSetter={setInput} styling={"absolute bottom-20 right-5"}/>
                     <form className={"absolute bottom-0 left-0 right-0"} onSubmit={handleSubmit}>
                         <FormField icon={<MdOutlineQuestionAnswer/>} id={'input'}
                                    placeholder={placeholderText} value={form.input} onChange={handleInputChange}/>
