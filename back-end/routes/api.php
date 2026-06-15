@@ -37,6 +37,7 @@ Route::get('/vacancies/{id}', [VacancyController::class, 'show']);
 // Vacancy Feedback
 Route::post('/vacancy-feedback', [VacancyFeedbackController::class, 'store']);
 Route::get('/vacancy-feedback', [VacancyFeedbackController::class, 'index']);
+Route::get('/vacancy-feedback/accepted', [VacancyFeedbackController::class, 'accepted']);
 Route::get('/vacancy-feedback/{id}', [VacancyFeedbackController::class, 'showById']);
 Route::get('/vacancies/{vacancy}/feedback', [VacancyFeedbackController::class, 'show']);
 

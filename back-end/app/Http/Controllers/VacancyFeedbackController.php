@@ -231,4 +231,23 @@ class VacancyFeedbackController extends Controller
             'data' => $feedbacks,
         ]);
     }
+    
+    public function accepted()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $feedbacks = VacancyFeedback::with('vacancy')
+            ->where('user_id', $user->id)
+            ->where('accepted', true)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $feedbacks,
+        ]);
+    }
 }
