@@ -37,11 +37,6 @@
     * [Generate Feedback](#generate-feedback)
     * [Get Feedback](#get-feedback)
 
-* [Interview Feedback Endpoints](#interview-feedback-endpoints)
-
-    * [Get Interview Feedbacks](#get-interview-feedbacks)
-    * [Get Interview Feedback](#get-interview-feedback)
-
 * [Text-to-Speech Endpoint](#text-to-speech-endpoint)
 
     * [Generate Speech](#generate-speech)
@@ -713,117 +708,6 @@ Voorbeeld response:
         "accepted": true
     }
 }
-```
-
----
-
-## Interview Feedback Endpoints
-
-### Get Interview Feedbacks
-
-Haalt alle interview feedback op voor de ingelogde gebruiker.
-
-```http
-GET /interview-feedback
-Authorization: Bearer jwt_token_here
-```
-
-Voorbeeld response:
-
-```json
-{
-    "data": [
-        {
-            "id": 1,
-            "interview_id": 1,
-            "ai_feedback": "Je antwoorden waren goed gestructureerd. Zorg ervoor dat je meer voorbeelden geeft van je werkervaring.",
-            "accepted": true,
-            "created_at": "2026-06-09T12:00:00.000000Z",
-            "updated_at": "2026-06-09T12:00:00.000000Z",
-            "interview": {
-                "id": 1,
-                "vacancy_id": 1
-            }
-        },
-        {
-            "id": 2,
-            "interview_id": 2,
-            "ai_feedback": "Sterke voorbereiding zichtbaar. Je communicatie was duidelijk en professioneel.",
-            "accepted": true,
-            "created_at": "2026-06-09T13:00:00.000000Z",
-            "updated_at": "2026-06-09T13:00:00.000000Z",
-            "interview": {
-                "id": 2,
-                "vacancy_id": 2
-            }
-        }
-    ]
-}
-```
-
-Frontend flow:
-
-```
-1. Gebruiker navigeert naar interview feedback pagina
-2. Frontend roept GET /interview-feedback aan
-3. Frontend toont lijst van alle interview feedback items
-4. Gebruiker kan op item klikken voor gedetailleerde feedback
-```
-
----
-
-### Get Interview Feedback
-
-Haalt de details van één specifieke interview feedback op.
-
-```http
-GET /interview-feedback/{id}
-Authorization: Bearer jwt_token_here
-```
-
-URL Parameters:
-
-| Parameter | Type    | Required | Uitleg                   |
-|-----------|---------|----------|--------------------------|
-| `id`      | integer | Ja       | ID van het feedback item |
-
-Voorbeeld response:
-
-```json
-{
-    "data": {
-        "id": 1,
-        "interview_id": 1,
-        "ai_feedback": "Je antwoorden waren goed gestructureerd met concrete voorbeelden. Punten ter verbetering: zorg ervoor dat je meer je eigen rol in teamprojecten benadrukt. Je non-verbale communicatie was open en vriendelijk. Zorg ervoor dat je vragen stelt aan het einde van het interview om je interesse aan te tonen.",
-        "accepted": true,
-        "created_at": "2026-06-09T12:00:00.000000Z",
-        "updated_at": "2026-06-09T12:00:00.000000Z",
-        "interview": {
-            "id": 1,
-            "vacancy_id": 1
-        }
-    }
-}
-```
-
-Response velden:
-
-| Field          | Type    | Uitleg                                  |
-|----------------|---------|-----------------------------------------|
-| `id`           | integer | Feedback item ID                        |
-| `interview_id` | integer | gekoppelde interview ID                 |
-| `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
-| `accepted`     | boolean | Of de interview goed is gegaan          |
-| `interview`    | object  | Interview object met vacancy_id         |
-
-Frontend flow:
-
-```
-1. Gebruiker klikt op interview feedback item
-2. Frontend roept GET /interview-feedback/{id} aan
-3. Frontend toont gedetailleerde AI feedback
-4. Gebruiker kan feedback lezen en punten ter verbetering opnemen
-5. Optioneel: interview opnieuw volgen of naar volgende stap
 ```
 
 ---
