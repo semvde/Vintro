@@ -156,6 +156,45 @@ class VacancyFeedbackController extends Controller
         ]);
     }
 
+    public function showById($id)
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $feedback = VacancyFeedback::with('vacancy')
+            ->where('user_id', $user->id)
+            ->where('id', $id)
+            ->first();
+
+        if (!$feedback) {
+            return response()->json([
+                'message' => 'Feedback niet gevonden.'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => [
+                'id' => $feedback->id,
+                'vacancy_id' => $feedback->vacancy_id,
+                'motivation_letter' => $feedback->motivation_letter,
+                'ai_feedback' => json_decode($feedback->ai_feedback, true),
+                'accepted' => $feedback->accepted,
+                'created_at' => $feedback->created_at,
+                'vacancy' => [
+                    'id' => $feedback->vacancy->id,
+                    'title' => $feedback->vacancy->title,
+                    'company' => $feedback->vacancy->company,
+                    'location' => $feedback->vacancy->location,
+                ]
+            ]
+        ]);
+    }
+
     public function index()
     {
         $user = auth('api')->user();
