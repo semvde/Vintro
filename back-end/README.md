@@ -2,40 +2,29 @@
 
 ## Inhoudsopgave
 
-- [Base URL](#base-url)
-- [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
-- [Auth Endpoints](#auth-endpoints)
-    - [Register](#register)
-    - [Login](#login)
-    - [Get Current User](#get-current-user)
-    - [Logout](#logout)
+* [Base URL](#base-url)
+* [Huidige API Routes Overzicht](#huidige-api-routes-overzicht)
+* [Auth Endpoints](#auth-endpoints)
+    * [Register](#register)
+    * [Login](#login)
+    * [Get Current User](#get-current-user)
+    * [Logout](#logout)
 
-- [Onboarding Endpoints](#onboarding-endpoints)
-    - [Start Onboarding](#start-onboarding)
-    - [Onboarding Chat](#onboarding-chat)
+* [Onboarding Endpoints](#onboarding-endpoints)
+    * [Start Onboarding](#start-onboarding)
+    * [Onboarding Chat](#onboarding-chat)
 
-- [Profile Endpoints](#profile-endpoints)
-    - [Get Profile](#get-profile)
-    - [Update Profile](#update-profile)
-    - [Generate Profile](#generate-profile)
+* [Profile Endpoints](#profile-endpoints)
+    * [Get Profile](#get-profile)
+    * [Update Profile](#update-profile)
+    * [Generate Profile](#generate-profile)
 
-- [Vacancies Endpoints](#vacancies-endpoints)
-    - [Get Vacancies](#get-vacancies)
-    - [Get Vacancy](#get-vacancy)
-    - [Generate Vacancies](#generate-vacancies)
+* [Vacancy Endpoints](#vacancy-endpoints)
+    * [Get Vacancy Feedbacks](#vacancy-feedback)
 
-- [Vacancy Feedback Endpoints](#vacancy-feedback-endpoints)
-    - [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
-    - [Get Vacancy Feedback](#get-vacancy-feedback)
-
-- [Interview Feedback Endpoints](#interview-feedback-endpoints)
-    - [Get Interview Feedbacks](#get-interview-feedbacks)
-    - [Get Interview Feedback](#get-interview-feedback)
-
-* [Vacancies Endpoints](#vacancy-endpoints)
-  * [Get Vacancies](#get-vacancies)
-  * [Get Vacancy](#get-vacancy)
-  * [Generate Vacancies](#generate-vacancies)
+* [Interview Endpoints](#interview-endpoints)
+    * [Get Interview Feedbacks](#get-interview-feedbacks)
+    * [Get Interview Feedback](#get-interview-feedback)
 
 * [Motivation Letter Feedback](#motivation-letter-feedback)
 
@@ -652,30 +641,7 @@ Voorbeeld response:
 
 ---
 
-# Motivatiebrief Feedback
-
-Gebruikers kunnen een motivatiebrief schrijven voor een vacature.
-
-Victoria analyseert:
-
-- de vacature
-- het gebruikersprofiel
-- de motivatiebrief
-
-Daarna wordt feedback gegenereerd en opgeslagen in de `vacancy_feedback` tabel.
-
-De feedback bevat:
-
-- algemene reactie
-- sterke punten
-- verbeterpunten
-- suggesties vanuit het profiel/CV
-- een verbeterde voorbeeldbrief
-- een beoordeling (`accepted`)
-
----
-
-## Feedback genereren
+## Vacancy Feedback
 
 ```http
 POST /vacancy-feedback
@@ -756,7 +722,7 @@ Voorbeeld response:
 ```
 ---
 
-## Interview Feedback Endpoints
+## Interview Endpoints
 
 ### Get Interview Feedbacks
 
