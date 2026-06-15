@@ -106,6 +106,8 @@ http://127.0.0.1:8000/api/onboarding/start
 | POST   | `/vacancies/generate`      | Genereert 15 oefenvacatures op basis van profiel         | Ja         |
 | GET    | `/vacancy-feedback`        | Alle vacancy feedback opgehaald                          | Ja         |
 | GET    | `/vacancy-feedback/{id}`   | Specifieke vacancy feedback ophalen                      | Ja         |
+| GET    | `/interviews/{id}/start`   | Begin de Interview                                       | Ja         |
+| POST   | `/interviews/{id}/chat `   | Berichtjes naar interview                                | Ja         |
 | GET    | `/interview-feedback`      | Alle interview feedback ophalen                          | Ja         |
 | GET    | `/interview-feedback/{id}` | Specifieke interview feedback ophalen                    | Ja         |
 | POST   | `/tts`                     | Tekst omzetten naar audio                                | Nee        |
@@ -794,12 +796,14 @@ Frontend flow:
 6. Gebruiker kan nu oefenvacatures beoordelen en sollicitaties oefenen
 ```
 
-Opmerkingen:
+De feedback bevat:
 
-- Vacatures worden gegenereerd op basis van het user profiel (skills, CV, job preferences).
-- Dit endpoint genereert altijd precies 15 vacatures.
-- De gegenereerde vacatures zijn denkbeeldig en bedoeld voor oefendoeleinden.
-- Alle gegenereerde vacatures zijn gekoppeld aan de ingelogde gebruiker.
+- algemene reactie
+- sterke punten
+- verbeterpunten
+- suggesties vanuit het profiel/CV
+- een verbeterde voorbeeldbrief
+- een beoordeling (`accepted`)
 
 ---
 
