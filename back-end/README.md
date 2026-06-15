@@ -33,6 +33,11 @@
     * [Get Vacancy Feedbacks](#get-vacancy-feedbacks)
     * [Get Vacancy Feedback](#get-vacancy-feedback)
 
+* [Interview Endpoints](#interview-endpoints)
+
+    * [Start Interview](#start-interview)
+    * [Interview Chat](#interview-chat)
+
 * [Interview Feedback Endpoints](#interview-feedback-endpoints)
 
     * [Get Interview Feedbacks](#get-interview-feedbacks)
@@ -925,6 +930,207 @@ Frontend flow:
 4. Gebruiker kan AI-feedback lezen en verbeteringen aanpassen
 5. Optioneel: feedback opslaan of opnieuw indienen
 ```
+
+---
+
+## Interview Endpoints
+
+---
+
+### Start Interview
+
+Start een nieuw interview voor een specifieke vacature.
+
+```http
+GET /interviews/{vacancyId}/start
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg          |
+|-----------|---------|----------|-----------------|
+| vacancyId | integer | Ja       | ID van vacature |
+
+Voorbeeld response:
+
+```json
+{
+    "reply": "Goedemiddag Ahmed, mijn naam is Emma en ik doe vandaag het gesprek met u namens Tech Startup XYZ. We spreken over de functie Junior Frontend Developer. Fijn dat u er bent. Kunt u zichzelf kort introduceren en vertellen wat u naar deze functie heeft gebracht?",
+    "type": "interview_start",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 0,
+            "chat_history": [],
+            "completed": false,
+            "completed_at": null,
+            "created_at": "2026-06-15T10:30:00.000000Z",
+            "updated_at": "2026-06-15T10:30:00.000000Z"
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js."
+        },
+        "interviewer": "Emma"
+    }
+}
+```
+
+Response velden:
+
+| Field        | Type     | Uitleg                             |
+|--------------|----------|------------------------------------|
+| reply        | string   | Eerste AI bericht                  |
+| type         | string   | Response type                      |
+| interview    | object   | Interview object                   |
+| vacancy      | object   | Gekoppelde vacature                |
+| interviewer  | string   | Naam van interviewer               |
+| current_step | integer  | Huidige interview stap             |
+| chat_history | array    | Geschiedenis van gesprek           |
+| completed    | boolean  | Geeft aan of interview voltooid is |
+| completed_at | datetime | Tijdstip van afronding             |
+
+Frontend flow:
+
+```text
+1. Gebruiker opent vacature
+2. Frontend roept GET /interviews/{vacancyId}/start aan
+3. Backend maakt interview sessie aan
+4. Frontend toont eerste interview vraag
+```
+
+---
+
+### Interview Chat
+
+Stuurt een bericht naar het interview en ontvangt een AI reactie.
+
+```http
+POST /interviews/{vacancyId}/chat
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg          |
+|-----------|---------|----------|-----------------|
+| vacancyId | integer | Ja       | ID van vacature |
+
+Request body:
+
+```json
+{
+    "message": "Ik heb gewerkt met React en Vue.",
+    "step": 1
+}
+```
+
+Request velden:
+
+| Field   | Type    | Required | Uitleg                 |
+|---------|---------|----------|------------------------|
+| message | string  | Ja       | Bericht van gebruiker  |
+| step    | integer | Ja       | Huidige interview stap |
+
+Voorbeeld response:
+
+```json
+{
+    "reply": "Dat klinkt interessant. Kunt u daar meer over vertellen?",
+    "finished": false,
+    "next_action": "continue_interview",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 1,
+            "chat_history": [
+                {
+                    "role": "user",
+                    "content": "Ik heb gewerkt met React en Vue.",
+                    "step": 1
+                },
+                {
+                    "role": "assistant",
+                    "content": "Dat klinkt interessant. Kunt u daar meer over vertellen?",
+                    "step": 1
+                }
+            ],
+            "completed": false,
+            "completed_at": null
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ"
+        },
+        "feedback": null
+    }
+}
+```
+
+Voorbeeld response (afgerond interview):
+
+```json
+{
+    "reply": "Bedankt voor het prettige gesprek. We nemen binnenkort contact met u op.",
+    "finished": true,
+    "next_action": "generate_interview_feedback",
+    "data": {
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1,
+            "current_step": 10,
+            "completed": true,
+            "completed_at": "2026-06-15T11:15:00.000000Z"
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ"
+        },
+        "feedback": {
+            "id": 1,
+            "interview_id": 1,
+            "ai_feedback": "Je antwoorden waren goed gestructureerd en professioneel.",
+            "accepted": true,
+            "created_at": "2026-06-15T11:15:00.000000Z",
+            "updated_at": "2026-06-15T11:15:00.000000Z"
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field       | Type    | Uitleg                             |
+|-------------|---------|------------------------------------|
+| reply       | string  | AI reactie                         |
+| finished    | boolean | Geeft aan of interview afgerond is |
+| next_action | string  | Volgende actie voor frontend       |
+| interview   | object  | Interview object                   |
+| vacancy     | object  | Gekoppelde vacature                |
+| feedback    | object  | Gegenereerde interview feedback    |
+
+Frontend flow:
+
+```text
+1. Gebruiker stuurt antwoord
+2. Frontend roept POST /interviews/{vacancyId}/chat aan
+3. Backend verwerkt bericht
+4. AI genereert nieuwe vraag
+5. Frontend toont reactie
+6. Proces herhaalt totdat interview voltooid is
+```
+
+---
 
 ---
 
