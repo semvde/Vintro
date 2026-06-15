@@ -2,6 +2,7 @@ import ChatMessage from "./ChatMessage.jsx";
 import {useEffect, useRef, useState} from "react";
 import {fetchAPI} from "../services/Fetch.js";
 import {useNavigate} from "react-router";
+import VoiceInput from "./VoiceInput.jsx";
 
 export default function ChatWindow() {
     const [messages, setMessages] = useState([]);
@@ -92,6 +93,8 @@ export default function ChatWindow() {
                     </p>
                 )}
             </div>
+
+            <VoiceInput inputSetter={setInput} styling={"fixed bottom-30 right-5"}/>
 
             <form className="flex bg-secondary/20 p-2 fixed bottom-0 left-0 right-0 py-7" onSubmit={sendMessage}>
                 <input
