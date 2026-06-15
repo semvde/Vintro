@@ -673,13 +673,14 @@ Frontend flow:
 
 ## Vacancies Endpoints
 
-### Alle vacatures ophalen
+### Get Vacancies
+
+Haalt alle oefenvacatures op voor de ingelogde gebruiker.
 
 ```http
 GET /vacancies
+Authorization: Bearer jwt_token_here
 ```
-
-Geeft alle vacatures terug die aan de ingelogde gebruiker gekoppeld zijn.
 
 Voorbeeld response:
 
@@ -688,31 +689,84 @@ Voorbeeld response:
     "data": [
         {
             "id": 1,
-            "title": "Winkelmedewerker",
-            "company": "Albert Heijn",
-            "location": "Utrecht",
-            "employment_type": "part-time",
-            "salary": 14,
-            "description": "Je helpt klanten, vult schappen en zorgt dat de winkel netjes blijft."
+            "user_id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js. Je werkt in een klein, dynamisch team aan innovative projecten.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
+        },
+        {
+            "id": 2,
+            "user_id": 1,
+            "title": "Backend Developer",
+            "company": "Enterprise Solutions",
+            "location": "Rotterdam",
+            "employment_type": "full-time",
+            "salary": 3200,
+            "description": "Wij zoeken een ervaren backend developer met Python en Django kennis.",
+            "created_at": "2026-06-09T10:30:00.000000Z",
+            "updated_at": "2026-06-09T10:30:00.000000Z"
         }
     ]
 }
 ```
 
+Frontend flow:
+
+```
+1. Gebruiker navigeert naar vacaturepagina
+2. Frontend roept GET /vacancies aan
+3. Frontend toont lijst van vacatures
+4. Gebruiker kan op vacature klikken voor details
+```
+
 ---
 
-### Eén vacature ophalen
+### Get Vacancy
+
+Haalt de details van één specifieke vacature op.
 
 ```http
 GET /vacancies/{id}
+Authorization: Bearer jwt_token_here
 ```
 
-Geeft de details van één specifieke vacature terug.
+URL Parameters:
 
-Voorbeeld:
+| Parameter | Type    | Required | Uitleg             |
+|-----------|---------|----------|--------------------|
+| `id`      | integer | Ja       | ID van de vacature |
 
-```http
-GET /vacancies/1
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "user_id": 1,
+        "title": "Junior Frontend Developer",
+        "company": "Tech Startup XYZ",
+        "location": "Amsterdam",
+        "employment_type": "full-time",
+        "salary": 2500,
+        "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js. Je werkt in een klein, dynamisch team aan innovative projecten. Vereisten: HTML/CSS, JavaScript, Git.",
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z"
+    }
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op vacature uit lijst
+2. Frontend roept GET /vacancies/{id} aan
+3. Frontend toont volledige vacaturedetails
+4. Gebruiker kan solliciteren of oefening starten
 ```
 
 ---
