@@ -19,13 +19,14 @@ const navigate = useNavigate()
         async function getData() {
             try {
                 const response = await fetchAPI("/user");
+                const response2 = await fetchAPI("/profile");
                 const data = response;
-
-                console.log("Dashboard data binnen:", data.onboarded);
+                const data2 = response2
+                console.log("Dashboard data binnen:", data2);
 
                 if (data.onboarded === 1) {
                     if (data) {
-                        setName(data.name);
+                        setName(data2.profile.name);
                         setTimeout(() => setNameLoaded(true), 50);
                     }
                 }else if (data.onboarded === 0) {
