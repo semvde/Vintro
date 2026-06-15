@@ -28,8 +28,8 @@
     * [Get Vacancy](#get-vacancy)
     * [Generate Vacancies](#generate-vacancies)
 
-* [Motivation Letter Feedback](#motivation-letter-feedback)
-    * [Generate Feedback](#generate-feedback)
+* [Motivatiebrief Feedback](#Motivatiebrief-Feedback)
+    * [Generate Feedback](#Generate-Feedback)
     * [Get Feedback](#get-feedback)
 
 * [Interview Feedback Endpoints](#interview-feedback-endpoints)
@@ -929,7 +929,7 @@ Opmerkingen:
 
 ---
 
-# Motivatiebrief Feedback
+## Motivatiebrief Feedback
 
 Gebruikers kunnen een motivatiebrief schrijven voor een vacature.
 
@@ -952,7 +952,7 @@ De feedback bevat:
 
 ---
 
-## Feedback genereren
+### Generate Feedback
 
 ```http
 POST /vacancy-feedback
@@ -998,7 +998,7 @@ Voorbeeld response:
 
 ---
 
-## Feedback ophalen
+### Get Feedback
 
 ```http
 GET /vacancies/{vacancy}/feedback
