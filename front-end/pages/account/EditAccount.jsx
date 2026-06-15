@@ -8,9 +8,8 @@ export default function EditAccount() {
     const [loading, setLoading] = useState(true);
 
     const [formData, setFormData] = useState({
-        naam: "",
+        name: "",
         email: "",
-
     });
 
     const [errors, setErrors] = useState({});
@@ -28,8 +27,9 @@ export default function EditAccount() {
         e.preventDefault();
         const newErrors = {};
 
-        if (!formData.naam) {
-            newErrors.naam = "Naam is verplicht.";
+        // Aangepast naar name
+        if (!formData.name) {
+            newErrors.name = "Naam is verplicht.";
         }
         if (!formData.email) {
             newErrors.email = "E-mailadres is verplicht.";
@@ -59,13 +59,11 @@ export default function EditAccount() {
                 } else {
                     alert("Upload mislukt: Er ging iets mis aan de serverkant.")
                 }
-            } catch
-                (error) {
+            } catch (error) {
                 console.error("Error met updaten:", error)
             } finally {
                 setLoading(false)
             }
-
         }
     };
 
@@ -81,7 +79,6 @@ export default function EditAccount() {
                     setFormData({
                         name: profile.name || "",
                         email: cv.email || "",
-                        phone_number: cv.phone_number || ""
                     });
                 }
             } catch (error) {
@@ -103,14 +100,12 @@ export default function EditAccount() {
                     </Link>
                 </div>
                 <div className="bg-primary/20 pb-10 md:rounded-lg md:flex md:flex-row md:pb-0 md:items-stretch">
-                    <div
-                        className="bg-primary/20 flex flex-row md:flex-col items-center space-x-3 md:space-x-0 md:space-y-4 p-6 md:w-1/3 md:justify-center md:rounded-l-lg">
+                    <div className="bg-primary/20 flex flex-row md:flex-col items-center space-x-3 md:space-x-0 md:space-y-4 p-6 md:w-1/3 md:justify-center md:rounded-l-lg">
                         <img alt="profiel foto" src="/front-end/public"/>
                         <h2>{formData.name || "Gebruiker"}</h2>
                     </div>
 
                     <div className="flex flex-col gap-4 md:w-2/3 md:p-6">
-
                         <div className="bg-primary/20 p-6 flex flex-col gap-2 md:rounded-lg">
                             <div className="flex justify-between flex-row items-center">
                                 <label className="h2 text-primary">Naam</label>
@@ -118,11 +113,10 @@ export default function EditAccount() {
                                     name="name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className={`pl-2 w-3/5 bg-white md:max-w-md h-10 rounded ${errors.naam ? 'border-2 border-red-500' : ''}`}
+                                    className={`pl-2 w-3/5 bg-white md:max-w-md h-10 rounded ${errors.name ? 'border-2 border-red-500' : ''}`}
                                 />
                             </div>
-                            {errors.naam &&
-                                <span className="text-red-600 text-sm font-medium text-right pr-2">{errors.naam}</span>}
+                            {errors.name && <span className="text-red-600 text-sm font-medium text-right pr-2">{errors.name}</span>}
                         </div>
 
                         <div className="bg-secondary/20 p-6 flex flex-col gap-2 md:rounded-lg">
@@ -136,33 +130,17 @@ export default function EditAccount() {
                                     className={`pl-2 w-3/5 bg-white md:max-w-md h-10 rounded ${errors.email ? 'border-2 border-red-500' : ''}`}
                                 />
                             </div>
-                            {errors.email &&
-                                <span
-                                    className="text-red-600 text-sm font-medium text-right pr-2">{errors.email}</span>}
+                            {errors.email && <span className="text-red-600 text-sm font-medium text-right pr-2">{errors.email}</span>}
                         </div>
-
 
                         <div className="bg-primary/20 hover:bg-primary/50 p-6 flex flex-col gap-2 md:rounded-lg">
                             <div className="flex justify-between flex-row items-center">
-                                <button className="hover:cursor-pointer">Wijzig wachtwoord</button>
+                                <button type="button" className="hover:cursor-pointer">Wijzig wachtwoord</button>
                             </div>
-                            {/*    <label className="h2 text-primary">Wachtwoord</label>*/}
-                            {/*    <input*/}
-                            {/*        name="wachtwoord"*/}
-                            {/*        type="password"*/}
-                            {/*        value={formData.wachtwoord}*/}
-                            {/*        onChange={handleChange}*/}
-                            {/*        className={`pl-2 w-3/5 bg-white md:max-w-md h-10 rounded ${errors.wachtwoord ? 'border-2 border-red-500' : ''}`}*/}
-                            {/*    />*/}
-                            {/*</div>*/}
-                            {/*{errors.wachtwoord && <span*/}
-                            {/*    className="text-red-600 text-sm font-medium text-right pr-2">{errors.wachtwoord}</span>}*/}
                         </div>
-
 
                         <div className="flex justify-center rounded-3xl pt-7 items-center md:justify-end md:pt-4">
                             <button
-                                onClick={handleSubmit}
                                 type="submit"
                                 className="text-white bg-primary h2 w-fit h-fit p-4 md:rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
                             >
