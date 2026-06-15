@@ -605,6 +605,72 @@ Frontend flow:
 
 ---
 
+## Vacancy Feedback Endpoints
+
+### Get Vacancy Feedback
+
+Haalt de details van één specifiek feedback item op.
+
+```http
+GET /vacancy-feedback/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg                   |
+|-----------|---------|----------|--------------------------|
+| `id`      | integer | Ja       | ID van het feedback item |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "ai_feedback": "Je motivatie is sterk en je relevante ervaring is duidelijk geformuleerd. Echter, je zou kunnen uitbreiden op je specifieke technische vaardigheden en hoe deze direct van toepassing zijn.",
+        "motivation_letter": "Ik ben zeer geïnteresseerd in deze rol omdat ik graag mijn frontend-vaardigheden wil verder ontwikkelen in een dynamisch team. Mijn ervaring met React en Vue.js biedt een solide basis.",
+        "accepted": true,
+        "created_at": "2026-06-09T10:30:00.000000Z",
+        "updated_at": "2026-06-09T10:30:00.000000Z",
+        "vacancy": {
+            "id": 1,
+            "user_id": 1,
+            "title": "Junior Frontend Developer",
+            "company": "Tech Startup XYZ",
+            "location": "Amsterdam",
+            "employment_type": "full-time",
+            "salary": 2500,
+            "description": "Wij zoeken een junior frontend developer met kennis van React en Vue.js..."
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field               | Type    | Uitleg                                    |
+|---------------------|---------|-------------------------------------------|
+| `id`                | integer | Feedback item ID                          |
+| `vacancy_id`        | integer | gekoppelde vacature ID                    |
+| `ai_feedback`       | string  | AI gegenereerde beoordeling en suggesties |
+| `motivation_letter` | string  | Gebruiker geschreven motivatiebrief       |
+| `accepted`          | boolean | Of de sollicitatie werd geaccepteerd      |
+| `vacancy`           | object  | Volledige vacature object                 |
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op feedback item uit lijst
+2. Frontend roept GET /vacancy-feedback/{id} aan
+3. Frontend toont volledige feedback details
+4. Gebruiker kan AI-feedback lezen en verbeteringen aanpassen
+5. Optioneel: feedback opslaan of opnieuw indienen
+```
+
+---
+
 ## Vacancies Endpoints
 
 ### Alle vacatures ophalen
