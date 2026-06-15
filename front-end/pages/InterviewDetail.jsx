@@ -6,6 +6,7 @@ import VoiceInput from "../components/VoiceInput.jsx";
 
 export default function InterviewDetail() {
     const { id } = useParams();
+    const API_URL = import.meta.env.BASE_URL;
 
     const [messages, setMessages] = useState([]);
     const [step, setStep] = useState(0);
@@ -25,6 +26,7 @@ export default function InterviewDetail() {
                     content: res.reply,
                 },
             ]);
+            console.log(res.reply)
 
             setStep(0);
             setLoading(false);
@@ -69,16 +71,49 @@ export default function InterviewDetail() {
                 content: res.reply,
             },
         ]);
+        //TTS werkt nog niet?
+        speakText(res.reply);
         console.log(res.reply)
         setStep((prev) => prev + 1);
     };
+
+    //TTS werkt nog niet?
+    const speakText = async (text) => {
+        const res = await fetch(`${API_URL}/tts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                text,
+                voice: "af_heart",
+            }),
+        });
+
+        const audioBlob = await res.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        const audio = new Audio(audioUrl);
+        audio.play();
+    };
+
     // LOADING
     if (loading) return <p>Laden...</p>;
 
     return(
         <>
-            <div className={"flex justify-around"}>
+            <div className={"flex justify-around pb-16"}>
                 <div className={"flex flex-col items-center justify-center gap-8"}>
+                    <div className="flex justify-center">
+                        <div className="bg-secondary text-outline text-xs px-4 py-2 rounded-lg shadow-md max-w-75">
+                            {(() => {
+                                const lastAssistant = [...messages]
+                                    .reverse()
+                                    .find(m => m.role === "assistant");
+                                return lastAssistant?.content ?? "Wachten op interviewer...";
+                            })()}
+                        </div>
+                    </div>
                     <img src={Interviewer} alt={"Interviewer"} width={250}/>
                     <VoiceInput
                         inputSetter={(text) => {
