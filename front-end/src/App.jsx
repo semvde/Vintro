@@ -107,7 +107,7 @@ const router = createBrowserRouter([
                 element: <CV />,
             },
             {
-                path: "/app/interview",
+                path: "/app/interviews",
                 element: <Interviews />,
             },
             {

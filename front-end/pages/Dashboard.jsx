@@ -75,17 +75,6 @@ const navigate = useNavigate()
                     title={"Vacature oefenen"}
                     description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
                 /></Link>
-                <Link to={"/app/interview"}>
-                    <DashboardCard
-                        icon={<FaMicrophoneAlt/>}/>
-                </Link>
-                <Link to={"/app/vacancies"}>
-                    <DashboardCard
-                        icon={<IoNewspaperSharp/>}
-                        title={"Vacature oefenen"}
-                        description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
-                    />
-                </Link>
 
                 <Link to={"/app/interviews"}>
                 <DashboardCard
@@ -99,20 +88,12 @@ const navigate = useNavigate()
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
                 /></Link>
-                <Link to={"/app/cv"}>
-                    <DashboardCard
-                        icon={<MdEditDocument/>}
-                        title={"Bewerk je CV"}
-                        description={"Bekijk en verbeter je CV"}
-                    />
-                </Link>
 
                 <DashboardCard
                     icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
                     description={"Ontdek tips & tricks die je helpen jezelf beter te presenteren"}
                 />
-
             </section>
 
             <section>
