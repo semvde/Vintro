@@ -32,15 +32,10 @@
     - [Get Interview Feedbacks](#get-interview-feedbacks)
     - [Get Interview Feedback](#get-interview-feedback)
 
-* [Vacancies Endpoints](#vacancy-endpoints)
-  * [Get Vacancies](#get-vacancies)
-  * [Get Vacancy](#get-vacancy)
-  * [Generate Vacancies](#generate-vacancies)
-
 * [Motivation Letter Feedback](#motivation-letter-feedback)
 
-  * [Generate Feedback](#generate-feedback)
-  * [Get Feedback](#get-feedback)
+    * [Generate Feedback](#generate-feedback)
+    * [Get Feedback](#get-feedback)
 
 * [Interview Feedback Endpoints](#interview-feedback-endpoints)
 
@@ -95,7 +90,7 @@ http://127.0.0.1:8000/api/onboarding/start
 ## Huidige API routes overzicht
 
 | Method | Endpoint                   | Beschrijving                                             | Auth nodig |
-| ------ | -------------------------- | -------------------------------------------------------- | ---------- |
+|--------|----------------------------|----------------------------------------------------------|------------|
 | POST   | `/register`                | Nieuwe gebruiker registreren                             | Nee        |
 | POST   | `/login`                   | Gebruiker inloggen                                       | Nee        |
 | GET    | `/user`                    | Ingelogde gebruiker ophalen                              | Ja         |
@@ -289,7 +284,7 @@ Voorbeeld request:
 Velden:
 
 | Field     | Type    | Required | Uitleg                                            |
-| --------- | ------- | -------- | ------------------------------------------------- |
+|-----------|---------|----------|---------------------------------------------------|
 | `message` | string  | Ja       | Het nieuwste bericht van de gebruiker             |
 | `step`    | integer | Ja       | Huidige onboardingstap, bijgehouden door frontend |
 
@@ -351,7 +346,11 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User",
             "image": "https://example.com/image.jpg",
-            "skills": ["samenwerken", "organiseren", "probleemoplossen"],
+            "skills": [
+                "samenwerken",
+                "organiseren",
+                "probleemoplossen"
+            ],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -404,7 +403,11 @@ Voorbeeld request (bijwerken profiel):
 {
     "name": "Test User Updated",
     "image": "https://example.com/new-image.jpg",
-    "skills": ["samenwerken", "organiseren", "communicatie"],
+    "skills": [
+        "samenwerken",
+        "organiseren",
+        "communicatie"
+    ],
     "work_experience": [
         {
             "company": "Jumbo",
@@ -426,9 +429,17 @@ Voorbeeld request (bijwerken profiel):
     },
     "preferred_language": "nl",
     "age": 25,
-    "interests": ["sport", "creativiteit"],
-    "strengths": ["leergierig", "ijverig"],
-    "job_preferences": ["werken met mensen"],
+    "interests": [
+        "sport",
+        "creativiteit"
+    ],
+    "strengths": [
+        "leergierig",
+        "ijverig"
+    ],
+    "job_preferences": [
+        "werken met mensen"
+    ],
     "profile_summary": "Gemotiveerde professional met ervaring in detailhandel en projectmanagement.",
     "phone_number": "+31687654321",
     "email": "newemail@example.com"
@@ -447,7 +458,7 @@ Voorbeeld request (bijwerken CV-gegevens):
 Velden voor profiel:
 
 | Field                | Type    | Required | Uitleg                                               |
-| -------------------- | ------- | -------- | ---------------------------------------------------- |
+|----------------------|---------|----------|------------------------------------------------------|
 | `name`               | string  | Nee      | Volledige naam van de gebruiker                      |
 | `image`              | string  | Nee      | URL naar profielfoto                                 |
 | `skills`             | array   | Nee      | Array van vaardigheden (strings)                     |
@@ -463,7 +474,7 @@ Velden voor profiel:
 Velden voor CV:
 
 | Field          | Type   | Required | Uitleg         |
-| -------------- | ------ | -------- | -------------- |
+|----------------|--------|----------|----------------|
 | `phone_number` | string | Nee      | Telefoonnummer |
 | `email`        | string | Nee      | Email adres    |
 
@@ -478,7 +489,11 @@ Voorbeeld response:
             "user_id": 1,
             "name": "Test User Updated",
             "image": "https://example.com/new-image.jpg",
-            "skills": ["samenwerken", "organiseren", "communicatie"],
+            "skills": [
+                "samenwerken",
+                "organiseren",
+                "communicatie"
+            ],
             "work_experience": [
                 {
                     "company": "Jumbo",
@@ -557,7 +572,10 @@ Voorbeeld response:
             "status": "afgerond",
             "period": "onbekend"
         },
-        "skills": ["samenwerken", "organiseren"],
+        "skills": [
+            "samenwerken",
+            "organiseren"
+        ],
         "work_experience": [
             {
                 "company": "Jumbo",
@@ -566,9 +584,17 @@ Voorbeeld response:
                 "description": "Eerste werkervaring opgedaan in de detailhandel."
             }
         ],
-        "interests": ["sport", "creativiteit"],
-        "strengths": ["leergierig", "ijverig"],
-        "job_preferences": ["werken met mensen"],
+        "interests": [
+            "sport",
+            "creativiteit"
+        ],
+        "strengths": [
+            "leergierig",
+            "ijverig"
+        ],
+        "job_preferences": [
+            "werken met mensen"
+        ],
         "profile_summary": "Korte profielsamenvatting..."
     },
     "next_action": "generate_cv"
@@ -582,72 +608,6 @@ Frontend flow:
 2. Roep POST /profile/generate aan
 3. Gebruik response.profile voor preview, CV-generatie of dashboard
 4. Ga daarna door naar CV-pagina of dashboard
-```
-
----
-
-## Vacancy Endpoints
-
-### Alle vacatures ophalen
-
-```http
-GET /vacancies
-```
-
-Geeft alle vacatures terug die aan de ingelogde gebruiker gekoppeld zijn.
-
-Voorbeeld response:
-
-```json
-{
-  "data": [
-    {
-      "id": 1,
-      "title": "Winkelmedewerker",
-      "company": "Albert Heijn",
-      "location": "Utrecht",
-      "employment_type": "part-time",
-      "salary": 14,
-      "description": "Je helpt klanten, vult schappen en zorgt dat de winkel netjes blijft."
-    }
-  ]
-}
-```
-
----
-
-### Eén vacature ophalen
-
-```http
-GET /vacancies/{id}
-```
-
-Geeft de details van één specifieke vacature terug.
-
-Voorbeeld:
-
-```http
-GET /vacancies/1
-```
-
----
-
-### Vacatures genereren
-
-```http
-POST /vacancies/generate
-```
-
-Laat Victoria 15 oefenvacatures genereren op basis van het gebruikersprofiel.
-
-Voorbeeld response:
-
-```json
-{
-  "message": "15 oefenvacatures aangemaakt.",
-  "count": 15,
-  "data": [...]
-}
 ```
 
 ---
@@ -687,8 +647,8 @@ Request:
 
 ```json
 {
-  "vacancy_id": 1,
-  "motivation_letter": "Beste Albert Heijn, ik wil graag bij jullie werken omdat..."
+    "vacancy_id": 1,
+    "motivation_letter": "Beste Albert Heijn, ik wil graag bij jullie werken omdat..."
 }
 ```
 
@@ -696,26 +656,26 @@ Voorbeeld response:
 
 ```json
 {
-  "message": "Motivatiebrief opgeslagen en feedback gegenereerd.",
-  "data": {
-    "id": 1,
-    "vacancy_id": 1,
-    "motivation_letter": "Beste Albert Heijn...",
-    "ai_feedback": {
-      "reaction": "Je hebt een goede basis gelegd.",
-      "good_points": [
-        "Je motivatie is duidelijk."
-      ],
-      "improvement_points": [
-        "Maak de brief persoonlijker."
-      ],
-      "profile_suggestions": [
-        "Uit je profiel blijkt dat je ervaring hebt als vakkenvuller bij Jumbo. Dit kun je benoemen."
-      ],
-      "improved_example": "Beste Albert Heijn..."
-    },
-    "accepted": false
-  }
+    "message": "Motivatiebrief opgeslagen en feedback gegenereerd.",
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "motivation_letter": "Beste Albert Heijn...",
+        "ai_feedback": {
+            "reaction": "Je hebt een goede basis gelegd.",
+            "good_points": [
+                "Je motivatie is duidelijk."
+            ],
+            "improvement_points": [
+                "Maak de brief persoonlijker."
+            ],
+            "profile_suggestions": [
+                "Uit je profiel blijkt dat je ervaring hebt als vakkenvuller bij Jumbo. Dit kun je benoemen."
+            ],
+            "improved_example": "Beste Albert Heijn..."
+        },
+        "accepted": false
+    }
 }
 ```
 
@@ -739,21 +699,22 @@ Voorbeeld response:
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "vacancy_id": 1,
-    "motivation_letter": "...",
-    "ai_feedback": {
-      "reaction": "...",
-      "good_points": [],
-      "improvement_points": [],
-      "profile_suggestions": [],
-      "improved_example": "..."
-    },
-    "accepted": true
-  }
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "motivation_letter": "...",
+        "ai_feedback": {
+            "reaction": "...",
+            "good_points": [],
+            "improvement_points": [],
+            "profile_suggestions": [],
+            "improved_example": "..."
+        },
+        "accepted": true
+    }
 }
 ```
+
 ---
 
 ## Interview Feedback Endpoints
@@ -823,7 +784,7 @@ Authorization: Bearer jwt_token_here
 URL Parameters:
 
 | Parameter | Type    | Required | Uitleg                   |
-| --------- | ------- | -------- | ------------------------ |
+|-----------|---------|----------|--------------------------|
 | `id`      | integer | Ja       | ID van het feedback item |
 
 Voorbeeld response:
@@ -848,7 +809,7 @@ Voorbeeld response:
 Response velden:
 
 | Field          | Type    | Uitleg                                  |
-| -------------- | ------- | --------------------------------------- |
+|----------------|---------|-----------------------------------------|
 | `id`           | integer | Feedback item ID                        |
 | `interview_id` | integer | gekoppelde interview ID                 |
 | `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
@@ -889,7 +850,7 @@ Voorbeeld request:
 Velden:
 
 | Field   | Type   | Required | Uitleg                                |
-| ------- | ------ | -------- | ------------------------------------- |
+|---------|--------|----------|---------------------------------------|
 | `text`  | string | Ja       | De tekst die uitgesproken moet worden |
 | `voice` | string | Nee      | Steminstelling voor het TTS-model     |
 
