@@ -21,6 +21,7 @@ import VacationDetail from "../pages/VacancyDetail.jsx";
 import OnboardLayout from "../layouts/OnboardLayout.jsx";
 import VacancyApply from "../pages/VacancyApply.jsx";
 import VacancyFeedback from "../pages/VacancyFeedback.jsx";
+import InterviewFeedback from "../pages/InterviewFeedback.jsx";
 
 const router = createBrowserRouter([
     {
@@ -79,6 +80,11 @@ const router = createBrowserRouter([
             {
                 path: "/app/vacancies/:id/apply/feedback",
                 element: <VacancyFeedback />
+            },
+            {
+                //moet nog ID toevoegen naast interview
+                path: "/app/interview/feedback",
+                element: <InterviewFeedback />
             },
             {
                 path: "/app/account",
