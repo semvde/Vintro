@@ -4,9 +4,8 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
-import {IoNewspaperSharp} from "react-icons/io5";
 import {Link} from "react-router";
-import {Link, useNavigate} from "react-router";
+import {useNavigate} from "react-router";
 import {IoNewspaperSharp} from "react-icons/io5";
 import {fetchAPI} from "../services/Fetch.js";
 import {useEffect, useState} from "react";
@@ -76,8 +75,10 @@ const navigate = useNavigate()
                     title={"Vacature oefenen"}
                     description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
                 /></Link>
-                <Link to={"/app/interview"}><DashboardCard
-                    icon={<FaMicrophoneAlt />}
+                <Link to={"/app/interview"}>
+                    <DashboardCard
+                        icon={<FaMicrophoneAlt/>}/>
+                </Link>
                 <Link to={"/app/vacancies"}>
                     <DashboardCard
                         icon={<IoNewspaperSharp/>}
@@ -86,17 +87,18 @@ const navigate = useNavigate()
                     />
                 </Link>
 
+                <Link to={"/app/interviews"}>
                 <DashboardCard
                     icon={<FaMicrophoneAlt/>}
                     title={"Interview oefenen"}
                     description={"Oefen een sollicitatiegesprek met AI"}
-                /></Link>
+                />
+                </Link>
                 <Link to={"/app/cv"}><DashboardCard
                     icon={<IoNewspaperSharp />}
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
                 /></Link>
-                />
                 <Link to={"/app/cv"}>
                     <DashboardCard
                         icon={<MdEditDocument/>}
@@ -109,7 +111,6 @@ const navigate = useNavigate()
                     icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
                     description={"Ontdek tips & tricks die je helpen jezelf beter te presenteren"}
-                    description={"Hoe kan jij voorbereid het sollicitatiegesprek in?"}
                 />
 
             </section>
