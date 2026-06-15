@@ -42,6 +42,11 @@
     * [Generate Feedback](#generate-feedback)
     * [Get Feedback](#get-feedback)
 
+* [Interview Endpoints](#interview-endpoints)
+
+    * [Start Interview](#start-interview)
+    * [Interview Chat](#interview-chat)
+
 * [Interview Feedback Endpoints](#interview-feedback-endpoints)
 
     * [Get Interview Feedbacks](#get-interview-feedbacks)
