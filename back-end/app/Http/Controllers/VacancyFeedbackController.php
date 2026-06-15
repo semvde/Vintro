@@ -101,7 +101,7 @@ class VacancyFeedbackController extends Controller
                 'raw' => $content,
             ], 500);
         }
-    
+
         $feedback = VacancyFeedback::updateOrCreate(
             [
                 'user_id' => $user->id,
@@ -141,7 +141,7 @@ class VacancyFeedbackController extends Controller
 
         if (!$feedback) {
             return response()->json([
-                'message' => 'Nog geen feedback gevonden voor deze vacature.'
+                'message' => 'Nog geen geaccepteerde.'
             ], 404);
         }
 
@@ -153,6 +153,31 @@ class VacancyFeedbackController extends Controller
                 'ai_feedback' => json_decode($feedback->ai_feedback, true),
                 'accepted' => $feedback->accepted,
             ],
+        ]);
+    }
+
+    public function accepted()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $accepted = VacancyFeedback::where('user_id', $user->id)
+            ->where('accepted', true)
+            ->with('vacancy')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $accepted->map(fn($feedback) => [
+                'id' => $feedback->id,
+                'vacancy' => $feedback->vacancy,
+                'motivation_letter' => $feedback->motivation_letter,
+                'ai_feedback' => json_decode($feedback->ai_feedback, true),
+                'accepted' => $feedback->accepted,
+            ]),
         ]);
     }
 }
