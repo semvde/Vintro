@@ -230,6 +230,7 @@ class VacancyFeedbackController extends Controller
         return response()->json([
             'data' => $feedbacks,
         ]);
+        
     }
     
     public function accepted()
