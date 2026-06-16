@@ -44,8 +44,7 @@ Route::middleware('user')->group(function () {
 
 // Interview Feedback
     Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
-    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
-
+    Route::get('/interview-feedback/{vacancyid}', [InterviewFeedbackController::class, 'show']);
 // Interviews
     Route::prefix('interviews/{vacancyId}')->group(function () {
         Route::get('/start', [InterviewController::class, 'start']);
