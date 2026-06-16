@@ -44,6 +44,16 @@
     * [Get Vacancy Feedback Detail](#get-vacancy-feedback-detail)
     * [Get Latest Feedback For Vacancy](#get-latest-feedback-for-vacancy)
 
+* [Videos Endpoints](#videos-endpoints)
+    * [Get Videos](#get-videos)
+    * [Get Video](#get-video)
+
+* [Categories Endpoints](#categories-endpoints)
+    * [Get Categories](#get-categories)
+    * [Get Category](#get-category)
+
+* [Frontend Notes](#frontend-notes)
+
 ---
 
 # API Routes Overzicht
@@ -938,60 +948,6 @@ Frontend flow:
 ```
 
 ---
-
-## Get Vacancy Feedback History
-
-```http
-GET /vacancy-feedback
-Authorization: Bearer jwt_token_here
-```
-
-URL Parameters:
-
-| Parameter | Type    | Required | Uitleg                   |
-|-----------|---------|----------|--------------------------|
-| `id`      | integer | Ja       | ID van het feedback item |
-
-### Voorbeeld response
-
-```json
-{
-    "data": [
-        {
-            "id": 1,
-            "vacancy_id": 1,
-            "accepted": false,
-            "created_at": "2026-06-15T10:00:00.000000Z",
-            "vacancy": {
-                "id": 1,
-                "title": "Frontend Developer",
-                "company": "Tech Company",
-                "location": "Rotterdam"
-            }
-        }
-    ]
-}
-```
-
-Response velden:
-
-| Field          | Type    | Uitleg                                  |
-|----------------|---------|-----------------------------------------|
-| `id`           | integer | Feedback item ID                        |
-| `interview_id` | integer | gekoppelde interview ID                 |
-| `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
-| `accepted`     | boolean | Of de interview goed is gegaan          |
-| `interview`    | object  | Interview object met vacancy_id         |
-
-Frontend flow:
-
-```
-1. Gebruiker klikt op interview feedback item
-2. Frontend roept GET /interview-feedback/{id} aan
-3. Frontend toont gedetailleerde AI feedback
-4. Gebruiker kan feedback lezen en punten ter verbetering opnemen
-5. Optioneel: interview opnieuw volgen of naar volgende stap
-```
 
 ---
 
