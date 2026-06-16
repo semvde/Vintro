@@ -33,6 +33,8 @@
     * [Get Feedback](#get-feedback)
 
 * [Interview Endpoints](#interview-endpoints)
+    * [Get Interviews](#get-interviews)
+    * [Get Interview](#get-interview)
     * [Start Interview](#start-interview)
     * [Interview Chat](#interview-chat)
 
@@ -1045,7 +1047,104 @@ Voorbeeld response:
 
 ## Interview Endpoints
 
+### Get Interviews
+
+Haalt alle interviews op voor de ingelogde gebruiker.
+
+```http
+GET /interviews
+Authorization: Bearer jwt_token_here
+```
+
+Voorbeeld response:
+
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "vacancy_id": 5,
+            "current_step": 2,
+            "chat_history": [
+                {
+                    "role": "assistant",
+                    "message": "Tell me about yourself"
+                },
+                {
+                    "role": "user",
+                    "message": "I am a backend developer with 3 years experience"
+                }
+            ],
+            "completed": false,
+            "completed_at": null,
+            "created_at": "2026-06-16T10:00:00.000000Z",
+            "updated_at": "2026-06-16T10:00:00.000000Z"
+        }
+    ]
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker gaat naar interview overzicht
+2. Frontend roept GET /interviews aan
+3. Backend haalt interviews op die horen bij vacatures van de user
+4. Frontend toont lijst van interviews
+5. Gebruiker kan een interview openen
+```
+
 ---
+
+### Get Interview
+
+Haalt één specifiek interview op.
+
+```http
+GET /interviews/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg           |
+|-----------|---------|----------|------------------|
+| id        | integer | Ja       | ID van interview |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "vacancy_id": 5,
+        "current_step": 2,
+        "chat_history": [
+            {
+                "role": "assistant",
+                "message": "Tell me about yourself"
+            },
+            {
+                "role": "user",
+                "message": "I am a backend developer with 3 years experience"
+            }
+        ],
+        "completed": false,
+        "completed_at": null,
+        "created_at": "2026-06-16T10:00:00.000000Z",
+        "updated_at": "2026-06-16T10:00:00.000000Z"
+    }
+}
+```
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op een interview
+2. Frontend roept GET /interviews/{id} aan
+3. Backend controleert of interview bij user hoort via vacancy
+4. Frontend toont interview details + chat history
+```
 
 ### Start Interview
 
