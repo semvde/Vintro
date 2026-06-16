@@ -23,6 +23,7 @@ import InterviewDetail from "../pages/InterviewDetail.jsx";
 import OnboardLayout from "../layouts/OnboardLayout.jsx";
 import VacancyApply from "../pages/VacancyApply.jsx";
 import VacancyFeedback from "../pages/VacancyFeedback.jsx";
+import InterviewFeedback from "../pages/InterviewFeedback.jsx";
 import HistoryVacancyDetail from "../pages/account/HistoryVacancyDetail.jsx";
 import HistoryInterviewDetail from "../pages/account/HistoryInterviewDetail.jsx";
 
@@ -83,6 +84,11 @@ const router = createBrowserRouter([
             {
                 path: "/app/vacancies/:id/apply/feedback",
                 element: <VacancyFeedback />
+            },
+            {
+                //moet nog ID toevoegen naast interview
+                path: "/app/interview/:id/feedback",
+                element: <InterviewFeedback />
             },
             {
                 path: "/app/account",
