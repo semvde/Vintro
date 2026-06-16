@@ -1438,6 +1438,120 @@ Frontend flow
 
 ---
 
+## Get Vacancy Feedback Detail
+
+```http
+GET /vacancy-feedback/{id}
+Authorization: Bearer jwt_token_here
+```
+
+Haalt één specifiek feedbackrecord op.
+
+### URL Parameters
+
+| Parameter | Type    | Uitleg                |
+|-----------|---------|-----------------------|
+| id        | integer | ID van feedbackrecord |
+
+### Voorbeeld
+
+```http
+GET /vacancy-feedback/5
+```
+
+### Voorbeeld response
+
+```json
+{
+    "data": {
+        "id": 5,
+        "vacancy_id": 1,
+        "motivation_letter": "Beste werkgever...",
+        "accepted": false,
+        "created_at": "2026-06-15T10:00:00.000000Z",
+        "ai_feedback": {
+            "reaction": "Je hebt een goede basis gelegd.",
+            "good_points": [],
+            "improvement_points": [],
+            "profile_suggestions": [],
+            "improved_example": "..."
+        },
+        "vacancy": {
+            "id": 1,
+            "title": "Frontend Developer",
+            "company": "Tech Company",
+            "location": "Rotterdam"
+        }
+    }
+}
+```
+
+### Frontend flow
+
+```text
+1. Gebruiker klikt op feedbackkaart
+2. Frontend roept GET /vacancy-feedback/{id} aan
+3. Backend retourneert volledige feedback
+4. Frontend toont motivatiebrief en feedback
+```
+
+---
+
+## Get Latest Feedback For Vacancy
+
+```http
+GET /vacancies/{vacancy}/feedback
+Authorization: Bearer jwt_token_here
+```
+
+Haalt de meest recente feedback op voor een specifieke vacature.
+
+Dit endpoint wordt gebruikt direct na het versturen van een motivatiebrief of bij het opnieuw openen van een vacature.
+
+### URL Parameters
+
+| Parameter | Type    | Uitleg             |
+|-----------|---------|--------------------|
+| vacancy   | integer | ID van de vacature |
+
+### Voorbeeld
+
+```http
+GET /vacancies/1/feedback
+```
+
+### Voorbeeld response
+
+```json
+{
+    "data": {
+        "id": 1,
+        "vacancy_id": 1,
+        "motivation_letter": "...",
+        "accepted": true,
+        "ai_feedback": {
+            "reaction": "...",
+            "good_points": [],
+            "improvement_points": [],
+            "profile_suggestions": [],
+            "improved_example": "..."
+        }
+    }
+}
+```
+
+### Frontend flow
+
+```text
+1. Gebruiker opent vacature
+2. Frontend controleert of eerdere feedback bestaat
+3. Frontend roept GET /vacancies/{vacancy}/feedback aan
+4. Backend retourneert laatste feedback
+5. Frontend toont bestaande feedback indien aanwezig
+```
+
+---
+
 ## Frontend Notes
 
 - Alle endpoints beginnen met `/api`. Voor lokale development is de volledige URL bijvoorbeeld:
