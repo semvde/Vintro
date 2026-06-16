@@ -106,6 +106,7 @@ Rules:
   - 1 or 2 soft skills or personal traits that are welcome (e.g. reliable, punctual, friendly).
 - Do not add markdown, code fences, or explanations.
 - Do not return anything except JSON.
+- Exclude formatting like \n inside the JSON. ONLY give correct JSON!
 PROMPT;
 
         $messages = [
