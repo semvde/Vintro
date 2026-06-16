@@ -1,4 +1,4 @@
-# Vacancy API
+# VINTRO Backend API Endpoints
 
 ## Inhoudsopgave
 
@@ -39,11 +39,6 @@
 * [Text-to-Speech Endpoint](#text-to-speech-endpoint)
     * [Generate Speech](#generate-speech)
 
-    * [Generate Vacancy Feedback](#generate-vacancy-feedback)
-    * [Get Vacancy Feedback History](#get-vacancy-feedback-history)
-    * [Get Vacancy Feedback Detail](#get-vacancy-feedback-detail)
-    * [Get Latest Feedback For Vacancy](#get-latest-feedback-for-vacancy)
-
 * [Videos Endpoints](#videos-endpoints)
     * [Get Videos](#get-videos)
     * [Get Video](#get-video)
@@ -56,17 +51,26 @@
 
 ---
 
-# API Routes Overzicht
+## Base URL
 
-| Method | Endpoint                        | Beschrijving                                       | Auth nodig |
-|--------|---------------------------------|----------------------------------------------------|------------|
-| GET    | `/vacancies`                    | Alle vacatures van de gebruiker ophalen            | Ja         |
-| GET    | `/vacancies/{id}`               | Specifieke vacature ophalen                        | Ja         |
-| POST   | `/vacancies/generate`           | 15 oefenvacatures genereren op basis van profiel   | Ja         |
-| POST   | `/vacancy-feedback`             | Motivatiebrief opslaan en AI-feedback genereren    | Ja         |
-| GET    | `/vacancy-feedback`             | Alle motivatiebrief feedback van gebruiker ophalen | Ja         |
-| GET    | `/vacancy-feedback/{id}`        | Specifiek feedback item ophalen                    | Ja         |
-| GET    | `/vacancies/{vacancy}/feedback` | Laatste feedback voor een vacature ophalen         | Ja         |
+Online (live):
+
+```
+http://145.24.223.123:8000/
+```
+
+Base URL lokaal:
+
+```
+http://127.0.0.1:8000/api
+```
+
+Gebruik bij JSON requests altijd deze headers:
+
+```
+Accept: application/json
+Content-Type: application/json
+```
 
 ---
 
@@ -107,16 +111,133 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ### Register
 
-## Get Vacancies
+Registreert een nieuwe gebruiker.
 
 ```http
-GET /vacancies
+POST /register
+```
+
+Voorbeeld request:
+
+```json
+{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+Voorbeeld response:
+
+```json
+{
+    "user": {
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com"
+    },
+    "token": "jwt_token_here"
+}
+```
+
+---
+
+### Login
+
+Logt een bestaande gebruiker in.
+
+```http
+POST /login
+```
+
+Voorbeeld request:
+
+```json
+{
+    "email": "test@example.com",
+    "password": "password123"
+}
+```
+
+Voorbeeld response:
+
+```json
+{
+    "user": {
+        "id": 1,
+        "name": "Test User",
+        "email": "test@example.com"
+    },
+    "token": "jwt_token_here"
+}
+```
+
+Frontend moet deze token opslaan en meesturen bij protected routes.
+
+---
+
+## Protected Auth Endpoints
+
+Voor deze endpoints is een JWT-token nodig.
+
+Header:
+
+```
 Authorization: Bearer jwt_token_here
 ```
 
-Haalt alle vacatures op die gekoppeld zijn aan de ingelogde gebruiker.
+### Get Current User
 
-### Voorbeeld response
+Haalt de ingelogde gebruiker op.
+
+```http
+GET /user
+```
+
+Voorbeeld response:
+
+```json
+{
+    "id": 1,
+    "name": "Test User",
+    "email": "test@example.com"
+}
+```
+
+---
+
+### Logout
+
+Logt de gebruiker uit.
+
+```http
+POST /logout
+```
+
+Voorbeeld response:
+
+```json
+{
+    "message": "Successfully logged out"
+}
+```
+
+---
+
+## Onboarding Endpoints
+
+De onboarding verzamelt informatie voor een werkprofiel, eerste CV en sollicitatie-oefeningen.
+
+### Start Onboarding
+
+```http
+GET /onboarding/start
+```
+
+Gebruik dit wanneer de gebruiker de onboardingpagina opent.
+
+Voorbeeld response:
 
 ```json
 {
@@ -182,25 +303,33 @@ Voorbeeld response wanneer onboarding klaar is:
 }
 ```
 
-### Frontend flow
+Frontend flow:
 
-```text
-1. Gebruiker opent vacatureoverzicht
-2. Frontend roept GET /vacancies aan
-3. Backend retourneert vacatures van gebruiker
-4. Frontend toont vacaturekaarten
+```
+1. Gebruiker stuurt antwoord
+2. Frontend verhoogt step
+3. Frontend stuurt message en step naar POST /onboarding/chat
+4. Frontend toont reply
+5. Als finished true is:
+   - input blokkeren
+   - POST /profile/generate aanroepen
+   - daarna door naar CV- of dashboardpagina
 ```
 
 ---
 
-## Get Vacancy
+## Profile Endpoints
+
+### Get Profile
+
+Haalt het profiel en CV van de ingelogde gebruiker op.
 
 ```http
-GET /vacancies/{id}
+GET /profile
 Authorization: Bearer jwt_token_here
 ```
 
-Haalt één specifieke vacature op.
+Voorbeeld response:
 
 ```json
 {
@@ -251,11 +380,9 @@ Frontend flow:
 
 ---
 
-| Parameter | Type    | Uitleg             |
-|-----------|---------|--------------------|
-| id        | integer | ID van de vacature |
+### Update Profile
 
-### Voorbeeld
+Werkt het profiel en/of CV bij voor de ingelogde gebruiker.
 
 ```http
 PUT /profile
@@ -391,12 +518,33 @@ Voorbeeld response:
 }
 ```
 
+Frontend flow:
+
+```
+1. Gebruiker vult profielvorm in (name, skills, etc.)
+2. Frontend stuurt PUT /profile met aangepaste gegevens
+3. Frontend ontvangt bijgewerkt profiel
+4. Frontend toont success bericht en bijgewerkte gegevens
+5. Optioneel: redirect naar CV- of dashboardpagina
+```
+
 ---
 
-## Generate Vacancies
+### Generate Profile
 
 ```http
-POST /vacancies/generate
+POST /profile/generate
+```
+
+Genereert een `user_profile` op basis van de afgeronde onboarding-chat.
+
+Deze endpoint heeft geen body nodig. De backend gebruikt de ingelogde gebruiker en zoekt automatisch de afgeronde
+onboarding session.
+
+Voorbeeld request:
+
+```http
+POST /profile/generate
 Authorization: Bearer jwt_token_here
 Accept: application/json
 ```
@@ -446,7 +594,7 @@ Voorbeeld response:
 }
 ```
 
-Genereert 15 oefenvacatures op basis van het user profile.
+Frontend flow:
 
 ```
 1. Wacht tot /onboarding/chat finished true teruggeeft
@@ -538,7 +686,7 @@ URL Parameters:
 |-----------|---------|----------|--------------------------|
 | `id`      | integer | Ja       | ID van het feedback item |
 
-### Voorbeeld response
+Voorbeeld response:
 
 ```json
 {
@@ -808,12 +956,11 @@ De feedback bevat:
 
 ```http
 POST /vacancy-feedback
-Authorization: Bearer jwt_token_here
 ```
 
-Slaat een motivatiebrief op en laat Victoria feedback genereren.
+Slaat een motivatiebrief op en genereert direct AI-feedback.
 
-### Request body
+Request:
 
 ```json
 {
@@ -822,7 +969,7 @@ Slaat een motivatiebrief op en laat Victoria feedback genereren.
 }
 ```
 
-### Voorbeeld response
+Voorbeeld response:
 
 ```json
 {
@@ -857,16 +1004,9 @@ Slaat een motivatiebrief op en laat Victoria feedback genereren.
 GET /vacancies/{vacancy}/feedback
 ```
 
-| Field               | Type    | Uitleg                                     |
-|---------------------|---------|--------------------------------------------|
-| accepted            | boolean | Of de brief goed genoeg is om te versturen |
-| reaction            | string  | Algemene reactie van Victoria              |
-| good_points         | array   | Positieve punten in de motivatiebrief      |
-| improvement_points  | array   | Verbeterpunten voor de motivatiebrief      |
-| profile_suggestions | array   | Suggesties gebaseerd op profiel/CV         |
-| improved_example    | string  | Verbeterde voorbeeldversie                 |
+Haalt de laatst opgeslagen feedback voor een vacature op.
 
-### Frontend flow
+Voorbeeld:
 
 ```http
 GET /vacancies/1/feedback
@@ -949,6 +1089,60 @@ Frontend flow:
 
 ---
 
+### Get Interview Feedback
+
+Haalt de details van één specifieke interview feedback op.
+
+```http
+GET /interview-feedback/{id}
+Authorization: Bearer jwt_token_here
+```
+
+URL Parameters:
+
+| Parameter | Type    | Required | Uitleg                   |
+|-----------|---------|----------|--------------------------|
+| `id`      | integer | Ja       | ID van het feedback item |
+
+Voorbeeld response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "interview_id": 1,
+        "ai_feedback": "Je antwoorden waren goed gestructureerd met concrete voorbeelden. Punten ter verbetering: zorg ervoor dat je meer je eigen rol in teamprojecten benadrukt. Je non-verbale communicatie was open en vriendelijk. Zorg ervoor dat je vragen stelt aan het einde van het interview om je interesse aan te tonen.",
+        "accepted": true,
+        "created_at": "2026-06-09T12:00:00.000000Z",
+        "updated_at": "2026-06-09T12:00:00.000000Z",
+        "interview": {
+            "id": 1,
+            "vacancy_id": 1
+        }
+    }
+}
+```
+
+Response velden:
+
+| Field          | Type    | Uitleg                                  |
+|----------------|---------|-----------------------------------------|
+| `id`           | integer | Feedback item ID                        |
+| `interview_id` | integer | gekoppelde interview ID                 |
+| `ai_feedback`  | string  | AI gegenereerde beoordeling en feedback |
+| `accepted`     | boolean | Of de interview goed is gegaan          |
+| `interview`    | object  | Interview object met vacancy_id         |
+
+Frontend flow:
+
+```
+1. Gebruiker klikt op interview feedback item
+2. Frontend roept GET /interview-feedback/{id} aan
+3. Frontend toont gedetailleerde AI feedback
+4. Gebruiker kan feedback lezen en punten ter verbetering opnemen
+5. Optioneel: interview opnieuw volgen of naar volgende stap
+```
+
 ---
 
 ## Text-to-Speech Endpoint
@@ -979,127 +1173,32 @@ Velden:
 
 Response:
 
-```text
-1. Gebruiker opent Geschiedenis
-2. Frontend roept GET /vacancy-feedback aan
-3. Backend retourneert alle feedback records
-4. Frontend toont overzichtskaarten
-5. Gebruiker kan doorklikken naar details
+```
+Content-Type: audio/wav
+```
+
+Frontend voorbeeld:
+
+```js
+const response = await fetch("/api/tts", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+        Accept: "audio/wav",
+    },
+    body: JSON.stringify({
+        text: "Hoi, ik ben VINTRO.",
+        voice: "af_heart",
+    }),
+});
+
+const audioBlob = await response.blob();
+const audioUrl = URL.createObjectURL(audioBlob);
+const audio = new Audio(audioUrl);
+audio.play();
 ```
 
 ---
-
-## Get Vacancy Feedback Detail
-
-```http
-GET /vacancy-feedback/{id}
-Authorization: Bearer jwt_token_here
-```
-
-Haalt één specifiek feedbackrecord op.
-
-### URL Parameters
-
-| Parameter | Type    | Uitleg                |
-|-----------|---------|-----------------------|
-| id        | integer | ID van feedbackrecord |
-
-### Voorbeeld
-
-```http
-GET /vacancy-feedback/5
-```
-
-### Voorbeeld response
-
-```json
-{
-    "data": {
-        "id": 5,
-        "vacancy_id": 1,
-        "motivation_letter": "Beste werkgever...",
-        "accepted": false,
-        "created_at": "2026-06-15T10:00:00.000000Z",
-        "ai_feedback": {
-            "reaction": "Je hebt een goede basis gelegd.",
-            "good_points": [],
-            "improvement_points": [],
-            "profile_suggestions": [],
-            "improved_example": "..."
-        },
-        "vacancy": {
-            "id": 1,
-            "title": "Frontend Developer",
-            "company": "Tech Company",
-            "location": "Rotterdam"
-        }
-    }
-}
-```
-
-### Frontend flow
-
-```text
-1. Gebruiker klikt op feedbackkaart
-2. Frontend roept GET /vacancy-feedback/{id} aan
-3. Backend retourneert volledige feedback
-4. Frontend toont motivatiebrief en feedback
-```
-
----
-
-## Get Latest Feedback For Vacancy
-
-```http
-GET /vacancies/{vacancy}/feedback
-Authorization: Bearer jwt_token_here
-```
-
-Haalt de meest recente feedback op voor een specifieke vacature.
-
-Dit endpoint wordt gebruikt direct na het versturen van een motivatiebrief of bij het opnieuw openen van een vacature.
-
-### URL Parameters
-
-| Parameter | Type    | Uitleg             |
-|-----------|---------|--------------------|
-| vacancy   | integer | ID van de vacature |
-
-### Voorbeeld
-
-```http
-GET /vacancies/1/feedback
-```
-
-### Voorbeeld response
-
-```json
-{
-    "data": {
-        "id": 1,
-        "vacancy_id": 1,
-        "motivation_letter": "...",
-        "accepted": true,
-        "ai_feedback": {
-            "reaction": "...",
-            "good_points": [],
-            "improvement_points": [],
-            "profile_suggestions": [],
-            "improved_example": "..."
-        }
-    }
-}
-```
-
-### Frontend flow
-
-```text
-1. Gebruiker opent vacature
-2. Frontend controleert of eerdere feedback bestaat
-3. Frontend roept GET /vacancies/{vacancy}/feedback aan
-4. Backend retourneert laatste feedback
-5. Frontend toont bestaande feedback indien aanwezig
-```
 
 ## Videos Endpoints
 
