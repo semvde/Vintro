@@ -77,19 +77,19 @@ export default function InterviewDetail() {
             setTimeout(() => {
                 navigate(`app/interview/${id}/feedback`);
             }, 20000)
+        } else {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: res.reply,
+                },
+            ]);
+
+            speakText(res.reply);
+            console.log(res.reply)
+            setStep((prev) => prev + 1);
         }
-
-        setMessages((prev) => [
-            ...prev,
-            {
-                role: "assistant",
-                content: res.reply,
-            },
-        ]);
-
-        speakText(res.reply);
-        console.log(res.reply)
-        setStep((prev) => prev + 1);
     };
 
     const speakText = async (text) => {
