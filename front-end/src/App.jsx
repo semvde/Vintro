@@ -83,7 +83,7 @@ const router = createBrowserRouter([
             },
             {
                 //moet nog ID toevoegen naast interview
-                path: "/app/interview/feedback",
+                path: "/app/interview/:id/feedback",
                 element: <InterviewFeedback />
             },
             {
