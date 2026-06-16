@@ -134,12 +134,11 @@ export default function UserLayout() {
                 </section>
             }
             <footer className={"fixed left-0 right-0 bottom-0 z-999"}>
-                <div className={"flex justify-end p-2.5"}>
-                    <button className={"bg-primary shadow rounded-full w-1/5 hover:bg-primary-hover sm:w-1/20"}
-                            onClick={() => openChat()}>
-                        <img src={Victoria} alt="Victoria - Chat Bot" className={"aspect-square w-full translate-y-1"}/>
-                    </button>
-                </div>
+                <button
+                    className={"absolute bottom-15 right-2 bg-primary shadow rounded-full w-1/5 hover:bg-primary-hover sm:w-1/20"}
+                    onClick={() => openChat()}>
+                    <img src={Victoria} alt="Victoria - Chat Bot" className={"aspect-square w-full translate-y-1"}/>
+                </button>
                 <nav className="grid grid-cols-5 bg-outline p-2">
                     {/* Divs will be Links when routes are available */}
                     <Link to={"/app"} className={"flex justify-center"}><IoMdHome size={40}/></Link>
