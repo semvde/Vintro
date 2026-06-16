@@ -18,6 +18,8 @@ import CV from "../pages/cv/CV.jsx";
 import EditCV from "../pages/cv/EditCV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
+import Interviews from "../pages/Interviews.jsx";
+import InterviewDetail from "../pages/InterviewDetail.jsx";
 import OnboardLayout from "../layouts/OnboardLayout.jsx";
 import VacancyApply from "../pages/VacancyApply.jsx";
 import VacancyFeedback from "../pages/VacancyFeedback.jsx";
@@ -112,7 +114,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/cv",
-                element: <CV/>,
+                element: <CV />,
+            },
+            {
+                path: "/app/interviews",
+                element: <Interviews />,
+            },
+            {
+                path: "/app/interview/:id",
+                element: <InterviewDetail />,
             },
             {
                 path: "/app/cv/edit",

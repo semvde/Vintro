@@ -4,7 +4,8 @@ import {MdEditDocument} from "react-icons/md";
 import {HiLightBulb} from "react-icons/hi";
 import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
 import VideoCard from "../components/VideoCard.jsx";
-import {Link, useNavigate} from "react-router";
+import {Link} from "react-router";
+import {useNavigate} from "react-router";
 import {IoNewspaperSharp} from "react-icons/io5";
 import {fetchAPI} from "../services/Fetch.js";
 import {useEffect, useState} from "react";
@@ -69,33 +70,30 @@ const navigate = useNavigate()
             <section className={"mb-8"}>
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
-                <Link to={"/app/vacancies"}>
-                    <DashboardCard
-                        icon={<IoNewspaperSharp/>}
-                        title={"Vacature oefenen"}
-                        description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
-                    />
-                </Link>
+                <Link to={"/app/vacancies"}><DashboardCard
+                    icon={<MdEditDocument />}
+                    title={"Vacature oefenen"}
+                    description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
+                /></Link>
 
+                <Link to={"/app/interviews"}>
                 <DashboardCard
                     icon={<FaMicrophoneAlt/>}
                     title={"Interview oefenen"}
                     description={"Oefen een sollicitatiegesprek met AI"}
                 />
-                <Link to={"/app/cv"}>
-                    <DashboardCard
-                        icon={<MdEditDocument/>}
-                        title={"Bewerk je CV"}
-                        description={"Bekijk en verbeter je CV"}
-                    />
                 </Link>
+                <Link to={"/app/cv"}><DashboardCard
+                    icon={<IoNewspaperSharp />}
+                    title={"Bewerk je CV"}
+                    description={"Bekijk en verbeter je CV"}
+                /></Link>
 
                 <DashboardCard
                     icon={<HiLightBulb/>}
                     title={"Tips & Tricks"}
-                    description={"Hoe kan jij voorbereid het sollicitatiegesprek in?"}
+                    description={"Ontdek tips & tricks die je helpen jezelf beter te presenteren"}
                 />
-
             </section>
 
             <section>
