@@ -48,7 +48,7 @@ class InterviewFeedbackController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($vacancyId)
     {
         $user = auth('api')->user();
 
@@ -56,11 +56,11 @@ class InterviewFeedbackController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        $feedback = InterviewFeedback::with(['interview.vacancy'])
-            ->where('id', $id)
-            ->whereHas('interview.vacancy', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
+        $feedback = InterviewFeedback::whereHas('interview.vacancy', function ($query) use ($user, $vacancyId) {
+            $query->where('user_id', $user->id)
+                ->where('id', $vacancyId);
+        })
+            ->with(['interview.vacancy'])
             ->first();
 
         if (!$feedback) {
@@ -76,19 +76,7 @@ class InterviewFeedbackController extends Controller
                 'ai_feedback' => json_decode($feedback->ai_feedback, true),
                 'accepted' => $feedback->accepted,
                 'created_at' => $feedback->created_at,
-                'interview' => $feedback->interview ? [
-                    'id' => $feedback->interview->id,
-                    'vacancy_id' => $feedback->interview->vacancy_id,
-                    'vacancy' => $feedback->interview->vacancy ? [
-                        'id' => $feedback->interview->vacancy->id,
-                        'title' => $feedback->interview->vacancy->title,
-                        'company' => $feedback->interview->vacancy->company,
-                        'location' => $feedback->interview->vacancy->location,
-                        'employment_type' => $feedback->interview->vacancy->employment_type,
-                        'salary' => $feedback->interview->vacancy->salary,
-                        'description' => $feedback->interview->vacancy->description,
-                    ] : null,
-                ] : null,
+                'interview' => $feedback->interview,
             ],
         ]);
     }

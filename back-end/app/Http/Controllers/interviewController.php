@@ -12,7 +12,13 @@ class interviewController extends Controller
 {
     public function show($id)
     {
-        $interview = Interview::find($id);
+        $user = auth('api')->user();
+
+        $interview = Interview::where('id', $id)
+            ->whereHas('vacancy', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->first();
 
         if (!$interview) {
             return response()->json([

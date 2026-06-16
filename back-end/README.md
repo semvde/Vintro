@@ -91,30 +91,30 @@ http://127.0.0.1:8000/api/onboarding/start
 
 ## Huidige API routes overzicht
 
-| Method | Endpoint                        | Beschrijving                                             | Auth nodig |
-|--------|---------------------------------|----------------------------------------------------------|------------|
-| POST   | `/register`                     | Nieuwe gebruiker registreren                             | Nee        |
-| POST   | `/login`                        | Gebruiker inloggen                                       | Nee        |
-| GET    | `/user`                         | Ingelogde gebruiker ophalen                              | Ja         |
-| POST   | `/logout`                       | Gebruiker uitloggen                                      | Ja         |
-| GET    | `/onboarding/start`             | Startbericht onboarding ophalen                          | Ja         |
-| POST   | `/onboarding/chat`              | Onboarding-chat met Victoria                             | Ja         |
-| GET    | `/profile`                      | Profiel en CV ophalen                                    | Ja         |
-| PUT    | `/profile`                      | Profiel en CV bijwerken                                  | Ja         |
-| POST   | `/profile/generate`             | Genereert user_profile op basis van afgeronde onboarding | Ja         |
-| GET    | `/vacancies`                    | Alle vacatures van gebruiker ophalen                     | Ja         |
-| GET    | `/vacancies/{id}`               | Specifieke vacature ophalen                              | Ja         |
-| POST   | `/vacancies/generate`           | Genereert 15 oefenvacatures op basis van profiel         | Ja         |
-| POST   | `/vacancy-feedback`             | Motivatiebrief opslaan en AI-feedback genereren          | Ja         |
-| GET    | `/vacancy-feedback`             | Alle vacancy feedback opgehaald                          | Ja         |
-| GET    | `/vacancy-feedback/{id}`        | Specifieke vacancy feedback ophalen                      | Ja         |
-| GET    | `/vacancies/{vacancy}/feedback` | Laatste feedback voor een vacature ophalen               | Ja         |
-| GET    | `/interview-feedback`           | Alle interview feedback ophalen                          | Ja         |
-| GET    | `/interview-feedback/{id}`      | Specifieke interview feedback ophalen                    | Ja         |
-| GET    | `/interviews/{id}/start`        | Begin de Interview                                       | Ja         |
-| POST   | `/interviews/{id}/chat `        | Berichtjes naar interview                                | Ja         |
-| POST   | `/tts`                          | Tekst omzetten naar audio                                | Nee        |
-| POST   | `/coach`                        | Algemene coach-chat met Victoria                         | Nee        |
+| Method | Endpoint                          | Beschrijving                                             | Auth nodig |
+|--------|-----------------------------------|----------------------------------------------------------|------------|
+| POST   | `/register`                       | Nieuwe gebruiker registreren                             | Nee        |
+| POST   | `/login`                          | Gebruiker inloggen                                       | Nee        |
+| GET    | `/user`                           | Ingelogde gebruiker ophalen                              | Ja         |
+| POST   | `/logout`                         | Gebruiker uitloggen                                      | Ja         |
+| GET    | `/onboarding/start`               | Startbericht onboarding ophalen                          | Ja         |
+| POST   | `/onboarding/chat`                | Onboarding-chat met Victoria                             | Ja         |
+| GET    | `/profile`                        | Profiel en CV ophalen                                    | Ja         |
+| PUT    | `/profile`                        | Profiel en CV bijwerken                                  | Ja         |
+| POST   | `/profile/generate`               | Genereert user_profile op basis van afgeronde onboarding | Ja         |
+| GET    | `/vacancies`                      | Alle vacatures van gebruiker ophalen                     | Ja         |
+| GET    | `/vacancies/{id}`                 | Specifieke vacature ophalen                              | Ja         |
+| POST   | `/vacancies/generate`             | Genereert 15 oefenvacatures op basis van profiel         | Ja         |
+| POST   | `/vacancy-feedback`               | Motivatiebrief opslaan en AI-feedback genereren          | Ja         |
+| GET    | `/vacancy-feedback`               | Alle vacancy feedback opgehaald                          | Ja         |
+| GET    | `/vacancy-feedback/{id}`          | Specifieke vacancy feedback ophalen                      | Ja         |
+| GET    | `/vacancies/{vacancy}/feedback`   | Laatste feedback voor een vacature ophalen               | Ja         |
+| GET    | `/interview-feedback`             | Alle interview feedback ophalen                          | Ja         |
+| GET    | `/interview-feedback/{VacancyID}` | Specifieke interview feedback ophalen                    | Ja         |
+| GET    | `/interviews/{id}/start`          | Begin de Interview                                       | Ja         |
+| POST   | `/interviews/{id}/chat `          | Berichtjes naar interview                                | Ja         |
+| POST   | `/tts`                            | Tekst omzetten naar audio                                | Nee        |
+| POST   | `/coach`                          | Algemene coach-chat met Victoria                         | Nee        |
 
 ---
 
@@ -1403,7 +1403,7 @@ Frontend flow:
 Haalt de details van één specifieke interview feedback op.
 
 ```http
-GET /interview-feedback/{id}
+GET /interview-feedback/{Vacancyid}
 Authorization: Bearer jwt_token_here
 ```
 

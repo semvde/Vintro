@@ -18,12 +18,13 @@ use App\Http\Controllers\interviewController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::post('/coach', [CoachController::class, 'chat']);
-Route::post('/tts', [TTSController::class, 'tts']);
 
 // PROTECTED ROUTES (JWT required)
 Route::middleware('user')->group(function () {
 
+    // Coach & TTS
+    Route::post('/coach', [CoachController::class, 'chat']);
+    Route::post('/tts', [TTSController::class, 'tts']);
 // Profile & Auth
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
@@ -43,8 +44,7 @@ Route::middleware('user')->group(function () {
 
 // Interview Feedback
     Route::get('/interview-feedback', [InterviewFeedbackController::class, 'index']);
-    Route::get('/interview-feedback/{id}', [InterviewFeedbackController::class, 'show']);
-
+    Route::get('/interview-feedback/{vacancyid}', [InterviewFeedbackController::class, 'show']);
 // Interviews
     Route::prefix('interviews/{vacancyId}')->group(function () {
         Route::get('/start', [InterviewController::class, 'start']);
