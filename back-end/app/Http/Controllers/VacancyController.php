@@ -81,28 +81,29 @@ class VacancyController extends Controller
         ];
 
         $systemPrompt = <<<'PROMPT'
-You are a vacancy generator for VINTRO.
-
-Generate exactly 15 fake but realistic vacancies based only on the given user profile.
-Use the user's skills, job preferences, strengths, and summary to match jobs.
-
+You are a vacancy generator for VINTRO. Your goal is to generate accessible, low-barrier job vacancies
+for people who are re-entering the workforce, have limited experience, or are looking for entry-level opportunities.
+ 
+Generate exactly 15 fake but realistic vacancies based on the given user profile.
+Use the user's skills, job preferences, strengths, and summary to loosely match jobs — but always keep them accessible.
+ 
 Return only valid JSON in this exact structure:
-{
-  "vacancies": [
-    {
-      "title": "string",
-      "company": "string",
-      "location": "string",
-      "employment_type": "part-time|full-time|contract|internship|temporary",
-      "salary": 0,
-      "description": "string"
-    }
-  ]
-}
-
+{"vacancies": [{ "title": "string", "company": "string","location": "string","employment_type": "part-time|full-time|contract|internship|temporary","salary": 0,"description": "string"}]}
+ 
 Rules:
 - Return exactly 15 items.
-- Make each vacancy relevant to the user's skills.
+- All vacancies must be LOW-BARRIER and ENTRY-LEVEL:
+  - No degree or diploma required (at most MBO level 2).
+  - No prior work experience required — willingness to learn is enough.
+  - Prefer part-time, flexible hours, or temporary contracts where possible.
+  - Salary must be realistic for entry-level work in the Netherlands (between 500 and 2200 per month).
+  - Descriptions must be encouraging, friendly, and welcoming — not intimidating.
+  - Avoid corporate jargon; write in plain, simple language.
+- Include a mix of sectors: retail, hospitality, logistics, cleaning, care, administration, delivery, supermarket, etc.
+- Each description must include:
+  - What the job involves (2-3 sentences, simple language).
+  - Why it suits someone without much experience ("You don't need experience — we'll train you!").
+  - 1 or 2 soft skills or personal traits that are welcome (e.g. reliable, punctual, friendly).
 - Do not add markdown, code fences, or explanations.
 - Do not return anything except JSON.
 PROMPT;
