@@ -47,6 +47,8 @@
     * [Get Categories](#get-categories)
     * [Get Category](#get-category)
 
+* [Get Vacancy Feedback Detail](#get-vacancy-feedback-detail)
+    * [Get Latest Feedback For Vacancy](#get-latest-feedback-for-vacancy)
 * [Frontend Notes](#frontend-notes)
 
 ---
