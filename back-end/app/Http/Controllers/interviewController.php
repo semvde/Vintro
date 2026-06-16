@@ -10,6 +10,36 @@ use Illuminate\Support\Facades\Http;
 
 class interviewController extends Controller
 {
+    public function show($id)
+    {
+        $interview = Interview::find($id);
+
+        if (!$interview) {
+            return response()->json([
+                'message' => 'Interview not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $interview
+        ]);
+    }
+
+    public function index()
+    {
+        $user = auth('api')->user();
+
+        $interviews = Interview::whereHas('vacancy', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $interviews
+        ]);
+    }
+
     public function start(Request $request, $vacancyId)
     {
         $user = auth('api')->user();
@@ -205,7 +235,7 @@ PROMPT;
                 'content' => $mustFinish
                     ? 'Rond het gesprek nu professioneel af. Stel geen nieuwe vragen meer. Bedank de kandidaat en sluit het gesprek zakelijk af.'
                     : (
-                        $canFinish
+                    $canFinish
                         ? 'Je mag het gesprek afronden als de belangrijkste onderwerpen (motivatie, ervaring, vaardigheden, persoonlijkheid, samenwerking, beschikbaarheid) voldoende aan bod zijn gekomen. Als er nog een essentieel onderwerp ontbreekt, stel dan nog één gerichte vraag.'
                         : 'Stel één gerichte, professionele interviewvraag die aansluit op de vacature en het gesprek tot nu toe. Wissel vakinhoudelijke vragen af met persoonlijke vragen over karakter, hobby\'s of leven buiten het werk. Vraag niet naar de naam.'
                     ),
@@ -303,7 +333,7 @@ PROMPT;
 
     private function generateAndStoreFeedback(Interview $interview, Vacancy $vacancy, array $chatHistory, string $interviewer = 'de interviewer')
     {
-    $feedbackPrompt = <<<PROMPT
+        $feedbackPrompt = <<<PROMPT
     /no_think
 
     Je bent Victoria, een neutrale sollicitatiecoach voor jongeren.
@@ -406,7 +436,7 @@ PROMPT;
             ['interview_id' => $interview->id],
             [
                 'ai_feedback' => json_encode($data['feedback'] ?? [], JSON_UNESCAPED_UNICODE),
-                'accepted' => (bool) ($data['accepted'] ?? false),
+                'accepted' => (bool)($data['accepted'] ?? false),
             ]
         );
 
