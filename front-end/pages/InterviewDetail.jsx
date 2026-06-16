@@ -75,7 +75,7 @@ export default function InterviewDetail() {
             ]);
 
             setTimeout(() => {
-                navigate(`/interview/${id}/feedback`);
+                navigate(`app/interview/${id}/feedback`);
             }, 20000)
         }
 
