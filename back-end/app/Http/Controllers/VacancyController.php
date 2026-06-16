@@ -88,18 +88,7 @@ Generate exactly 15 fake but realistic vacancies based on the given user profile
 Use the user's skills, job preferences, strengths, and summary to loosely match jobs — but always keep them accessible.
  
 Return only valid JSON in this exact structure:
-{
-  "vacancies": [
-    {
-      "title": "string",
-      "company": "string",
-      "location": "string",
-      "employment_type": "part-time|full-time|contract|internship|temporary",
-      "salary": 0,
-      "description": "string"
-    }
-  ]
-}
+{"vacancies": [{ "title": "string", "company": "string","location": "string","employment_type": "part-time|full-time|contract|internship|temporary","salary": 0,"description": "string"}]}
  
 Rules:
 - Return exactly 15 items.
