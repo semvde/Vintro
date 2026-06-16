@@ -57,11 +57,11 @@ export default function Interviews() {
             <div className="space-y-4">
                 {feedbackItems.map((item) => {
                     const vacancy = item.vacancy;
-
+                    console.log(item);
                     return (
                         <Link
-                            key={item.id}
-                            to={`/app/interview/${item.id}`}
+                            key={item.vacancy.id}
+                            to={`/app/interview/${item.vacancy.id}`}
                             className="block"
                         >
                             <Card>

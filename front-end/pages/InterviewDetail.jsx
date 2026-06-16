@@ -1,12 +1,13 @@
 import Interviewer from "../src/assets/Interviewer.png";
 import {useEffect, useState} from "react";
 import {fetchAPI} from "../services/Fetch.js";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import VoiceInput from "../components/VoiceInput.jsx";
 
 export default function InterviewDetail() {
     const { id } = useParams();
-    const API_URL = import.meta.env.BASE_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
+    const navigate = useNavigate();
 
     const [messages, setMessages] = useState([]);
     const [step, setStep] = useState(0);
@@ -33,7 +34,7 @@ export default function InterviewDetail() {
         };
 
         startInterview();
-    }, [id]);
+    }, []);
 
     // 2. VOICE AUTO-SEND WATCHER
     useEffect(() => {
@@ -63,6 +64,20 @@ export default function InterviewDetail() {
             message: text,
             step: step + 1,
         });
+        console.log(res.finished);
+        if(res.finished) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: "Bedankt, ik heb genoeg informatie. Je hoort binnenkort meer van ons. Nog een fijne dag gewenst!",
+                },
+            ]);
+
+            setTimeout(() => {
+                navigate(`/interview/${id}/feedback`);
+            }, 20000)
+        }
 
         setMessages((prev) => [
             ...prev,
@@ -71,13 +86,12 @@ export default function InterviewDetail() {
                 content: res.reply,
             },
         ]);
-        //TTS werkt nog niet?
+
         speakText(res.reply);
         console.log(res.reply)
         setStep((prev) => prev + 1);
     };
 
-    //TTS werkt nog niet?
     const speakText = async (text) => {
         const res = await fetch(`${API_URL}/tts`, {
             method: "POST",
