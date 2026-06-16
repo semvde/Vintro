@@ -117,5 +117,5 @@ export default function InterviewFeedback() {
                 </div>
             </div>
         </>
-    );
+    )
 }
