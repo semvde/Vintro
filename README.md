@@ -145,7 +145,7 @@ Vintro uses the following technologies:
 
 ### Entity Relationship Diagram
 
-ERD HERE
+![ERD](https://github.com/semvde/Vintro/blob/main/erd.png)
 
 ### Usage
 
