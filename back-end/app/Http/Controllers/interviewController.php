@@ -104,7 +104,7 @@ class interviewController extends Controller
         $interviewer = $interview->interviewer_name ?? 'de interviewer';
 
         $minSteps = 5;
-        $maxSteps = 14;
+        $maxSteps = 11;
 
         $canFinish = $validated['step'] >= $minSteps;
         $mustFinish = $validated['step'] >= $maxSteps;
