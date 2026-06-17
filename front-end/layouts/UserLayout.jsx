@@ -3,7 +3,7 @@ import VintroLogo from "../src/assets/vintro_logo-03.png";
 import Victoria from "../src/assets/Victoria - Job coach.png";
 import {IoMdHome} from "react-icons/io";
 import {IoNewspaperSharp} from "react-icons/io5";
-import {FaMicrophoneAlt, FaUser} from "react-icons/fa";
+import {FaMicrophoneAlt} from "react-icons/fa";
 import {MdEditDocument} from "react-icons/md";
 import {useEffect, useRef, useState} from "react";
 import {FaXmark} from "react-icons/fa6";
@@ -14,6 +14,7 @@ import {fetchAPI} from "../services/Fetch.js";
 import {FaAngleRight} from "react-icons/fa";
 import ScrollToTop from "../components/ScrollToTop.jsx";
 import VoiceInput from "../components/VoiceInput.jsx";
+import {FaHistory} from "react-icons/fa";
 
 export default function UserLayout() {
     const messagesEndRef = useRef(null);
@@ -145,7 +146,7 @@ export default function UserLayout() {
                     <Link to={"/app/vacancies"} className={"flex justify-center"}><IoNewspaperSharp size={40}/></Link>
                     <Link to={"/app/interviews"} className={"flex justify-center"}><FaMicrophoneAlt size={40}/></Link>
                     <Link to={"/app/cv"} className={"flex justify-center"}><MdEditDocument size={40}/></Link>
-                    <Link to={"/app/account/history"} className={"flex justify-center"}><FaUser size={40}/></Link>
+                    <Link to={"/app/history"} className={"flex justify-center"}><FaHistory size={40}/></Link>
                 </nav>
             </footer>
         </>
