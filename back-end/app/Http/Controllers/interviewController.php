@@ -285,47 +285,9 @@ PROMPT;
             ?? $response->json('choices.0.message.reasoning_content')
             ?? 'Er ging iets mis bij het ophalen van het AI-antwoord.';
 
-        $finishKeywords = [
-            'contact met u op',
-            'nemen contact op',
-            'vervolgstappen',
-            'hartelijk dank voor uw tijd',
-            'bedankt voor het gesprek',
-            'we laten u weten',
-            'succes gewenst',
-            'binnenkort contact',
-            'volgende stappen',
-            'we nemen contact',
-            'u hoort van ons',
-            'zo snel mogelijk contact',
-            'we komen bij u terug',
-            'we laten het u weten',
-            'fijn gesprek gehad',
-            'prettig gesprek gehad',
-            'dank voor uw tijd',
-            'dank u wel voor dit gesprek',
-            'bedankt voor uw komst',
-            'heel erg bedankt',
-            'we hebben genoeg informatie',
-            'dat was mijn laatste vraag',
-            'hiermee ronden we af',
-            'we sluiten het gesprek af',
-            'veel succes verder',
-            'sterkte verder',
-            'we wensen u veel succes',
-            'we hopen u snel te spreken',
-            'tot ziens',
-            'nogmaals bedankt',
-        ];
+        $replyData = json_decode($reply, true);
 
-        $aiFinished = false;
-
-        foreach ($finishKeywords as $keyword) {
-            if (str_contains(strtolower($reply), $keyword)) {
-                $aiFinished = true;
-                break;
-            }
-        }
+        $aiFinished = $replyData['finished'] ?? false;
 
         $isFinished = $mustFinish || ($canFinish && $aiFinished);
 
@@ -382,17 +344,7 @@ PROMPT;
     - Wees vriendelijk, eerlijk, concreet en praktisch.
 
     Return alleen geldige JSON in deze exacte structuur:
-    {
-    "accepted": false,
-    "feedback": {
-        "reaction": "korte algemene reactie op het interview",
-        "good_points": ["wat ging goed in het gesprek"],
-        "improvement_points": ["wat kan beter in het gesprek"],
-        "communication_feedback": ["feedback op communicatie, duidelijkheid en houding"],
-        "personal_presentation": ["hoe de kandidaat zichzelf als persoon/professional neerzette"],
-        "next_interview_tips": ["concrete tips voor een volgend sollicitatiegesprek"]
-    }
-    }
+    {"accepted": false,"feedback": {"reaction": "korte algemene reactie op het interview","good_points": ["wat ging goed in het gesprek"],"improvement_points": ["wat kan beter in het gesprek"],"communication_feedback": ["feedback op communicatie, duidelijkheid en houding"],"personal_presentation": ["hoe de kandidaat zichzelf als persoon/professional neerzette"],"next_interview_tips": ["concrete tips voor een volgend sollicitatiegesprek"]}}
 
     Regels:
     - accepted is true als de kandidaat overtuigend, concreet en passend bij de vacature heeft geantwoord.
@@ -400,6 +352,9 @@ PROMPT;
     - Noem concrete punten uit het gesprek.
     - Geen markdown.
     - Geen uitleg buiten JSON.
+    - Do not add markdown, code fences, or explanations.
+    - Do not return anything except valid JSON.
+    - Exclude formatting like \n inside the JSON. ONLY give correct JSON!
     PROMPT;
 
         $messages = [
@@ -429,7 +384,7 @@ PROMPT;
                 'model' => env('HF_MODEL'),
                 'messages' => $messages,
                 'temperature' => 0.2,
-                'max_tokens' => 500,
+                'max_tokens' => 2000,
                 'stream' => false,
                 'chat_template_kwargs' => [
                     'enable_thinking' => false,

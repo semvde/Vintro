@@ -143,7 +143,7 @@ export default function UserLayout() {
                     {/* Divs will be Links when routes are available */}
                     <Link to={"/app"} className={"flex justify-center"}><IoMdHome size={40}/></Link>
                     <Link to={"/app/vacancies"} className={"flex justify-center"}><IoNewspaperSharp size={40}/></Link>
-                    <div className={"flex justify-center"}><FaMicrophoneAlt size={40}/></div>
+                    <Link to={"/app/interviews"} className={"flex justify-center"}><FaMicrophoneAlt size={40}/></Link>
                     <Link to={"/app/cv"} className={"flex justify-center"}><MdEditDocument size={40}/></Link>
                     <Link to={"/app/account"} className={"flex justify-center"}><FaUser size={40}/></Link>
                 </nav>

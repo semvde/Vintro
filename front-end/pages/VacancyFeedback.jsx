@@ -39,8 +39,8 @@ export default function VacancyFeedback() {
                 <img src={Victoria} alt={"Victoria"} width={200}/>
             </div>
             <div className="shadow-md bg-gray-300/20 mb-13  p-2">
-            <p className={"font-bold italic "}>"{feedback.reaction}"</p>
-        </div>
+                <p className={"font-bold italic "}>"{feedback.reaction}"</p>
+            </div>
             <div className="bg-secondary/20 p-3 shadow-md gap-20">
                 <div className="p-2">
                     <h2>Wat gaat al goed?</h2>
@@ -62,7 +62,7 @@ export default function VacancyFeedback() {
             </div>
 
             <div className="p-4">
-                <h2 className="font-semibold mt-4 pt-6">Suggesties voor je CV</h2>
+                <h2 className="font-semibold mt-4 pt-6">Suggesties vanuit je CV</h2>
                 <ul className={"list-disc list-inside"}>
                     {feedback.profile_suggestions.map((item, i) => (
                         <li key={i}>{item}</li>

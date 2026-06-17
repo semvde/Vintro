@@ -5,7 +5,7 @@ import {useNavigate, useParams} from "react-router";
 import VoiceInput from "../components/VoiceInput.jsx";
 
 export default function InterviewDetail() {
-    const { id } = useParams();
+    const {id} = useParams();
     const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
 
@@ -65,17 +65,17 @@ export default function InterviewDetail() {
             step: step + 1,
         });
         console.log(res.finished);
-        if(res.finished) {
+        if (res.finished) {
             setMessages((prev) => [
                 ...prev,
                 {
                     role: "assistant",
-                    content: "Bedankt, ik heb genoeg informatie. Je hoort binnenkort meer van ons. Nog een fijne dag gewenst!",
+                    content: "Bedankt, ik heb genoeg informatie. Je hoort binnenkort meer van ons. Nog een fijne dag gewenst! Je wordt over een aantal seconden naar de volgende pagina gestuud!",
                 },
             ]);
 
             setTimeout(() => {
-                navigate(`app/interview/${id}/feedback`);
+                navigate(`/app/interview/${id}/feedback`);
             }, 20000)
         } else {
             setMessages((prev) => [
@@ -114,7 +114,7 @@ export default function InterviewDetail() {
     // LOADING
     if (loading) return <p>Laden...</p>;
 
-    return(
+    return (
         <>
             <div className={"flex justify-around pb-16"}>
                 <div className={"flex flex-col items-center justify-center gap-8"}>
