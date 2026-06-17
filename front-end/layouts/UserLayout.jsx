@@ -145,7 +145,7 @@ export default function UserLayout() {
                     <Link to={"/app/vacancies"} className={"flex justify-center"}><IoNewspaperSharp size={40}/></Link>
                     <Link to={"/app/interviews"} className={"flex justify-center"}><FaMicrophoneAlt size={40}/></Link>
                     <Link to={"/app/cv"} className={"flex justify-center"}><MdEditDocument size={40}/></Link>
-                    <Link to={"/app/account"} className={"flex justify-center"}><FaUser size={40}/></Link>
+                    <Link to={"/app/account/history"} className={"flex justify-center"}><FaUser size={40}/></Link>
                 </nav>
             </footer>
         </>
