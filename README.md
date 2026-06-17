@@ -2,7 +2,7 @@
 
 Practice a complete job interview and find your new job with Vintro!
 
-🌐 Check out the live version: NOT AVAILABLE YET
+🌐 Check out the live version: http://145.24.237.84
 
 <details>
     <summary>Table of Contents</summary>
