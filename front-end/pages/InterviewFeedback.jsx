@@ -13,17 +13,20 @@ export default function InterviewFeedback() {
 
     useEffect(() => {
         const loadAllData = async () => {
+            let tempData;
             try {
-                const [feedbackRes, transcriptieRes] = await Promise.all([
-                    fetchAPI(`/interview-feedback/${params.id}`, "GET"),
-                    fetchAPI(`/interviews/${params.id}`, "GET")
-                ])
+                const feedbackRes = await fetchAPI(`/interview-feedback/${params.id}`, "GET");
 
+                tempData = feedbackRes;
                 setData(feedbackRes)
-                setTranscriptie(transcriptieRes)
             } catch (err) {
                 console.error("Er is iets misgegaan bij het ophalen van de data:", err)
             } finally {
+                let interviewId = tempData.data.interview_id;
+
+                const transcriptieRes = await fetchAPI(`/interviews/${interviewId}`)
+                setTranscriptie(transcriptieRes);
+
                 setLoading(false)
             }
         }

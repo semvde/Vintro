@@ -1,6 +1,6 @@
-import { Link } from "react-router";
-import { useEffect, useState } from "react";
-import { fetchAPI } from "../services/Fetch.js";
+import {Link} from "react-router";
+import {useEffect, useState} from "react";
+import {fetchAPI} from "../services/Fetch.js";
 
 export default function HistoryInterviewComponent() {
     const [interviews, setInterviews] = useState([]);
@@ -48,7 +48,7 @@ export default function HistoryInterviewComponent() {
                 return (
                     <Link
                         key={feedback.id}
-                        to={`/app/history/interview-feedback/${feedback.id}`}
+                        to={`/app/history/interview-feedback/${vacancy.id}`}
                         className="block rounded-xl bg-primary/10 p-4 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                     >
                         <article className="rounded-lg bg-primary/10 p-4 text-gray-900">
