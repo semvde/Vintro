@@ -74,9 +74,10 @@ class VacancyFeedbackController extends Controller
         }
 
         Regels:
-        - accepted is true als de brief zelf goed genoeg is om te versturen.
-        - accepted is false als de brief zelf duidelijke verbeterpunten heeft.
+        - accepted is true als de brief zelf goed genoeg is om te versturen. Hanteer hierbij enige flexibiliteit. Verbeterpunten betekend niet meteen afgekeurd.
+        - accepted is false als de brief zelf overduidelijke verbeterpunten heeft. Hanteer hierbij enige flexibiliteit. Verbeterpunten betekend niet meteen afgekeurd.
         - Een brief mag worden afgekeurd als hij te informeel, te kort of onprofessioneel is.
+        - We hebben hier te maken met NEETs die willen oefenen met het sollicitatieproces. Zet accepted alleen op false als het overduidelijk slecht is. Anders kan dit demotiverend werken voor de NEET.
         - improved_example mag relevante informatie uit user_profile gebruiken, maar alleen als die logisch past.
         - Geen markdown.
         - Geen uitleg buiten JSON.
@@ -101,7 +102,7 @@ class VacancyFeedbackController extends Controller
                 'raw' => $content,
             ], 500);
         }
-    
+
         $feedback = VacancyFeedback::updateOrCreate(
             [
                 'user_id' => $user->id,
@@ -110,7 +111,7 @@ class VacancyFeedbackController extends Controller
             [
                 'motivation_letter' => $validated['motivation_letter'],
                 'ai_feedback' => json_encode($data['feedback'] ?? [], JSON_UNESCAPED_UNICODE),
-                'accepted' => (bool) ($data['accepted'] ?? false),
+                'accepted' => (bool)($data['accepted'] ?? false),
             ]
         );
 
@@ -153,6 +154,102 @@ class VacancyFeedbackController extends Controller
                 'ai_feedback' => json_decode($feedback->ai_feedback, true),
                 'accepted' => $feedback->accepted,
             ],
+        ]);
+    }
+
+    public function showById($id)
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        $feedback = VacancyFeedback::with('vacancy')
+            ->where('user_id', $user->id)
+            ->where('id', $id)
+            ->first();
+
+        if (!$feedback) {
+            return response()->json([
+                'message' => 'Feedback niet gevonden.'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => [
+                'id' => $feedback->id,
+                'vacancy_id' => $feedback->vacancy_id,
+                'motivation_letter' => $feedback->motivation_letter,
+                'ai_feedback' => json_decode($feedback->ai_feedback, true),
+                'accepted' => $feedback->accepted,
+                'created_at' => $feedback->created_at,
+                'vacancy' => [
+                    'id' => $feedback->vacancy->id,
+                    'title' => $feedback->vacancy->title,
+                    'company' => $feedback->vacancy->company,
+                    'location' => $feedback->vacancy->location,
+                ]
+            ]
+        ]);
+    }
+
+    public function index()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $feedbacks = VacancyFeedback::with('vacancy')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get()
+            ->map(function ($feedback) {
+                return [
+                    'id' => $feedback->id,
+                    'vacancy_id' => $feedback->vacancy_id,
+                    'motivation_letter' => $feedback->motivation_letter,
+                    'ai_feedback' => json_decode($feedback->ai_feedback, true),
+                    'accepted' => $feedback->accepted,
+                    'created_at' => $feedback->created_at,
+                    'vacancy' => $feedback->vacancy ? [
+                        'id' => $feedback->vacancy->id,
+                        'title' => $feedback->vacancy->title,
+                        'company' => $feedback->vacancy->company,
+                        'location' => $feedback->vacancy->location,
+                        'employment_type' => $feedback->vacancy->employment_type,
+                        'salary' => $feedback->vacancy->salary,
+                        'description' => $feedback->vacancy->description,
+                    ] : null,
+                ];
+            });
+
+        return response()->json([
+            'data' => $feedbacks,
+        ]);
+
+    }
+
+    public function accepted()
+    {
+        $user = auth('api')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $feedbacks = VacancyFeedback::with('vacancy')
+            ->where('user_id', $user->id)
+            ->where('accepted', true)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $feedbacks,
         ]);
     }
 }

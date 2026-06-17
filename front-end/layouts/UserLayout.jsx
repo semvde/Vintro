@@ -13,6 +13,7 @@ import ChatMessage from "../components/ChatMessage.jsx";
 import {fetchAPI} from "../services/Fetch.js";
 import {FaAngleRight} from "react-icons/fa";
 import ScrollToTop from "../components/ScrollToTop.jsx";
+import VoiceInput from "../components/VoiceInput.jsx";
 
 export default function UserLayout() {
     const messagesEndRef = useRef(null);
@@ -41,6 +42,10 @@ export default function UserLayout() {
         setTimeout(() => {
             setChatOpen(false);
         }, 500)
+    }
+
+    function setInput(x) {
+        setForm({input: x});
     }
 
     const [form, setForm] = useState({
@@ -97,7 +102,7 @@ export default function UserLayout() {
     return (
         <>
             <header>
-                <ScrollToTop />
+                <ScrollToTop/>
                 <div className={"bg-primary"}>
                     <Link to={"/app"}><img src={VintroLogo} alt="Logo" width={60} height={60}/></Link>
                 </div>
@@ -119,6 +124,7 @@ export default function UserLayout() {
 
                         <div ref={messagesEndRef}/>
                     </div>
+                    <VoiceInput inputSetter={setInput} styling={"absolute bottom-20 right-5"}/>
                     <form className={"absolute bottom-0 left-0 right-0"} onSubmit={handleSubmit}>
                         <FormField icon={<MdOutlineQuestionAnswer/>} id={'input'}
                                    placeholder={placeholderText} value={form.input} onChange={handleInputChange}/>
@@ -128,17 +134,16 @@ export default function UserLayout() {
                 </section>
             }
             <footer className={"fixed left-0 right-0 bottom-0 z-999"}>
-                <div className={"flex justify-end p-2.5"}>
-                    <button className={"bg-primary shadow rounded-full w-1/5 hover:bg-primary-hover sm:w-1/20"}
-                            onClick={() => openChat()}>
-                        <img src={Victoria} alt="Victoria - Chat Bot" className={"aspect-square w-full translate-y-1"}/>
-                    </button>
-                </div>
+                <button
+                    className={"absolute bottom-15 right-2 bg-primary shadow rounded-full w-1/5 hover:bg-primary-hover sm:w-1/20"}
+                    onClick={() => openChat()}>
+                    <img src={Victoria} alt="Victoria - Chat Bot" className={"aspect-square w-full translate-y-1"}/>
+                </button>
                 <nav className="grid grid-cols-5 bg-outline p-2">
                     {/* Divs will be Links when routes are available */}
                     <Link to={"/app"} className={"flex justify-center"}><IoMdHome size={40}/></Link>
                     <Link to={"/app/vacancies"} className={"flex justify-center"}><IoNewspaperSharp size={40}/></Link>
-                    <div className={"flex justify-center"}><FaMicrophoneAlt size={40}/></div>
+                    <Link to={"/app/interviews"} className={"flex justify-center"}><FaMicrophoneAlt size={40}/></Link>
                     <Link to={"/app/cv"} className={"flex justify-center"}><MdEditDocument size={40}/></Link>
                     <Link to={"/app/account"} className={"flex justify-center"}><FaUser size={40}/></Link>
                 </nav>

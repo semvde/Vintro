@@ -18,9 +18,14 @@ import CV from "../pages/cv/CV.jsx";
 import EditCV from "../pages/cv/EditCV.jsx";
 import Vacancies from "../pages/Vacancies.jsx";
 import VacationDetail from "../pages/VacancyDetail.jsx";
+import Interviews from "../pages/Interviews.jsx";
+import InterviewDetail from "../pages/InterviewDetail.jsx";
 import OnboardLayout from "../layouts/OnboardLayout.jsx";
 import VacancyApply from "../pages/VacancyApply.jsx";
 import VacancyFeedback from "../pages/VacancyFeedback.jsx";
+import InterviewFeedback from "../pages/InterviewFeedback.jsx";
+import HistoryVacancyDetail from "../pages/account/HistoryVacancyDetail.jsx";
+import HistoryInterviewDetail from "../pages/account/HistoryInterviewDetail.jsx";
 
 const router = createBrowserRouter([
     {
@@ -81,6 +86,11 @@ const router = createBrowserRouter([
                 element: <VacancyFeedback />
             },
             {
+                //moet nog ID toevoegen naast interview
+                path: "/app/interview/:id/feedback",
+                element: <InterviewFeedback />
+            },
+            {
                 path: "/app/account",
                 element: <Account/>,
             },
@@ -93,6 +103,14 @@ const router = createBrowserRouter([
                 element: <History/>,
             },
             {
+                path: "/app/history/vacancy-feedback/:id",
+                element: <HistoryVacancyDetail/>
+            },
+            {
+                path: "/app/history/interview-feedback/:id",
+                element: <HistoryInterviewDetail/>
+            },
+            {
                 path: "/app/preferences",
                 element: <Preferences/>,
             },
@@ -102,7 +120,15 @@ const router = createBrowserRouter([
             },
             {
                 path: "/app/cv",
-                element: <CV/>,
+                element: <CV />,
+            },
+            {
+                path: "/app/interviews",
+                element: <Interviews />,
+            },
+            {
+                path: "/app/interview/:id",
+                element: <InterviewDetail />,
             },
             {
                 path: "/app/cv/edit",

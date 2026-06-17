@@ -9,10 +9,16 @@ class InterviewFeedback extends Model
 {
     use HasFactory;
 
+    protected $table = 'interview_feedback';
+
     protected $fillable = [
         'interview_id',
         'ai_feedback',
         'accepted',
+    ];
+
+    protected $casts = [
+        'accepted' => 'boolean',
     ];
 
     public function interview()

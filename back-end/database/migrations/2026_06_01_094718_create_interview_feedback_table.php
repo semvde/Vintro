@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('interview_feedback', function (Blueprint $table) {
             $table->id();
             $table->foreignId('interview_id')->constrained('interviews')->cascadeOnDelete();
-            $table->longText('ai_feedback');
+            $table->longText('ai_feedback')->nullable();
             $table->boolean('accepted')->default(false);
             $table->timestamps();
         });

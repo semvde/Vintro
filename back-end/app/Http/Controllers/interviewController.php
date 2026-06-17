@@ -10,6 +10,42 @@ use Illuminate\Support\Facades\Http;
 
 class interviewController extends Controller
 {
+    public function show($id)
+    {
+        $user = auth('api')->user();
+
+        $interview = Interview::where('id', $id)
+            ->whereHas('vacancy', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->first();
+
+        if (!$interview) {
+            return response()->json([
+                'message' => 'Interview not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $interview
+        ]);
+    }
+
+    public function index()
+    {
+        $user = auth('api')->user();
+
+        $interviews = Interview::whereHas('vacancy', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'data' => $interviews
+        ]);
+    }
+
     public function start(Request $request, $vacancyId)
     {
         $user = auth('api')->user();
@@ -104,7 +140,7 @@ class interviewController extends Controller
         $interviewer = $interview->interviewer_name ?? 'de interviewer';
 
         $minSteps = 5;
-        $maxSteps = 14;
+        $maxSteps = 11;
 
         $canFinish = $validated['step'] >= $minSteps;
         $mustFinish = $validated['step'] >= $maxSteps;
@@ -205,7 +241,7 @@ PROMPT;
                 'content' => $mustFinish
                     ? 'Rond het gesprek nu professioneel af. Stel geen nieuwe vragen meer. Bedank de kandidaat en sluit het gesprek zakelijk af.'
                     : (
-                        $canFinish
+                    $canFinish
                         ? 'Je mag het gesprek afronden als de belangrijkste onderwerpen (motivatie, ervaring, vaardigheden, persoonlijkheid, samenwerking, beschikbaarheid) voldoende aan bod zijn gekomen. Als er nog een essentieel onderwerp ontbreekt, stel dan nog één gerichte vraag.'
                         : 'Stel één gerichte, professionele interviewvraag die aansluit op de vacature en het gesprek tot nu toe. Wissel vakinhoudelijke vragen af met persoonlijke vragen over karakter, hobby\'s of leven buiten het werk. Vraag niet naar de naam.'
                     ),
@@ -249,24 +285,9 @@ PROMPT;
             ?? $response->json('choices.0.message.reasoning_content')
             ?? 'Er ging iets mis bij het ophalen van het AI-antwoord.';
 
-        $finishKeywords = [
-            'contact met u op',
-            'nemen contact op',
-            'vervolgstappen',
-            'hartelijk dank voor uw tijd',
-            'bedankt voor het gesprek',
-            'we laten u weten',
-            'succes gewenst',
-        ];
+        $replyData = json_decode($reply, true);
 
-        $aiFinished = false;
-
-        foreach ($finishKeywords as $keyword) {
-            if (str_contains(strtolower($reply), $keyword)) {
-                $aiFinished = true;
-                break;
-            }
-        }
+        $aiFinished = $replyData['finished'] ?? false;
 
         $isFinished = $mustFinish || ($canFinish && $aiFinished);
 
@@ -304,39 +325,37 @@ PROMPT;
     private function generateAndStoreFeedback(Interview $interview, Vacancy $vacancy, array $chatHistory, string $interviewer = 'de interviewer')
     {
         $feedbackPrompt = <<<PROMPT
-/no_think
+    /no_think
 
-Je bent een neutrale coach die het zojuist afgeronde sollicitatiegesprek beoordeelt.
-Het gesprek werd gevoerd door interviewer {$interviewer} namens {$vacancy->company} voor de functie {$vacancy->title}.
+    Je bent Victoria, een neutrale sollicitatiecoach voor jongeren.
 
-Geef een eerlijke, concrete en constructieve beoordeling van de prestaties van de kandidaat.
+    Je beoordeelt een zojuist afgerond sollicitatiegesprek.
+    Het gesprek werd gevoerd door interviewer {$interviewer} namens {$vacancy->company} voor de functie {$vacancy->title}.
 
-Belangrijk:
-- Baseer je uitsluitend op de chatgeschiedenis en de vacaturedetails.
-- Verzin geen informatie die niet in het gesprek naar voren is gekomen.
-- Geef alleen geldige JSON terug.
-- Geen markdown, geen code fences, geen uitleg buiten de JSON.
+    Je krijgt:
+    1. De vacature.
+    2. De chatgeschiedenis van het interview.
 
-Terug te geven JSON-structuur:
-{
-  "ai_feedback": "string in het Nederlands",
-  "accepted": false
-}
+    Belangrijk:
+    - Baseer je uitsluitend op de chatgeschiedenis en de vacaturedetails.
+    - Verzin geen informatie die niet in het gesprek naar voren is gekomen.
+    - Beoordeel zowel inhoud als communicatie.
+    - Geef feedback alsof je direct tegen de gebruiker praat.
+    - Wees vriendelijk, eerlijk, concreet en praktisch.
 
-Richtlijnen voor ai_feedback:
-- Noem minimaal twee concrete sterke punten van de kandidaat, zowel vakinhoudelijk als persoonlijk.
-- Noem minimaal twee concrete verbeterpunten of gemiste kansen, ook op het vlak van zelfpresentatie en persoonlijkheid.
-- Beoordeel ook hoe de kandidaat zichzelf als persoon heeft neergezet: kwamen hobby's, interesses en karakter overtuigend en authentiek over?
-- Koppel de beoordeling aan de eisen en taken uit de vacature.
-- Geef praktische, bruikbare tips voor een volgend gesprek.
-- Toon geen medelijden, maar wees ook niet onnodig hard.
-- Schrijf vanuit het perspectief van een coach, niet de interviewer.
-- Maximaal 150 woorden.
+    Return alleen geldige JSON in deze exacte structuur:
+    {"accepted": false,"feedback": {"reaction": "korte algemene reactie op het interview","good_points": ["wat ging goed in het gesprek"],"improvement_points": ["wat kan beter in het gesprek"],"communication_feedback": ["feedback op communicatie, duidelijkheid en houding"],"personal_presentation": ["hoe de kandidaat zichzelf als persoon/professional neerzette"],"next_interview_tips": ["concrete tips voor een volgend sollicitatiegesprek"]}}
 
-Richtlijnen voor accepted:
-- true: de kandidaat heeft overtuigend en concreet geantwoord op zowel de vakinhoudelijke als de persoonlijke vragen, en zou realistisch gezien een goede kans maken op deze functie.
-- false: de antwoorden waren te vaag, onvolledig, of de kandidaat heeft onvoldoende een beeld gegeven van zichzelf als persoon en professional.
-PROMPT;
+    Regels:
+    - accepted is true als de kandidaat overtuigend, concreet en passend bij de vacature heeft geantwoord.
+    - accepted is false als antwoorden te vaag, te kort of onvoldoende onderbouwd waren.
+    - Noem concrete punten uit het gesprek.
+    - Geen markdown.
+    - Geen uitleg buiten JSON.
+    - Do not add markdown, code fences, or explanations.
+    - Do not return anything except valid JSON.
+    - Exclude formatting like \n inside the JSON. ONLY give correct JSON!
+    PROMPT;
 
         $messages = [
             [
@@ -365,7 +384,7 @@ PROMPT;
                 'model' => env('HF_MODEL'),
                 'messages' => $messages,
                 'temperature' => 0.2,
-                'max_tokens' => 500,
+                'max_tokens' => 2000,
                 'stream' => false,
                 'chat_template_kwargs' => [
                     'enable_thinking' => false,
@@ -400,11 +419,17 @@ PROMPT;
         $feedback = InterviewFeedback::updateOrCreate(
             ['interview_id' => $interview->id],
             [
-                'ai_feedback' => $data['ai_feedback'] ?? 'Er is geen feedback beschikbaar.',
-                'accepted' => (bool) ($data['accepted'] ?? false),
+                'ai_feedback' => json_encode($data['feedback'] ?? [], JSON_UNESCAPED_UNICODE),
+                'accepted' => (bool)($data['accepted'] ?? false),
             ]
         );
 
-        return $feedback;
+        return [
+            'id' => $feedback->id,
+            'interview_id' => $feedback->interview_id,
+            'ai_feedback' => json_decode($feedback->ai_feedback, true),
+            'accepted' => $feedback->accepted,
+            'created_at' => $feedback->created_at,
+        ];
     }
 }
