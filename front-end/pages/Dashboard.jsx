@@ -72,29 +72,23 @@ export default function Dashboard() {
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
                 <Link to={"/app/vacancies"}><DashboardCard
-                    icon={<MdEditDocument />}
+                    icon={<MdEditDocument/>}
                     title={"Vacature oefenen"}
                     description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
                 /></Link>
 
                 <Link to={"/app/interviews"}>
-                <DashboardCard
-                    icon={<FaMicrophoneAlt/>}
-                    title={"Interview oefenen"}
-                    description={"Oefen een sollicitatiegesprek met AI"}
-                />
+                    <DashboardCard
+                        icon={<FaMicrophoneAlt/>}
+                        title={"Interview oefenen"}
+                        description={"Oefen een sollicitatiegesprek met AI"}
+                    />
                 </Link>
                 <Link to={"/app/cv"}><DashboardCard
-                    icon={<IoNewspaperSharp />}
+                    icon={<IoNewspaperSharp/>}
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
                 /></Link>
-
-                <DashboardCard
-                    icon={<HiLightBulb/>}
-                    title={"Tips & Tricks"}
-                    description={"Ontdek tips & tricks die je helpen jezelf beter te presenteren"}
-                />
             </section>
 
             <section className={"pb-10"}>
