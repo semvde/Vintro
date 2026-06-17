@@ -75,8 +75,9 @@ class VacancyFeedbackController extends Controller
 
         Regels:
         - accepted is true als de brief zelf goed genoeg is om te versturen. Hanteer hierbij enige flexibiliteit. Verbeterpunten betekend niet meteen afgekeurd.
-        - accepted is false als de brief zelf overduidelijke verbeterpunten heeft.
+        - accepted is false als de brief zelf overduidelijke verbeterpunten heeft. Hanteer hierbij enige flexibiliteit. Verbeterpunten betekend niet meteen afgekeurd.
         - Een brief mag worden afgekeurd als hij te informeel, te kort of onprofessioneel is.
+        - We hebben hier te maken met NEETs die willen oefenen met het sollicitatieproces. Zet accepted alleen op false als het overduidelijk slecht is. Anders kan dit demotiverend werken voor de NEET.
         - improved_example mag relevante informatie uit user_profile gebruiken, maar alleen als die logisch past.
         - Geen markdown.
         - Geen uitleg buiten JSON.
