@@ -83,13 +83,13 @@ class VacancyController extends Controller
         $systemPrompt = <<<'PROMPT'
 You are a vacancy generator for VINTRO. Your goal is to generate accessible, low-barrier job vacancies
 for people who are re-entering the workforce, have limited experience, or are looking for entry-level opportunities.
- 
+
 Generate exactly 15 fake but realistic vacancies based on the given user profile.
 Use the user's skills, job preferences, strengths, and summary to loosely match jobs — but always keep them accessible.
- 
+
 Return only valid JSON in this exact structure:
 {"vacancies": [{ "title": "string", "company": "string","location": "string","employment_type": "part-time|full-time|contract|internship|temporary","salary": 0,"description": "string"}]}
- 
+
 Rules:
 - Return exactly 15 items.
 - All vacancies must be LOW-BARRIER and ENTRY-LEVEL:
@@ -121,7 +121,7 @@ PROMPT;
         ];
 
         try {
-            $content = $qwen->chat($messages, 1800, 0.3);
+            $content = $qwen->chat($messages, 2500, 0.3);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'AI request failed',
@@ -157,13 +157,13 @@ PROMPT;
         foreach ($vacancyList as $vacancy) {
             if (
                 !isset(
-                $vacancy['title'],
-                $vacancy['company'],
-                $vacancy['location'],
-                $vacancy['employment_type'],
-                $vacancy['salary'],
-                $vacancy['description']
-            )
+                    $vacancy['title'],
+                    $vacancy['company'],
+                    $vacancy['location'],
+                    $vacancy['employment_type'],
+                    $vacancy['salary'],
+                    $vacancy['description']
+                )
             ) {
                 continue;
             }
