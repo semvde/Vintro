@@ -13,10 +13,10 @@
     --color-base-200: #d9e8f6;
     --color-base-content: #343434;
 
-    --color-primary: #408DD4;
+    --color-primary: #2e73b3;
     --color-primary-content: var(--color-base-content);
     --color-secondary: #68B55E;
-    --color-accent: #ebebeb;
+    --color-accent: #fff;
 
     --color-error: #FF3B3B;
     --color-warning: #FFCC00;
