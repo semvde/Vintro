@@ -1,5 +1,6 @@
 import {Link} from "react-router";
 import Victoria from "../src/assets/Victoria - Job coach.png"
+import ButtonPrimary from "../components/ButtonPrimary.jsx";
 
 
 export default function Home() {
@@ -20,7 +21,7 @@ export default function Home() {
                 </div>
                 <div className="bg-primary/20 p-4 rounded-xl h-1/2 flex flex-col">
                     <div className="bg-primary/20 rounded-xl justify-between flex flex-row p-4">
-                        <img src={Victoria} alt="ai mannetje" width={90} className={"object-cover"}/>
+                        <img src={Victoria} alt="" aria-hidden={"true"} width={90} className={"object-cover"}/>
                         <div className="bg-primary w-3/4 p-1 pb-6 rounded-t-md textbubble">
                             <div className="bg-white p-4 h-full w-full">
                                 <p className="text-primary font-black text-lg">
@@ -64,9 +65,9 @@ export default function Home() {
                         </div>
                     </div>
                     <div className="pt-10 flex justify-center">
-                    <Link className=" w-fit h-full bg-primary shadow-md pb-3 pt-3 pl-8 pr-8 rounded-3xl text-white" to="/register">
+                    <ButtonPrimary to="/register">
                         Start jouw onboarding
-                    </Link>
+                    </ButtonPrimary>
                 </div>
                 </div>
             </section>
