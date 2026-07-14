@@ -45,7 +45,6 @@ const router = createBrowserRouter([
             },
         ]
     },
-    /*
     {
         element: (<ProtectedRoute><OnboardLayout/></ProtectedRoute>),
         children: [
@@ -54,12 +53,12 @@ const router = createBrowserRouter([
                 element: <Onboarding/>,
             }
         ]
-    }, */
+    },
     {
         element: (
-            //<ProtectedRoute>
+            <ProtectedRoute>
                 <UserLayout/>
-            //</ProtectedRoute>
+            </ProtectedRoute>
         ),
         children: [
             {
