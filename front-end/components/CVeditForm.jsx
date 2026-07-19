@@ -263,7 +263,6 @@ export function CVeditForm({data}) {
     return (
         <div className="w-full max-w-4xl mx-auto px-2 sm:px-4">
             <form onSubmit={handleUpdate} className="py-4 space-y-6">
-
                 <section className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-primary text-outline p-4 sm:p-6 rounded-t-lg">
                     <div className="flex flex-col items-center gap-3 w-full md:w-auto">
                         <img src={data?.image || null} alt="" className="h-24 w-24 rounded-full object-cover bg-gray-200 border-2 border-white shadow-sm"/>
@@ -276,9 +275,9 @@ export function CVeditForm({data}) {
                                 className="hidden"
                             />
 
-                            <label htmlFor="file-upload"
+                            <label htmlFor="file-upload" aria-label="Profielfoto uploaden"
                                    className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 hover:border-blue-500 bg-white p-2.5 rounded-xl cursor-pointer transition-colors text-center group w-12 h-12">
-                                <FaUpload className="text-xl text-gray-400 group-hover:text-blue-500 transition-colors"/>
+                                <FaUpload className="text-xl text-gray-400 group-hover:text-blue-500 transition-colors"  aria-hidden="true"/>
                             </label>
 
                             {file && (
@@ -291,8 +290,8 @@ export function CVeditForm({data}) {
 
                     <div className="flex flex-col w-full space-y-3 text-center md:text-left">
                         <div className="w-full">
-                            <label className="text-xs text-gray-300 block mb-1">Volledige naam</label>
-                            <input name="name"
+                            <label htmlFor="name" className="text-xs text-outline block mb-1">Volledige naam</label>
+                            <input name="name" id="name"
                                    className="w-full focus:bg-white pl-3 pr-3 py-1.5 border-white border-solid border-2 focus:text-black focus:border-black text-white bg-transparent rounded-md text-base"
                                    onChange={handleInputChange} value={formData.name}/>
                             {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
@@ -326,15 +325,16 @@ export function CVeditForm({data}) {
                                      className="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-start gap-4">
                                     <div className="space-y-0.5">
                                         <p className="font-semibold text-black text-base">{job.job_title} <span className="font-normal text-gray-500 text-sm">bij {job.company}</span></p>
-                                        <p className="text-xs text-gray-400">{job.period}</p>
+                                        <p className="text-xs">{job.period}</p>
                                         <p className="text-gray-700 text-sm mt-1.5 leading-relaxed">{job.description}</p>
                                     </div>
                                     <button
                                         type="button"
+                                        aria-label="Verwijder werkervaring"
                                         onClick={() => removeWorkExperience(index)}
                                         className="text-red-500 hover:text-red-700 p-2 shrink-0 rounded hover:bg-red-50 transition-colors"
                                     >
-                                        <FaTrash/>
+                                        <FaTrash aria-hidden={"true"}/>
                                     </button>
                                 </div>
                             ))}
@@ -377,10 +377,11 @@ export function CVeditForm({data}) {
 
                             <button
                                 type="button"
+                                aria-label="Voeg nieuwe werkervaring toe"
                                 onClick={addWorkExperience}
                                 className="flex items-center justify-center gap-2 bg-primary text-white w-10 h-10 rounded-md hover:bg-primary/80 transition-colors cursor-pointer"
                             >
-                                <FaPlus/>
+                                <FaPlus aria-hidden="true"/>
                             </button>
                         </div>
                     </div>
@@ -393,15 +394,16 @@ export function CVeditForm({data}) {
                                      className="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center gap-4">
                                     <div className="space-y-0.5">
                                         <p className="font-semibold text-black text-base">{education.school}</p>
-                                        <p className="text-xs text-gray-400">{education.period}</p>
+                                        <p className="text-xs">{education.period}</p>
                                         <p className="text-gray-600 text-sm">{education.degree}</p>
                                     </div>
                                     <button
                                         type="button"
+                                        aria-label="Verwijder educatie"
                                         onClick={() => removeEducation(index)}
                                         className="text-red-500 hover:text-red-700 p-2 shrink-0 rounded hover:bg-red-50 transition-colors"
                                     >
-                                        <FaTrash/>
+                                        <FaTrash aria-hidden="true"/>
                                     </button>
                                 </div>
                             ))}
@@ -437,10 +439,11 @@ export function CVeditForm({data}) {
 
                             <button
                                 type="button"
+                                aria-label="Voeg nieuwe educatie toe"
                                 onClick={addEducation}
                                 className="flex items-center justify-center gap-2 bg-primary text-white w-10 h-10 rounded-md hover:bg-primary/80 transition-colors cursor-pointer"
                             >
-                                <FaPlus/>
+                                <FaPlus aria-hidden="true"/>
                             </button>
                         </div>
                     </div>
@@ -448,7 +451,6 @@ export function CVeditForm({data}) {
 
                 <section className="bg-primary rounded-b-lg text-outline text-sm p-4 sm:p-6">
                     <div className="flex flex-col md:flex-row gap-8 md:gap-4 md:justify-between">
-
                         <div className="w-full md:w-[48%] flex flex-col justify-between">
                             <div>
                                 <h3 className="font-bold text-base border-b border-white/20 pb-1 mb-3">Vaardigheden</h3>
@@ -458,10 +460,11 @@ export function CVeditForm({data}) {
                                             <span className="font-semibold text-black">{skill}</span>
                                             <button
                                                 type="button"
+                                                aria-label="Verwijder vaardigheid van CV"
                                                 onClick={() => removeSkill(index)}
                                                 className="text-red-500 hover:text-red-700 p-1.5 rounded hover:bg-red-50 transition-colors"
                                             >
-                                                <FaTrash size={14}/>
+                                                <FaTrash size={14} aria-hidden="true"/>
                                             </button>
                                         </li>
                                     ))}
@@ -472,6 +475,7 @@ export function CVeditForm({data}) {
                                     type="text"
                                     name="newSkill"
                                     placeholder="Voeg een vaardigheid toe"
+                                    aria-label="Voeg een vaardigheid toe"
                                     className="p-2.5 border border-gray-300 rounded-md bg-white text-black text-sm w-full"
                                     onChange={(e) => setNewSkill(e.target.value)}
                                     value={newSkill}
@@ -482,7 +486,7 @@ export function CVeditForm({data}) {
                                     onClick={addSkill}
                                     className="flex items-center justify-center gap-2 bg-white/20 text-white w-10 h-10 rounded-md hover:bg-white/30 transition-colors cursor-pointer mt-1"
                                 >
-                                    <FaPlus/>
+                                    <FaPlus aria-label="Voeg een nieuwe vaardigheid toe"/>
                                 </button>
                             </div>
                         </div>
@@ -496,10 +500,11 @@ export function CVeditForm({data}) {
                                             <span className="font-semibold text-black">{strength}</span>
                                             <button
                                                 type="button"
+                                                aria-label="Verwijder sterktepunt"
                                                 onClick={() => removeStrength(index)}
                                                 className="text-red-500 hover:text-red-700 p-1.5 rounded hover:bg-red-50 transition-colors"
                                             >
-                                                <FaTrash size={14}/>
+                                                <FaTrash size={14} aria-hidden="true"/>
                                             </button>
                                         </li>
                                     ))}
@@ -520,7 +525,7 @@ export function CVeditForm({data}) {
                                     onClick={addStrength}
                                     className="flex items-center justify-center gap-2 bg-white/20 text-white w-10 h-10 rounded-md hover:bg-white/30 transition-colors cursor-pointer mt-1"
                                 >
-                                    <FaPlus/>
+                                    <FaPlus aria-label="Voeg een nieuw sterktepunt toe"/>
                                 </button>
                             </div>
                         </div>
