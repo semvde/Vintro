@@ -40,8 +40,8 @@ export default function Interviews() {
                 <p className="py-2 text-sm">
                     Solliciteer op vacatures om uitgenodigd te worden!
                 </p>
-                <ButtonPrimary>
-                    <Link to="/app/vacancies">Bekijk vacatures</Link>
+                <ButtonPrimary to="/app/vacancies">
+                    Bekijk vacatures
                 </ButtonPrimary>
             </div>
         );
