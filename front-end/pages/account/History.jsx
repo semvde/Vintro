@@ -25,7 +25,7 @@ export function History() {
                     className={
                         currentPage === "applications"
                             ? "font-bold text-white"
-                            : "font-normal text-white/80 hover:text-white transition-colors"
+                            : "font-normal text-white hover:text-white transition-colors"
                     }
                     onClick={() => setCurrentPage("applications")}
                 >
@@ -36,7 +36,7 @@ export function History() {
                     className={
                         currentPage === "interviews"
                             ? "font-bold text-white"
-                            : "font-normal text-white/80 hover:text-white transition-colors"
+                            : "font-normal text-white hover:text-white transition-colors"
                     }
                     onClick={() => setCurrentPage("interviews")}
                 >

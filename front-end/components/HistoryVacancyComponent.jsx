@@ -58,9 +58,9 @@ export default function HistoryVacancyComponent({ category }) {
                 <Link
                     key={feedback.id}
                     to={`/app/history/vacancy-feedback/${feedback.id}`}
-                    className="block max-w-md rounded-lg bg-primary/10 p-4 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    className="block max-w-md rounded-lg p-4 shadow-sm transition-colors duration-300 ease-in-out hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
-                    <article className="bg-primary/10 p-4 text-gray-800">
+                    <article className="p-4 text-gray-800">
                         <div className="flex flex-col items-start pb-6">
                             <h3 className="text-primary font-bold">
                                 {feedback.vacancy?.title ?? "Onbekende vacature"}

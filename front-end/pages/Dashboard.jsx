@@ -1,9 +1,6 @@
 import DashboardCard from "../components/DashboardCard.jsx";
 import {FaMicrophoneAlt} from "react-icons/fa";
 import {MdEditDocument} from "react-icons/md";
-import {HiLightBulb} from "react-icons/hi";
-import Thumbnail from "../src/assets/thumbnail_placeholder.jpg";
-import VideoCard from "../components/VideoCard.jsx";
 import {Link} from "react-router";
 import {useNavigate} from "react-router";
 import {IoNewspaperSharp} from "react-icons/io5";
@@ -53,11 +50,15 @@ export default function Dashboard() {
                 .fade-in-name {
                     animation: fadeIn 0.8s ease-out forwards;
                 }
+                @media (prefers-reduced-motion: reduce) {
+                    .fade-in-name {
+                        animation: none;
+                    }
+                }
                 `}
             </style>
 
             <section className={"mb-8"}>
-
                 <h1 className={`transition-opacity duration-300 ${nameLoaded ? '' : 'opacity-0'}`}>
                     Welkom,
                     <span className={nameLoaded ? 'fade-in-name pl-2 inline-block' : 'opacity-0'}>
@@ -71,20 +72,37 @@ export default function Dashboard() {
             <section className={"mb-8"}>
                 <h2>Wat wil je doen?</h2>
                 {/* Cards will have Links once pages exist */}
-                <Link to={"/app/vacancies"}><DashboardCard
+                <Link to={"/app/vacancies"} aria-label="Vacatures oefenen met AI" className="
+                    focus-visible:ring-4
+                    focus-visible:ring-secondary
+                    focus-visible:ring-offset-2
+                    rounded-xl
+                ">
+                    <DashboardCard
                     icon={<MdEditDocument/>}
                     title={"Vacature oefenen"}
                     description={"Reageer op vacatures & krijg AI feedback op je sollicitatie"}
                 /></Link>
 
-                <Link to={"/app/interviews"}>
+                <Link to={"/app/interviews"} aria-label="Interview oefenen met AI" className="
+                    focus-visible:ring-4
+                    focus-visible:ring-secondary
+                    focus-visible:ring-offset-2
+                    rounded-xl
+                ">
                     <DashboardCard
                         icon={<FaMicrophoneAlt/>}
                         title={"Interview oefenen"}
                         description={"Oefen een sollicitatiegesprek met AI"}
                     />
                 </Link>
-                <Link to={"/app/cv"}><DashboardCard
+                <Link to={"/app/cv"} aria-label="Bekijk of bewerk je CV" className="
+                    focus-visible:ring-4
+                    focus-visible:ring-secondary
+                    focus-visible:ring-offset-2
+                    rounded-xl
+                ">
+                    <DashboardCard
                     icon={<IoNewspaperSharp/>}
                     title={"Bewerk je CV"}
                     description={"Bekijk en verbeter je CV"}
@@ -95,7 +113,7 @@ export default function Dashboard() {
                 <h2>Tips & Tricks</h2>
                 <div className={"flex flex-col gap-2.5"}>
                     <Accordion>
-                        <AccordionSummary>
+                        <AccordionSummary aria-controls="panel1-content" id="panel1-header">
                             <b>Bereid je goed voor</b>
                         </AccordionSummary>
                         <AccordionDetails>

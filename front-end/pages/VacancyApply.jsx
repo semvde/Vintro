@@ -77,7 +77,8 @@ Met vriendelijke groet,
                 </button>
             </div>
 
-            <textarea value={text} onChange={(e) => setText(e.target.value)}
+            <label htmlFor="application" className="py-2">Motivatiebrief</label>
+            <textarea id="application" value={text} onChange={(e) => setText(e.target.value)}
                 rows={14} className="w-full p-3 border rounded-lg resize-y"/>
         </form>
     );
